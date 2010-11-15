@@ -28,6 +28,7 @@ void testApp::setup(){
 	
 	ofEnableAlphaBlending();
 	
+	panel.setXMLFilename("roamSettings.xml");
 	panel.setup("Control Panel", 5, 5, 300, 600);
 	panel.addPanel("animation");
 	panel.addSlider("base framerate", "animationBaseFramerate", 5, 0, 30);
