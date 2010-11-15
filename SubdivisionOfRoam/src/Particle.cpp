@@ -24,8 +24,8 @@ float
 	Particle::animationScale,
 	Particle::animationDepthScale,
 	Particle::animationVelocityFramerate;
-Animation
-	Particle::animation;
+AnimationManager
+	Particle::animationManager;
 
 void Particle::setup() {
 	perlin.setup(4, 1, .5, (int) ofRandom(0, 1000));
@@ -37,7 +37,7 @@ void Particle::setup() {
   neighborhood = 700;
 	turbulence = 1;
 	
-	animation.setup("animation/flocking/test");	
+	animationManager.setup();	
 }
 
 void Particle::drawAll() {

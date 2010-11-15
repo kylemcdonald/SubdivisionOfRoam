@@ -9,7 +9,6 @@ public:
 	Animation() {
 	}
 	void setup(string directory) {
-		ofLog(OF_LOG_VERBOSE, "Loading animation from " + directory);
 		ofxDirList dir;
 		int n = dir.listDir(directory);
 		for(int i = 0; i < n; i++) {

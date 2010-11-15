@@ -220,6 +220,7 @@
 		27CD962E128B989300E5E841 /* MSACoreGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MSACoreGL.h; path = ../../../../../msalibs/MSACore/src/MSACoreGL.h; sourceTree = SOURCE_ROOT; };
 		27CD962F128B989300E5E841 /* MSACoreMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MSACoreMath.h; path = ../../../../../msalibs/MSACore/src/MSACoreMath.h; sourceTree = SOURCE_ROOT; };
 		27CFA8C4129073A9005936DC /* ofxAutoControlPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAutoControlPanel.h; sourceTree = "<group>"; };
+		27DF102112914D28006E1E6B /* AnimationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationManager.h; sourceTree = "<group>"; };
 		27E2E65D128F342A0018A8CC /* guiBaseObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = guiBaseObject.cpp; path = ../../../addons/ofxControlPanel/src/guiBaseObject.cpp; sourceTree = SOURCE_ROOT; };
 		27E2E65E128F342A0018A8CC /* guiBaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = guiBaseObject.h; path = ../../../addons/ofxControlPanel/src/guiBaseObject.h; sourceTree = SOURCE_ROOT; };
 		27E2E65F128F342A0018A8CC /* guiCallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = guiCallback.cpp; path = ../../../addons/ofxControlPanel/src/guiCallback.cpp; sourceTree = SOURCE_ROOT; };
@@ -1298,6 +1299,7 @@
 				27CD95C6128B8C3500E5E841 /* ContourMatcher.h */,
 				27CFA8C4129073A9005936DC /* ofxAutoControlPanel.h */,
 				27A9C5FE1290EC01006DFC26 /* Animation.h */,
+				27DF102112914D28006E1E6B /* AnimationManager.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;

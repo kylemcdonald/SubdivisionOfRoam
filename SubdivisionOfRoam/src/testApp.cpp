@@ -1,5 +1,8 @@
 #include "testApp.h"
 
+// add an animationmanager that loads all the files
+// and associate an animation pointer with each bird
+
 void testApp::setup(){
 	ofSetFrameRate(120);
 	
@@ -27,12 +30,13 @@ void testApp::setup(){
 	
 	panel.setup("Control Panel", 5, 5, 300, 600);
 	panel.addPanel("animation");
-	panel.addSlider("base framerate", "animationBaseFramerate", 20, 0, 30);
-	panel.addSlider("velocity framerate", "animationVelocityFramerate", 0, 0, 1);
+	panel.addSlider("base framerate", "animationBaseFramerate", 5, 0, 30);
+	panel.addSlider("velocity framerate", "animationVelocityFramerate", .5, 0, 1);
 	panel.addSlider("scale", "animationScale", .15, 0, 2);
-	panel.addSlider("depth scale", "animationDepthScale", 1, 0, 10);
+	panel.addSlider("depth scale", "animationDepthScale", 2, 0, 10);
 	
 	panel.addPanel("flocking");
+	panel.addToggle("enable", "flockingEnable", true);
 	panel.addSlider("size", "flockingSize", n, 1, 1000);
 	panel.addSlider("speed", "flockingSpeed", 1, 0, 10);
 	panel.addSlider("turbulence", "flockingTurbulence", 60, 1, 100);
@@ -53,15 +57,17 @@ void testApp::update() {
 	Particle::animationScale = panel.getValueF("animationScale");
 	Particle::animationDepthScale = panel.getValueF("animationDepthScale");
 	
-	Particle::setSize(panel.getValueI("flockingSize"), 250);
-	Particle::speed = panel.getValueF("flockingSpeed") * ofGetLastFrameTime() * 256;
-	Particle::spread = panel.getValueF("flockingSpread");
-	Particle::viscosity = panel.getValueF("flockingViscosity");
-	Particle::independence = panel.getValueF("flockingIndependence");
-	Particle::neighborhood = panel.getValueF("flockingNeighborhood");
-	Particle::turbulence = panel.getValueF("flockingTurbulence") * ofGetLastFrameTime();
-	Particle::updateAll();
-
+	if(panel.getValueB("flockingEnable")) {
+		Particle::setSize(panel.getValueI("flockingSize"), 250);
+		Particle::speed = panel.getValueF("flockingSpeed") * ofGetLastFrameTime() * 256;
+		Particle::spread = panel.getValueF("flockingSpread");
+		Particle::viscosity = panel.getValueF("flockingViscosity");
+		Particle::independence = panel.getValueF("flockingIndependence");
+		Particle::neighborhood = panel.getValueF("flockingNeighborhood");
+		Particle::turbulence = panel.getValueF("flockingTurbulence") * ofGetLastFrameTime();
+		Particle::updateAll();
+	}
+	
 	bool bNewFrame = false;
 
 	vidPlayer.idleMovie();

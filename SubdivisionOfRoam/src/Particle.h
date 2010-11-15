@@ -4,7 +4,7 @@
 #include "ofxVectorMath.h"
 #include "MSAPerlin.h"
 
-#include "Animation.h"
+#include "AnimationManager.h"
 
 inline void randomize(ofxVec3f& v) {
 	v.x = ofRandomf();
@@ -20,7 +20,7 @@ public:
 	static float speed, spread, viscosity, independence, turbulence, neighborhood;
 	
 	static float animationBaseFramerate, animationScale, animationDepthScale, animationVelocityFramerate;
-	static Animation animation;
+	static AnimationManager animationManager;
 	
 	static vector<Particle> particles;
 	static void setup();
@@ -32,13 +32,16 @@ public:
 
 	float age;
   ofxVec3f position, velocity, force, localOffset;
+	Animation* animation;
 	Particle() {
 	}
   Particle(float radius) {
     randomize(localOffset);
   	randomize(position);
   	position *= radius;
+		
 		age = ofRandom(0, 10); // for frame offsets
+		animation = animationManager.randomFlocking();
   }
 	inline void drawAnimation() {
 		glPushMatrix();
@@ -58,7 +61,7 @@ public:
 			glScalef(1, -1, 1);
 		glScalef(animationScale, animationScale, 1);
 		
-		animation.draw(age);
+		animation->draw(age);
 		glPopMatrix();
 	}
   inline void draw() {
