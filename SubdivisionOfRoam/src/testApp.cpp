@@ -27,7 +27,8 @@ void testApp::setup(){
 	
 	panel.setup("Control Panel", 5, 5, 300, 600);
 	panel.addPanel("animation");
-	panel.addSlider("framerate", "animationFramerate", 20, 1, 30);
+	panel.addSlider("base framerate", "animationBaseFramerate", 20, 0, 30);
+	panel.addSlider("velocity framerate", "animationVelocityFramerate", 0, 0, 1);
 	panel.addSlider("scale", "animationScale", .15, 0, 2);
 	panel.addSlider("depth scale", "animationDepthScale", 1, 0, 10);
 	
@@ -47,7 +48,8 @@ void testApp::setup(){
 }
 
 void testApp::update() {
-	Particle::animationFramerate = panel.getValueF("animationFramerate");
+	Particle::animationBaseFramerate = panel.getValueF("animationBaseFramerate");
+	Particle::animationVelocityFramerate = panel.getValueF("animationVelocityFramerate");
 	Particle::animationScale = panel.getValueF("animationScale");
 	Particle::animationDepthScale = panel.getValueF("animationDepthScale");
 	

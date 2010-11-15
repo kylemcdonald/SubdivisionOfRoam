@@ -20,9 +20,10 @@ float
 	Particle::turbulence;
 
 float
-	Particle::animationFramerate,
+	Particle::animationBaseFramerate,
 	Particle::animationScale,
-	Particle::animationDepthScale;
+	Particle::animationDepthScale,
+	Particle::animationVelocityFramerate;
 Animation
 	Particle::animation;
 

@@ -19,7 +19,7 @@ public:
 	static MSA::Perlin perlin;
 	static float speed, spread, viscosity, independence, turbulence, neighborhood;
 	
-	static float animationFramerate, animationScale, animationDepthScale;
+	static float animationBaseFramerate, animationScale, animationDepthScale, animationVelocityFramerate;
 	static Animation animation;
 	
 	static vector<Particle> particles;
@@ -41,7 +41,6 @@ public:
 		age = ofRandom(0, 10); // for frame offsets
   }
 	inline void drawAnimation() {
-		float frame = (ofGetElapsedTimef() - age) * animationFramerate;
 		glPushMatrix();
 		glTranslatef(position.x, position.y, position.z * animationDepthScale);
 		
@@ -58,7 +57,8 @@ public:
 		if(angle > PI / 2 || angle < -PI / 2)
 			glScalef(1, -1, 1);
 		glScalef(animationScale, animationScale, 1);
-		animation.draw(frame);
+		
+		animation.draw(age);
 		glPopMatrix();
 	}
   inline void draw() {
@@ -105,5 +105,7 @@ public:
 		applyCenteringForce();
     velocity += force; // mass = 1
     position += velocity * speed;
+		age += ofGetLastFrameTime() * animationBaseFramerate;
+		age += velocity.length() * animationVelocityFramerate;
   }
 };
