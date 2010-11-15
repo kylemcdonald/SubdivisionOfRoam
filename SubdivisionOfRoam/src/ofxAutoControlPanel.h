@@ -17,8 +17,10 @@ public:
 		ofxControlPanel::update();
 	}
 	void draw(ofEventArgs& event) {
-		if(!hidden)
+		if(!hidden) {
+			glColor4f(0, 0, 0, 1);
 			ofDrawBitmapString(ofToString((int) ofGetFrameRate()), ofGetWidth() - 40, ofGetHeight() - 10);
+		}
 		ofxControlPanel::draw();
 	}
 	void keyPressed(ofKeyEventArgs& event) {

@@ -4,6 +4,8 @@
 #include "ofxVec3f.h"
 #include "MSAPerlin.h"
 
+#include "Animation.h"
+
 inline void randomize(ofxVec3f& v) {
 	v.x = ofRandomf();
 	v.y = ofRandomf();
@@ -16,13 +18,19 @@ public:
 	static ofxVec3f centeringForce, globalOffset, avg;
 	static MSA::Perlin perlin;
 	static float speed, spread, viscosity, independence, turbulence, neighborhood;
+	
+	static float animationFramerate, animationScale, animationDepthScale;
+	static Animation animation;
+	
 	static vector<Particle> particles;
 	static void setup();
   static void drawAll();
+	static void drawAnimationAll();
 	static void drawOrthoAll();
   static void updateAll();
 	static void setSize(int size, float radius);
 
+	float age;
   ofxVec3f position, velocity, force, localOffset;
 	Particle() {
 	}
@@ -30,7 +38,16 @@ public:
     randomize(localOffset);
   	randomize(position);
   	position *= radius;
+		age = ofRandom(0, 10); // for frame offsets
   }
+	inline void drawAnimation() {
+		float frame = (ofGetElapsedTimef() - age) * animationFramerate;
+		glPushMatrix();
+		glTranslatef(position.x, position.y, position.z * animationDepthScale);
+		glScalef(animationScale, animationScale, 1);
+		animation.draw(frame);
+		glPopMatrix();
+	}
   inline void draw() {
   	glVertex3fv(position.v);
 	}

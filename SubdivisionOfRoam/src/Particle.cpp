@@ -19,6 +19,13 @@ float
 	Particle::neighborhood,
 	Particle::turbulence;
 
+float
+	Particle::animationFramerate,
+	Particle::animationScale,
+	Particle::animationDepthScale;
+Animation
+	Particle::animation;
+
 void Particle::setup() {
 	perlin.setup(4, 1, .5, (int) ofRandom(0, 1000));
 	globalOffset.set(0, 1. / 3, 2. / 3);
@@ -28,6 +35,8 @@ void Particle::setup() {
   independence = .15;
   neighborhood = 700;
 	turbulence = 1;
+	
+	animation.setup("animation/flocking/test");	
 }
 
 void Particle::drawAll() {
@@ -35,6 +44,11 @@ void Particle::drawAll() {
 	for(int i = 0; i < particles.size(); i++)
 		particles[i].draw();
 	glEnd();
+}
+
+void Particle::drawAnimationAll() {
+	for(int i = 0; i < particles.size(); i++)
+		particles[i].drawAnimation();
 }
 
 void Particle::drawOrthoAll() {

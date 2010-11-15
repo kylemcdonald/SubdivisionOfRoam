@@ -1,7 +1,11 @@
 #include "testApp.h"
 
 void testApp::setup(){
-	vidPlayer.loadMovie("theo.mov");
+	ofSetFrameRate(120);
+	
+	ofSetLogLevel(OF_LOG_VERBOSE);
+
+	//vidPlayer.loadMovie("theo.mov");
 	vidPlayer.play();
 	
 	colorImg.allocate(320, 240);
@@ -14,28 +18,39 @@ void testApp::setup(){
 	
 	Particle::setup();
 	
-	int n = 5000;
+	int n = 200;
 	float radius = 250;
 	for(int i = 0; i < n; i++)
 		Particle::particles.push_back(Particle(radius));
 	
-	panel.setup("Control Panel", 0, 0, 300, 600);
-	panel.addPanel("flocking", 1);
-	panel.addSlider("size", "flockingSize", n, 1, 10000);
+	ofEnableAlphaBlending();
+	
+	panel.setup("Control Panel", 5, 5, 300, 600);
+	panel.addPanel("animation");
+	panel.addSlider("framerate", "animationFramerate", 20, 1, 30);
+	panel.addSlider("scale", "animationScale", .15, 0, 2);
+	panel.addSlider("depth scale", "animationDepthScale", 1, 0, 10);
+	
+	panel.addPanel("flocking");
+	panel.addSlider("size", "flockingSize", n, 1, 1000);
 	panel.addSlider("speed", "flockingSpeed", 1, 0, 10);
 	panel.addSlider("turbulence", "flockingTurbulence", 60, 1, 100);
-	panel.addSlider("spread", "flockingSpread", 80, 10, 100);
-	panel.addSlider("vsicosity", "flockingViscosity", .1, 0, 1);
-	panel.addSlider("independence", "flockingIndependence", .15, 0, 1);
-	panel.addSlider("neighborhood", "flockingNeighborhood", 700, 10, 1000);
+	panel.addSlider("spread", "flockingSpread", 40, 10, 100);
+	panel.addSlider("viscosity", "flockingViscosity", .15, 0, 1);
+	panel.addSlider("independence", "flockingIndependence", .35, 0, 1);
+	panel.addSlider("neighborhood", "flockingNeighborhood", 200, 10, 1000);
 	
-	panel.addPanel("blob", 1);
+	panel.addPanel("blob");
 	panel.addSlider("smoothing size", "blob.smoothingSize", 0, 0, 10, true);
 	panel.addSlider("smoothing amount", "blob.smoothingAmount", 0, 0, 1);
 	panel.addSlider("resample number", "blob.resampleNumber", 2, 2, 1000, true);
 }
 
 void testApp::update() {
+	Particle::animationFramerate = panel.getValueF("animationFramerate");
+	Particle::animationScale = panel.getValueF("animationScale");
+	Particle::animationDepthScale = panel.getValueF("animationDepthScale");
+	
 	Particle::setSize(panel.getValueI("flockingSize"), 250);
 	Particle::speed = panel.getValueF("flockingSpeed") * ofGetLastFrameTime() * 256;
 	Particle::spread = panel.getValueF("flockingSpread");
@@ -75,7 +90,7 @@ void testApp::draw(){
 	
 	glColor4f(0, 0, 0, 1);
 	ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2);
-	Particle::drawAll();
+	Particle::drawAnimationAll();
 	
 	/*	
 	for (int i = 0; i < contourFinder.nBlobs; i++){
@@ -99,6 +114,7 @@ void testApp::draw(){
 	*/
 	
 	glPopMatrix();
+	
 }
 
 void testApp::drawBlob(ofxCvBlob& blob) {

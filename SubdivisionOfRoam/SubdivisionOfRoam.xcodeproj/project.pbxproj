@@ -198,6 +198,7 @@
 		27A9C4C61290795E006DFC26 /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Particle.h; path = src/Particle.h; sourceTree = SOURCE_ROOT; };
 		27A9C4CF12907E9A006DFC26 /* MSAPerlin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MSAPerlin.cpp; path = ../../../../../msalibs/MSAPerlin/src/MSAPerlin.cpp; sourceTree = SOURCE_ROOT; };
 		27A9C4D012907E9A006DFC26 /* MSAPerlin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MSAPerlin.h; path = ../../../../../msalibs/MSAPerlin/src/MSAPerlin.h; sourceTree = SOURCE_ROOT; };
+		27A9C5FE1290EC01006DFC26 /* Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Animation.h; sourceTree = "<group>"; };
 		27CD95C6128B8C3500E5E841 /* ContourMatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContourMatcher.h; sourceTree = "<group>"; };
 		27CD9604128B982400E5E841 /* MSAInterpolationTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MSAInterpolationTypes.h; path = ../../../../../msalibs/MSAInterpolator/src/MSAInterpolationTypes.h; sourceTree = SOURCE_ROOT; };
 		27CD9605128B982400E5E841 /* MSAInterpolator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MSAInterpolator.h; path = ../../../../../msalibs/MSAInterpolator/src/MSAInterpolator.h; sourceTree = SOURCE_ROOT; };
@@ -1296,6 +1297,7 @@
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
 				27CD95C6128B8C3500E5E841 /* ContourMatcher.h */,
 				27CFA8C4129073A9005936DC /* ofxAutoControlPanel.h */,
+				27A9C5FE1290EC01006DFC26 /* Animation.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
