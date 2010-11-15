@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxVec3f.h"
+#include "ofxVectorMath.h"
 #include "MSAPerlin.h"
 
 #include "Animation.h"
@@ -44,6 +44,19 @@ public:
 		float frame = (ofGetElapsedTimef() - age) * animationFramerate;
 		glPushMatrix();
 		glTranslatef(position.x, position.y, position.z * animationDepthScale);
+		
+		/*
+		glBegin(GL_LINES);
+		glVertex3f(0, 0, 0);
+		float s = 100;
+		glVertex3f(velocity.x * s, velocity.y * s, velocity.z * s);
+		glEnd();
+		*/
+		
+		float angle = atan2f(velocity.y, velocity.x);
+		glRotatef(ofRadToDeg(angle), 0, 0, 1);
+		if(angle > PI / 2 || angle < -PI / 2)
+			glScalef(1, -1, 1);
 		glScalef(animationScale, animationScale, 1);
 		animation.draw(frame);
 		glPopMatrix();
