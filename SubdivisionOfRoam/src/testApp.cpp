@@ -1,15 +1,20 @@
 #include "testApp.h"
 
-// add an animationmanager that loads all the files
-// and associate an animation pointer with each bird
-
 void testApp::setup(){
 	ofSetFrameRate(120);
+	
+	ofImage img;
+	img.loadImage("person.png");
+	img.setImageType(OF_IMAGE_GRAYSCALE);
+	staticShadow.allocate(640, 480);
+	memcpy(staticShadow.getPixels(), img.getPixels(), 640 * 480);
+	staticShadow.invert();
+	staticShadow.flagImageChanged();
 	
 	ofSetLogLevel(OF_LOG_VERBOSE);
 
 	//vidPlayer.loadMovie("theo.mov");
-	vidPlayer.play();
+	//vidPlayer.play();
 	
 	colorImg.allocate(320, 240);
 	grayImage.allocate(320, 240);
@@ -47,9 +52,10 @@ void testApp::setup(){
 	panel.addSlider("neighborhood", "flockingNeighborhood", 200, 10, 1000);
 	
 	panel.addPanel("blob");
-	panel.addSlider("smoothing size", "blob.smoothingSize", 0, 0, 10, true);
-	panel.addSlider("smoothing amount", "blob.smoothingAmount", 0, 0, 1);
-	panel.addSlider("resample number", "blob.resampleNumber", 2, 2, 1000, true);
+	panel.addToggle("debug", "blobDebug", false);
+	panel.addSlider("smoothing size", "blobSmoothingSize", 0, 0, 10, true);
+	panel.addSlider("smoothing amount", "blobSmoothingAmount", 0, 0, 1);
+	panel.addSlider("resample number", "blobResampleNumber", 80, 2, 500, true);
 }
 
 void testApp::update() {
@@ -69,6 +75,7 @@ void testApp::update() {
 		Particle::updateAll();
 	}
 	
+	/*
 	bool bNewFrame = false;
 
 	vidPlayer.idleMovie();
@@ -89,6 +96,18 @@ void testApp::update() {
 
 		contourFinder.findContours(grayDiff, 20, (340*240) / 3, 10, false, true);
 	}
+	*/
+	
+	contourFinder.findContours(staticShadow, 50, 640 * 480 * .2, 8, true, true);
+	
+	ofPoint offset(-640 / 2, (ofGetHeight() / 2) - 480);
+	for(int i = 0; i < contourFinder.nBlobs; i++) {
+		ofxCvBlob& curBlob = contourFinder.blobs[i];
+		vector<ofPoint>& pts = curBlob.pts;
+		for(int j = 0; j < pts.size(); j++) {
+			pts[j] += offset;
+		}
+	}
 }
 
 
@@ -96,43 +115,52 @@ void testApp::draw(){
 	ofBackground(255, 255, 255);
 	
 	glPushMatrix();
-	
 	glColor4f(0, 0, 0, 1);
 	ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2);
 	Particle::drawAnimationAll();
 	
-	/*	
 	for (int i = 0; i < contourFinder.nBlobs; i++){
 		ofxCvBlob& curBlob = contourFinder.blobs[i];
 		
-		ofSetColor(255);
+		ofSetColor(0);
+		ofFill();
 		drawBlob(curBlob);
-		drawNormals(curBlob, 4);
 		
-		ofSetColor(0, 255, 0);
-		ofxCvBlob smoothed = curBlob;
-		ContourMatcher::smoothBlob(smoothed, panel.getValueI("smoothingSize"), panel.getValueF("smoothingAmount"));
-		drawBlob(smoothed);
-		drawNormals(smoothed, 4);
-		
-		ofSetColor(255, 0, 255);
-		ContourMatcher::resampleBlob(smoothed, panel.getValueI("resampleNumber"));
-		drawBlob(smoothed);
-		drawNormals(smoothed, 8);
+		if(panel.getValueB("blobDebug")) {
+			drawNormals(curBlob, 4);
+			
+			ofSetColor(0, 255, 0);
+			ofNoFill();
+			ofxCvBlob smoothed = curBlob;
+			ContourMatcher::smoothBlob(smoothed, panel.getValueI("blobSmoothingSize"), panel.getValueF("blobSmoothingAmount"));
+			drawBlob(smoothed);
+			drawNormals(smoothed, 4);
+			
+			ofSetColor(255, 0, 255);
+			ContourMatcher::resampleBlob(smoothed, panel.getValueI("blobResampleNumber"));
+			drawBlob(smoothed);
+			drawNormals(smoothed, 8);
+		}
 	}
-	*/
 	
 	glPopMatrix();
-	
 }
 
 void testApp::drawBlob(ofxCvBlob& blob) {
 	vector<ofPoint>& pts = blob.pts;
-	glBegin(GL_LINE_STRIP);
-	for(int i = 0; i < pts.size(); i++) {
-		glVertex2f(pts[i].x, pts[i].y);
+	if(ofGetFill() == OF_FILLED) {
+		ofBeginShape();
+		for(int i = 0; i < pts.size(); i++) {
+			ofVertex(pts[i].x, pts[i].y);
+		}
+		ofEndShape();
+	} else {
+		glBegin(GL_LINE_STRIP);
+		for(int i = 0; i < pts.size(); i++) {
+			glVertex2f(pts[i].x, pts[i].y);
+		}
+		glEnd();
 	}
-	glEnd();
 }
 
 void testApp::drawNormals(ofxCvBlob& blob, float length) {

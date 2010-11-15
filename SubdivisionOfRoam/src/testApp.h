@@ -33,7 +33,6 @@ public:
 	ofVideoPlayer vidPlayer;
 	
 	ofxCvColorImage colorImg;
-
 	ofxCvGrayscaleImage grayImage;
 	ofxCvGrayscaleImage grayBg;
 	ofxCvGrayscaleImage grayDiff;
@@ -44,4 +43,6 @@ public:
 	bool bLearnBakground;
 	
 	ofxAutoControlPanel panel;
+	
+	ofxCvGrayscaleImage staticShadow;
 };
