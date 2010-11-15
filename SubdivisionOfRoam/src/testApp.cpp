@@ -4,17 +4,46 @@ void testApp::setup(){
 	vidPlayer.loadMovie("theo.mov");
 	vidPlayer.play();
 	
-	colorImg.allocate(320,240);
-	grayImage.allocate(320,240);
-	grayBg.allocate(320,240);
-	grayDiff.allocate(320,240);
+	colorImg.allocate(320, 240);
+	grayImage.allocate(320, 240);
+	grayBg.allocate(320, 240);
+	grayDiff.allocate(320, 240);
 
 	bLearnBakground = true;
 	threshold = 80;
+	
+	Particle::setup();
+	
+	int n = 5000;
+	float radius = 250;
+	for(int i = 0; i < n; i++)
+		Particle::particles.push_back(Particle(radius));
+	
+	panel.setup("Control Panel", 0, 0, 300, 600);
+	panel.addPanel("flocking", 1);
+	panel.addSlider("size", "flockingSize", n, 1, 10000);
+	panel.addSlider("speed", "flockingSpeed", 1, 0, 10);
+	panel.addSlider("turbulence", "flockingTurbulence", 60, 1, 100);
+	panel.addSlider("spread", "flockingSpread", 80, 10, 100);
+	panel.addSlider("vsicosity", "flockingViscosity", .1, 0, 1);
+	panel.addSlider("independence", "flockingIndependence", .15, 0, 1);
+	panel.addSlider("neighborhood", "flockingNeighborhood", 700, 10, 1000);
+	
+	panel.addPanel("blob", 1);
+	panel.addSlider("smoothing size", "blob.smoothingSize", 0, 0, 10, true);
+	panel.addSlider("smoothing amount", "blob.smoothingAmount", 0, 0, 1);
+	panel.addSlider("resample number", "blob.resampleNumber", 2, 2, 1000, true);
 }
 
-void testApp::update(){
-	ofBackground(0);
+void testApp::update() {
+	Particle::setSize(panel.getValueI("flockingSize"), 250);
+	Particle::speed = panel.getValueF("flockingSpeed") * ofGetLastFrameTime() * 256;
+	Particle::spread = panel.getValueF("flockingSpread");
+	Particle::viscosity = panel.getValueF("flockingViscosity");
+	Particle::independence = panel.getValueF("flockingIndependence");
+	Particle::neighborhood = panel.getValueF("flockingNeighborhood");
+	Particle::turbulence = panel.getValueF("flockingTurbulence") * ofGetLastFrameTime();
+	Particle::updateAll();
 
 	bool bNewFrame = false;
 
@@ -40,35 +69,36 @@ void testApp::update(){
 
 
 void testApp::draw(){
-	ofScale(2, 2, 1);
+	ofBackground(255, 255, 255);
 	
-	ofSetColor(255);
-	colorImg.draw(0, 0);
-	/*
-	grayImage.draw(320,0);
-	grayBg.draw(0, 240);
-	grayDiff.draw(320, 240);
-	*/
+	glPushMatrix();
 	
+	glColor4f(0, 0, 0, 1);
+	ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2);
+	Particle::drawAll();
+	
+	/*	
 	for (int i = 0; i < contourFinder.nBlobs; i++){
 		ofxCvBlob& curBlob = contourFinder.blobs[i];
 		
-		/*ofSetColor(255);
-		drawBlob(curBlob);
-		drawNormals(curBlob, 4);*/
-		
 		ofSetColor(255);
+		drawBlob(curBlob);
+		drawNormals(curBlob, 4);
+		
+		ofSetColor(0, 255, 0);
 		ofxCvBlob smoothed = curBlob;
-		ContourMatcher::smoothBlob(smoothed, mouseY / 10, .5);
+		ContourMatcher::smoothBlob(smoothed, panel.getValueI("smoothingSize"), panel.getValueF("smoothingAmount"));
 		drawBlob(smoothed);
 		drawNormals(smoothed, 4);
 		
 		ofSetColor(255, 0, 255);
-		ContourMatcher::resampleBlob(smoothed, mouseX + 1);
+		ContourMatcher::resampleBlob(smoothed, panel.getValueI("resampleNumber"));
 		drawBlob(smoothed);
 		drawNormals(smoothed, 8);
-		
 	}
+	*/
+	
+	glPopMatrix();
 }
 
 void testApp::drawBlob(ofxCvBlob& blob) {

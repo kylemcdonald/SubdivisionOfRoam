@@ -1,12 +1,19 @@
 #pragma once
 
 #include "ofMain.h"
+
+// core addons
 #include "ofxVectorMath.h"
 #include "ofxOpenCv.h"
-#include "ofxControlPanel.h"
 #include "ofxFbo.h"
 
+// extra addons
+#include "ofxControlPanel.h" // https://github.com/ofTheo/ofxControlPanel
+#include "ofxLibdc.h" // https://github.com/kylemcdonald/ofxLibdc
+
+#include "ofxAutoControlPanel.h"
 #include "ContourMatcher.h"
+#include "Particle.h"
 
 class testApp : public ofBaseApp{
 public:
@@ -35,4 +42,6 @@ public:
 
 	int threshold;
 	bool bLearnBakground;
+	
+	ofxAutoControlPanel panel;
 };
