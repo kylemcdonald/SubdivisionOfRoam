@@ -1,7 +1,15 @@
 #include "testApp.h"
 
+// birds should have momentum and no awkward moments
+// render through 1920x1080 FBO
+
 void testApp::setup(){
 	ofSetFrameRate(120);
+	
+	camera.setPosition((752 - 640) / 2, 0);
+	camera.setFormat7(true);
+	camera.setup();
+	camera.setMaxFramerate();
 	
 	ofImage img;
 	img.loadImage("person.png");
@@ -10,6 +18,8 @@ void testApp::setup(){
 	memcpy(staticShadow.getPixels(), img.getPixels(), 640 * 480);
 	staticShadow.invert();
 	staticShadow.flagImageChanged();
+	
+	hole.setup("holes/hole.png");
 	
 	ofSetLogLevel(OF_LOG_VERBOSE);
 
@@ -36,8 +46,8 @@ void testApp::setup(){
 	panel.setXMLFilename("roamSettings.xml");
 	panel.setup("Control Panel", 5, 5, 300, 600);
 	panel.addPanel("animation");
-	panel.addSlider("base framerate", "animationBaseFramerate", 5, 0, 30);
-	panel.addSlider("velocity framerate", "animationVelocityFramerate", .5, 0, 1);
+	panel.addSlider("base framerate", "animationBaseFramerate", 5, 0, 60);
+	panel.addSlider("velocity framerate", "animationVelocityFramerate", .5, 0, 4);
 	panel.addSlider("scale", "animationScale", .15, 0, 2);
 	panel.addSlider("depth scale", "animationDepthScale", 2, 0, 10);
 	
@@ -55,7 +65,13 @@ void testApp::setup(){
 	panel.addToggle("debug", "blobDebug", false);
 	panel.addSlider("smoothing size", "blobSmoothingSize", 0, 0, 10, true);
 	panel.addSlider("smoothing amount", "blobSmoothingAmount", 0, 0, 1);
-	panel.addSlider("resample number", "blobResampleNumber", 80, 2, 500, true);
+	panel.addSlider("resample number", "blobResampleNumber", 100, 2, 500, true);
+	
+	panel.addDrawableRect("input", &curFrame, 200, 150);
+	
+	panel.addPanel("holes");
+	panel.addSlider("start", "holeStart", 0, 0, 400, true); // change to float
+	panel.addSlider("stop", "holeStop", 0, 0, 400, true); // change to float
 }
 
 void testApp::update() {
@@ -73,6 +89,10 @@ void testApp::update() {
 		Particle::neighborhood = panel.getValueF("flockingNeighborhood");
 		Particle::turbulence = panel.getValueF("flockingTurbulence") * ofGetLastFrameTime();
 		Particle::updateAll();
+	}
+	
+	if(camera.grabVideo(curFrame)) {
+		curFrame.update();
 	}
 	
 	/*
@@ -112,12 +132,16 @@ void testApp::update() {
 
 
 void testApp::draw(){
+	glDisable(GL_DEPTH_TEST);
+	
 	ofBackground(255, 255, 255);
 	
 	glPushMatrix();
-	glColor4f(0, 0, 0, 1);
 	ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2);
-	Particle::drawAnimationAll();
+	
+	if(!panel.getValueB("flockingEnable")) {
+		ofRotateY(mouseX);
+	}
 	
 	for (int i = 0; i < contourFinder.nBlobs; i++){
 		ofxCvBlob& curBlob = contourFinder.blobs[i];
@@ -125,6 +149,10 @@ void testApp::draw(){
 		ofSetColor(0);
 		ofFill();
 		drawBlob(curBlob);
+		
+		if(i == 0) {
+			hole.draw(curBlob, panel.getValueI("holeStart"), panel.getValueI("holeStop"));
+		}
 		
 		if(panel.getValueB("blobDebug")) {
 			drawNormals(curBlob, 4);
@@ -142,6 +170,8 @@ void testApp::draw(){
 			drawNormals(smoothed, 8);
 		}
 	}
+	
+	Particle::drawAnimationAll();
 	
 	glPopMatrix();
 }

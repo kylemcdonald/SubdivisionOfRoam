@@ -289,6 +289,7 @@
 		27E2E6D5128F34EB0018A8CC /* ofxDirList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxDirList.h; path = ../../../addons/ofxDirList/src/ofxDirList.h; sourceTree = SOURCE_ROOT; };
 		27E2E6DB128F389F0018A8CC /* ofxFbo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxFbo.cpp; path = ../../../addons/ofxFbo/src/ofxFbo.cpp; sourceTree = SOURCE_ROOT; };
 		27E2E6DC128F389F0018A8CC /* ofxFbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxFbo.h; path = ../../../addons/ofxFbo/src/ofxFbo.h; sourceTree = SOURCE_ROOT; };
+		27F6C8021291737B00E0D24A /* Hole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hole.h; sourceTree = "<group>"; };
 		E446664F0F5B3E03005D0BF0 /* cv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cv.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/cv.h; sourceTree = SOURCE_ROOT; };
 		E44666500F5B3E03005D0BF0 /* cv.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = cv.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/cv.hpp; sourceTree = SOURCE_ROOT; };
 		E44666510F5B3E03005D0BF0 /* cvaux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cvaux.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/cvaux.h; sourceTree = SOURCE_ROOT; };
@@ -1300,6 +1301,7 @@
 				27CFA8C4129073A9005936DC /* ofxAutoControlPanel.h */,
 				27A9C5FE1290EC01006DFC26 /* Animation.h */,
 				27DF102112914D28006E1E6B /* AnimationManager.h */,
+				27F6C8021291737B00E0D24A /* Hole.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;

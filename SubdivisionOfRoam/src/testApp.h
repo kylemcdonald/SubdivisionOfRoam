@@ -9,11 +9,12 @@
 
 // extra addons
 #include "ofxControlPanel.h" // https://github.com/ofTheo/ofxControlPanel
-#include "ofxLibdc.h" // https://github.com/kylemcdonald/ofxLibdc
+#include "ofxLibdcPtGrey.h" // https://github.com/kylemcdonald/ofxLibdc
 
 #include "ofxAutoControlPanel.h"
 #include "ContourMatcher.h"
 #include "Particle.h"
+#include "Hole.h"
 
 class testApp : public ofBaseApp{
 public:
@@ -30,6 +31,9 @@ public:
 	void drawBlob(ofxCvBlob& blob);
 	void drawNormals(ofxCvBlob& blob, float length);
 
+	ofxLibdcPtGrey camera;
+	ofImage curFrame;
+	
 	ofVideoPlayer vidPlayer;
 	
 	ofxCvColorImage colorImg;
@@ -45,4 +49,5 @@ public:
 	ofxAutoControlPanel panel;
 	
 	ofxCvGrayscaleImage staticShadow;
+	Hole hole;
 };
