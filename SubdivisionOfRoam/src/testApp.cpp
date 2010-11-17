@@ -17,6 +17,8 @@
 //	blob detection and normals
 //	attack state
 
+bool testApp::debug = false;
+
 void testApp::setup(){
 	ofSetFrameRate(120);
 	
@@ -59,6 +61,9 @@ void testApp::setup(){
 	
 	panel.setXMLFilename("roamSettings.xml");
 	panel.setup("Control Panel", 5, 5, 300, 600);
+	panel.addPanel("general");
+	panel.addToggle("debug", "debug", false);
+	
 	panel.addPanel("animation");
 	panel.addSlider("base framerate", "animationBaseFramerate", 5, 0, 60);
 	panel.addSlider("velocity framerate", "animationVelocityFramerate", .5, 0, 4);
@@ -76,7 +81,6 @@ void testApp::setup(){
 	panel.addSlider("neighborhood", "flockingNeighborhood", 200, 10, 1000);
 	
 	panel.addPanel("blob");
-	panel.addToggle("debug", "blobDebug", false);
 	panel.addSlider("smoothing size", "blobSmoothingSize", 0, 0, 10, true);
 	panel.addSlider("smoothing amount", "blobSmoothingAmount", 0, 0, 1);
 	panel.addSlider("resample number", "blobResampleNumber", 100, 2, 500, true);
@@ -91,6 +95,8 @@ void testApp::setup(){
 }
 
 void testApp::update() {
+	debug = panel.getValueB("debug");
+	
 	Particle::animationBaseFramerate = panel.getValueF("animationBaseFramerate");
 	Particle::animationVelocityFramerate = panel.getValueF("animationVelocityFramerate");
 	Particle::animationScale = panel.getValueF("animationScale");
@@ -167,8 +173,8 @@ void testApp::draw(){
 	glPushMatrix();
 	ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2);
 	
-	if(!panel.getValueB("flockingEnable")) {
-		ofRotateY(mouseX);
+	if(debug) {
+		ofRotateY(60 * sin(ofMap(mouseX, 0, ofGetWidth(), -HALF_PI, +HALF_PI)));
 	}
 	
 	for (int i = 0; i < contourFinder.nBlobs; i++){
@@ -182,7 +188,7 @@ void testApp::draw(){
 		holes[i].draw();
 	}
 	
-	if(panel.getValueB("blobDebug")) {
+	if(debug) {
 		for (int i = 0; i < contourFinder.nBlobs; i++){
 			ofxCvBlob& curBlob = contourFinder.blobs[i];
 		

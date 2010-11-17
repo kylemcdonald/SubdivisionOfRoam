@@ -18,6 +18,8 @@
 
 class testApp : public ofBaseApp{
 public:
+	static bool debug;
+	
 	void setup();
 	void update();
 	void draw();
