@@ -101,24 +101,6 @@ void testApp::setup(){
 void testApp::update() {
 	debug = panel.getValueB("debug");
 	
-	Particle::animationBaseFramerate = panel.getValueF("animationBaseFramerate");
-	Particle::animationVelocityFramerate = panel.getValueF("animationVelocityFramerate");
-	Particle::animationScale = panel.getValueF("animationScale");
-	Particle::animationDepthScale = panel.getValueF("animationDepthScale");
-	Particle::attackRange = panel.getValueF("attackingRange");
-	Particle::attackPrecision = panel.getValueF("attackingPrecision");
-	
-	if(panel.getValueB("flockingEnable")) {
-		Particle::setSize(panel.getValueI("flockingSize"), 250);
-		Particle::speed = panel.getValueF("flockingSpeed") * ofGetLastFrameTime() * 256;
-		Particle::spread = panel.getValueF("flockingSpread");
-		Particle::viscosity = panel.getValueF("flockingViscosity");
-		Particle::independence = panel.getValueF("flockingIndependence");
-		Particle::neighborhood = panel.getValueF("flockingNeighborhood");
-		Particle::turbulence = panel.getValueF("flockingTurbulence") * ofGetLastFrameTime();
-		Particle::updateAll();
-	}
-	
 	if(camera.grabVideo(curFrame)) {
 		curFrame.update();
 	}
@@ -146,17 +128,19 @@ void testApp::update() {
 	}
 	*/
 	
+	// update blobs
 	contourFinder.findContours(staticShadow, 50, 640 * 480 * .2, 8, true, true);
-	
-	ofPoint offset(-640 / 2, (ofGetHeight() / 2) - 480);
+	ofPoint offset(-camera.getWidth() / 2, (ofGetHeight() / 2) - camera.getHeight());
 	holes.clear();
 	for(int i = 0; i < contourFinder.nBlobs; i++) {
+		// offset blobs
 		ofxCvBlob& curBlob = contourFinder.blobs[i];
 		vector<ofPoint>& pts = curBlob.pts;
 		for(int j = 0; j < pts.size(); j++) {
 			pts[j] += offset;
 		}
 		
+		// generate random holes
 		if(panel.getValueB("holeRandomize")) {
 			ofSeedRandom(panel.getValueI("holeRandomSeed"));
 			for(int i = 0; i < panel.getValueI("holeCount"); i++) {
@@ -167,6 +151,33 @@ void testApp::update() {
 				holes.back().attach(curBlob, start, stop);
 			}
 		}
+	}
+	
+	// resample blobs
+	resampledBlobs = contourFinder.blobs;
+	for (int i = 0; i < resampledBlobs.size(); i++){
+		ofxCvBlob& curBlob = resampledBlobs[i];
+		ContourMatcher::smoothBlob(curBlob, panel.getValueI("blobSmoothingSize"), panel.getValueF("blobSmoothingAmount"));
+		ContourMatcher::resampleBlob(curBlob, panel.getValueI("blobResampleNumber"));
+	}
+	
+	// update particles
+	Particle::animationBaseFramerate = panel.getValueF("animationBaseFramerate");
+	Particle::animationVelocityFramerate = panel.getValueF("animationVelocityFramerate");
+	Particle::animationScale = panel.getValueF("animationScale");
+	Particle::animationDepthScale = panel.getValueF("animationDepthScale");
+	Particle::attackRange = panel.getValueF("attackingRange");
+	Particle::attackPrecision = panel.getValueF("attackingPrecision");
+	
+	if(panel.getValueB("flockingEnable")) {
+		Particle::setSize(panel.getValueI("flockingSize"), 250);
+		Particle::speed = panel.getValueF("flockingSpeed") * ofGetLastFrameTime() * 256;
+		Particle::spread = panel.getValueF("flockingSpread");
+		Particle::viscosity = panel.getValueF("flockingViscosity");
+		Particle::independence = panel.getValueF("flockingIndependence");
+		Particle::neighborhood = panel.getValueF("flockingNeighborhood");
+		Particle::turbulence = panel.getValueF("flockingTurbulence") * ofGetLastFrameTime();
+		Particle::updateAll();
 	}
 }
 
@@ -195,22 +206,16 @@ void testApp::draw(){
 	}
 	
 	if(debug) {
+		ofNoFill();
 		for (int i = 0; i < contourFinder.nBlobs; i++){
-			ofxCvBlob& curBlob = contourFinder.blobs[i];
-		
-			drawNormals(curBlob, 4);
-			
-			ofSetColor(0, 255, 0);
-			ofNoFill();
-			ofxCvBlob smoothed = curBlob;
-			ContourMatcher::smoothBlob(smoothed, panel.getValueI("blobSmoothingSize"), panel.getValueF("blobSmoothingAmount"));
-			drawBlob(smoothed);
-			drawNormals(smoothed, 4);
+			ofxCvBlob& cur = contourFinder.blobs[i];
+			ofSetColor(0);
+			drawNormals(cur, 4);
 			
 			ofSetColor(255, 0, 255);
-			ContourMatcher::resampleBlob(smoothed, panel.getValueI("blobResampleNumber"));
-			drawBlob(smoothed);
-			drawNormals(smoothed, 8);
+			cur = resampledBlobs[i];
+			drawBlob(cur);
+			drawNormals(cur, 8);
 		}
 	}
 	

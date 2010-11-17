@@ -97,5 +97,10 @@ public:
 		
 		target = position + velocity * attackRange;
 		attackMode = abs(target.z) < attackPrecision;
+		
+		// loop through resampled contours to see if there is really a target in range
+		// store that target and blob internally and draw a line to it
+		// store time that the attack starts
+		// use this for fading between attacking and flocking
   }
 };

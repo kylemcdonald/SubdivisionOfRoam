@@ -44,6 +44,7 @@ public:
 	ofxCvGrayscaleImage grayDiff;
 
 	ofxCvContourFinder contourFinder;
+	vector<ofxCvBlob> resampledBlobs;
 
 	int threshold;
 	bool bLearnBakground;

@@ -7,7 +7,6 @@ class ContourMatcher {
 public:
 	static void smoothBlobs(vector<ofxCvBlob>& blobs, int smoothingSize, float smoothingAmount) {
 		for(int i = 0; i < blobs.size(); i++) {
-			// should precompute weightSum, weights, and total normalization
 			smoothBlob(blobs[i], smoothingSize, smoothingAmount);
 		}
 	}
@@ -15,6 +14,7 @@ public:
 	static void smoothBlob(ofxCvBlob& blob, int smoothingSize, float smoothingAmount) {
 		vector<ofPoint> ref = blob.pts;
 		vector<ofPoint>& cur = blob.pts;
+		// should precompute weightSum, weights, and total normalization]
 		int n = cur.size();
 		for(int i = 0; i < n; i++) {
 			cur[i].set(0, 0);
@@ -43,6 +43,7 @@ public:
 		vector<ofPoint> resampled;
 		
 		/*
+		// alternate technique for evenly spaced samples
 		float totalLength = 0;
 		int curStep = 0;
 		for(int i = 0; i < pts.size() - 1; i++) {
@@ -61,13 +62,17 @@ public:
 				curStep++;
 			}
 		}
-		 */
+		*/
 		
 		MSA::Interpolator2D spline;
 		spline.setUseLength(true);
 		spline.reserve(pts.size());
 		for(int i = 0; i < pts.size(); i++) {
 			spline.push_back(MSA::Vec2f(pts[i].x, pts[i].y));
+		}
+		// loop back around
+		if(pts.size() > 0) {
+			spline.push_back(MSA::Vec2f(pts[0].x, pts[0].y));
 		}
 		for(int i = 0; i < spacing; i++) {
 			MSA::Vec2f interpolated = spline.sampleAt((float) i / spacing);
