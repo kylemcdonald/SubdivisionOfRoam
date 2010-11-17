@@ -29,7 +29,8 @@ AnimationManager
 
 float
 	Particle::attackRange,
-	Particle::attackPrecision;
+	Particle::attackPrecision,
+	Particle::attackDuration;
 
 void Particle::setup() {
 	perlin.setup(4, 1, .5, (int) ofRandom(0, 1000));
@@ -148,6 +149,7 @@ inline void Particle::update() {
 				if(dist < attackPrecision && (!attackMode || dist < bestDist)) {
 					bestDist = dist;
 					attackMode = true;
+					attackStarted = ofGetElapsedTimef();
 					target = pts[j];
 					targetPoint = j;
 					targetBlob = &cur;

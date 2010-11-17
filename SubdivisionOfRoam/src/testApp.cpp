@@ -46,16 +46,10 @@ void testApp::setup(){
 	
 	HoleManager::setup();
 
-	//vidPlayer.loadMovie("theo.mov");
-	//vidPlayer.play();
-	
-	colorImg.allocate(320, 240);
-	grayImage.allocate(320, 240);
-	grayBg.allocate(320, 240);
-	grayDiff.allocate(320, 240);
-
+	grayImage.allocate(camera.getWidth(), camera.getHeight());
+	grayBg.allocate(camera.getWidth(), camera.getHeight());
+	grayDiff.allocate(camera.getWidth(), camera.getHeight());
 	bLearnBakground = true;
-	threshold = 80;
 	
 	Particle::setup();
 	
@@ -67,7 +61,7 @@ void testApp::setup(){
 	ofEnableAlphaBlending();
 	
 	panel.setXMLFilename("roamSettings.xml");
-	panel.setup("Control Panel", 5, 5, 300, 600);
+	panel.setup("Control Panel", 5, 5, 300, 800);
 	panel.addPanel("general");
 	panel.addToggle("debug", "debug", true);
 	
@@ -90,14 +84,21 @@ void testApp::setup(){
 	panel.addPanel("attacking");
 	panel.addSlider("range", "attackingRange", 200, 10, 600);
 	panel.addSlider("precision", "attackingPrecision", 20, 1, 50);
+	panel.addSlider("duration", "attackingDuration", 1, 0, 3);
+	
+	panel.addPanel("input");
+	panel.addToggle("use live video", "blobUseLiveVideo", false);
+	panel.addToggle("reset background", "blobResetBackground", true);
+	panel.addSlider("threshold", "blobThreshold", 128, 0, 255, true);
+	panel.addDrawableRect("curFrame", &curFrame, 200, 150);
+	panel.addDrawableRect("background", &grayBg, 200, 150);
+	panel.addDrawableRect("difference", &grayDiff, 200, 150);
 	
 	panel.addPanel("blob");
 	panel.addSlider("sample rate", "blobSampleRate", 8, 1, 16, true);
 	panel.addSlider("smoothing size", "blobSmoothingSize", 0, 0, 10, true);
 	panel.addSlider("smoothing amount", "blobSmoothingAmount", 0, 0, 1);
-	panel.addSlider("resample number", "blobResampleNumber", 100, 2, 500, true);
-	
-	panel.addDrawableRect("input", &curFrame, 200, 150);
+	panel.addSlider("resample spacing", "blobResampleSpacing", 10, 1, 10);
 	
 	panel.addPanel("holes");
 	panel.addToggle("randomize", "holeRandomize", false);
@@ -111,33 +112,22 @@ void testApp::update() {
 	
 	if(camera.grabVideo(curFrame)) {
 		curFrame.update();
-	}
+		
+		memcpy(grayImage.getPixels(), curFrame.getPixels(), curFrame.getWidth() * curFrame.getHeight());
 	
-	/*
-	bool bNewFrame = false;
-
-	vidPlayer.idleMovie();
-	bNewFrame = vidPlayer.isFrameNew();
-	
-	if (bNewFrame){
-
-		colorImg.setFromPixels(vidPlayer.getPixels(), 320, 240);
-	
-		grayImage = colorImg;
-		if (bLearnBakground == true){
+		if(panel.getValueB("blobResetBackground")){
 			grayBg = grayImage;
-			bLearnBakground = false;
+			grayBg.flagImageChanged();
+			panel.setValueB("blobResetBackground", false);
 		}
 
 		grayDiff.absDiff(grayBg, grayImage);
-		grayDiff.threshold(threshold);
-
-		contourFinder.findContours(grayDiff, 20, (340*240) / 3, 10, false, true);
+		grayDiff.threshold(panel.getValueI("blobThreshold"));
+		grayDiff.flagImageChanged();
 	}
-	*/
 	
 	// update blobs
-	contourFinder.findContours(staticShadow, 50, 640 * 480 * .2, 8, true, true);
+	contourFinder.findContours(panel.getValueB("blobUseLiveVideo") ? grayDiff : staticShadow, 50, 640 * 480 * .2, 8, true, true);
 	ofPoint offset(-camera.getWidth() / 2, (ofGetHeight() / 2) - camera.getHeight());
 	if(panel.getValueB("holeRandomize")) {
 		holes.clear();
@@ -167,7 +157,7 @@ void testApp::update() {
 	for (int i = 0; i < resampledBlobs.size(); i++){
 		ofxCvBlob& curBlob = resampledBlobs[i];
 		ContourMatcher::smoothBlob(curBlob, panel.getValueI("blobSmoothingSize"), panel.getValueF("blobSmoothingAmount"));
-		ContourMatcher::resampleBlob(curBlob, panel.getValueI("blobSampleRate"), panel.getValueI("blobResampleNumber"));
+		ContourMatcher::resampleBlob(curBlob, panel.getValueI("blobSampleRate"), panel.getValueI("blobResampleSpacing"));
 	}
 	
 	// update particles
@@ -177,6 +167,7 @@ void testApp::update() {
 	Particle::animationDepthScale = panel.getValueF("animationDepthScale");
 	Particle::attackRange = panel.getValueF("attackingRange");
 	Particle::attackPrecision = panel.getValueF("attackingPrecision");
+	Particle::attackDuration = panel.getValueF("attackingDuration");
 	
 	if(panel.getValueB("flockingEnable")) {
 		Particle::setSize(panel.getValueI("flockingSize"), 250);
@@ -270,23 +261,7 @@ void testApp::keyPressed(int key){
 	switch (key){
 		case 'd':
 			panel.setValueB("debug", panel.getValueB("debug") ? false : true);
-		case ' ':
-			bLearnBakground = true;
-			break;
-		case '+':
-			threshold ++;
-			if (threshold > 255) threshold = 255;
-			break;
-		case '-':
-			threshold --;
-			if (threshold < 0) threshold = 0;
-			break;
-		case '[':
-			vidPlayer.setPaused(true);
-			break;
-		case ']':
-			vidPlayer.setPaused(false);
-			break;
+			
 	}
 }
 

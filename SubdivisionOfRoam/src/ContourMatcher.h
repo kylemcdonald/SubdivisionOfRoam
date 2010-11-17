@@ -42,7 +42,6 @@ public:
 		vector<ofPoint>& pts = blob.pts;
 		vector<ofPoint> resampled;
 		
-		/*
 		// alternate technique for evenly spaced samples
 		float totalLength = 0;
 		int curStep = 0;
@@ -62,8 +61,8 @@ public:
 				curStep++;
 			}
 		}
-		*/
 		
+		/*
 		// memo's interpolator is slowing things down...
 		// which is why i added sampleRate, so we do more with less here
 		
@@ -82,6 +81,7 @@ public:
 			MSA::Vec2f interpolated = spline.sampleAt((float) i / spacing);
 			resampled.push_back(ofPoint(interpolated.x, interpolated.y));
 		}
+		*/
 		
 		pts = resampled;
 	}

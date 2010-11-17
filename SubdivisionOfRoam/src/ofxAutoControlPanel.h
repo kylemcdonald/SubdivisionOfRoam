@@ -27,8 +27,10 @@ public:
 		if(event.key == '\t') {
 			if(hidden) {
 				show();
+				ofShowCursor();
 			} else {
 				hide();
+				ofHideCursor();
 			}
 		}
 	}

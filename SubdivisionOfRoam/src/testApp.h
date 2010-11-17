@@ -36,12 +36,7 @@ public:
 	ofxLibdcPtGrey camera;
 	ofImage curFrame;
 	
-	ofVideoPlayer vidPlayer;
-	
-	ofxCvColorImage colorImg;
-	ofxCvGrayscaleImage grayImage;
-	ofxCvGrayscaleImage grayBg;
-	ofxCvGrayscaleImage grayDiff;
+	ofxCvGrayscaleImage grayImage, grayBg, grayDiff;
 
 	static ofxCvContourFinder contourFinder;
 	static vector<ofxCvBlob> resampledBlobs;

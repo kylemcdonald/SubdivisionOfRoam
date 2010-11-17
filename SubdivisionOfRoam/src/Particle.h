@@ -22,7 +22,7 @@ public:
 	static float animationBaseFramerate, animationScale, animationDepthScale, animationVelocityFramerate;
 	static AnimationManager animationManager;
 	
-	static float attackRange, attackPrecision;
+	static float attackRange, attackPrecision, attackDuration;
 	
 	static vector<Particle> particles;
 	static void setup();
@@ -36,6 +36,7 @@ public:
   ofxVec3f position, velocity, force, localOffset, gaze, target;
 	Animation* animation;
 	bool attackMode;
+	float attackStarted;
 	Particle() {
 	}
   Particle(float radius) {
