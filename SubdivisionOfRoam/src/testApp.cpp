@@ -82,6 +82,7 @@ void testApp::setup(){
 	
 	panel.addPanel("attacking");
 	panel.addSlider("range", "attackingRange", 200, 10, 600);
+	panel.addSlider("precision", "attackingPrecision", 20, 1, 50);
 	
 	panel.addPanel("blob");
 	panel.addSlider("smoothing size", "blobSmoothingSize", 0, 0, 10, true);
@@ -105,6 +106,7 @@ void testApp::update() {
 	Particle::animationScale = panel.getValueF("animationScale");
 	Particle::animationDepthScale = panel.getValueF("animationDepthScale");
 	Particle::attackRange = panel.getValueF("attackingRange");
+	Particle::attackPrecision = panel.getValueF("attackingPrecision");
 	
 	if(panel.getValueB("flockingEnable")) {
 		Particle::setSize(panel.getValueI("flockingSize"), 250);

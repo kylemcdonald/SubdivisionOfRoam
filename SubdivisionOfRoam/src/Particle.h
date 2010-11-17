@@ -22,7 +22,7 @@ public:
 	static float animationBaseFramerate, animationScale, animationDepthScale, animationVelocityFramerate;
 	static AnimationManager animationManager;
 	
-	static float attackRange;
+	static float attackRange, attackPrecision;
 	
 	static vector<Particle> particles;
 	static void setup();
@@ -33,8 +33,9 @@ public:
 	static void setSize(int size, float radius);
 
 	float age;
-  ofxVec3f position, velocity, force, localOffset;
+  ofxVec3f position, velocity, force, localOffset, target;
 	Animation* animation;
+	bool attackMode;
 	Particle() {
 	}
   Particle(float radius) {
@@ -90,7 +91,11 @@ public:
 		applyCenteringForce();
     velocity += force; // mass = 1
     position += velocity * speed;
+		
 		age += ofGetLastFrameTime() * animationBaseFramerate;
 		age += velocity.length() * animationVelocityFramerate;
+		
+		target = position + velocity * attackRange;
+		attackMode = abs(target.z) < attackPrecision;
   }
 };

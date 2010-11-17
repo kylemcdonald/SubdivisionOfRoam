@@ -28,7 +28,8 @@ AnimationManager
 	Particle::animationManager;
 
 float
-	Particle::attackRange;
+	Particle::attackRange,
+	Particle::attackPrecision;
 
 void Particle::setup() {
 	perlin.setup(4, 1, .5, (int) ofRandom(0, 1000));
@@ -87,7 +88,10 @@ inline void Particle::drawAnimation() {
 	glTranslatef(position.x, position.y, position.z * animationDepthScale);
 	
 	if(testApp::debug) {
-		glColor4f(0, 1, 1, 1);
+		if(attackMode)
+			glColor4f(1, 0, 0, 1);
+		else
+			glColor4f(0, 1, 1, 1);
 		glBegin(GL_LINES);
 		glVertex3f(0, 0, 0);
 		ofxVec3f range = velocity * attackRange;
