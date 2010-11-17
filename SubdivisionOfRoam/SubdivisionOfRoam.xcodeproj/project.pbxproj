@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		273C3EB81293A2610068D40C /* HoleManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 273C3EB71293A2610068D40C /* HoleManager.cpp */; };
 		275FFDCE128A382E00DD0E3A /* ofxMatrix3x3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275FFDC1128A382E00DD0E3A /* ofxMatrix3x3.cpp */; };
 		275FFDCF128A382E00DD0E3A /* ofxMatrix4x4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275FFDC3128A382E00DD0E3A /* ofxMatrix4x4.cpp */; };
 		275FFDD0128A382E00DD0E3A /* ofxQuaternion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275FFDC8128A382E00DD0E3A /* ofxQuaternion.cpp */; };
@@ -127,6 +128,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		273C3EB61293A1E60068D40C /* HoleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HoleManager.h; sourceTree = "<group>"; };
+		273C3EB71293A2610068D40C /* HoleManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HoleManager.cpp; sourceTree = "<group>"; };
 		275FFDBF128A382E00DD0E3A /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = install.xml; path = ../../../addons/ofxVectorMath/install.xml; sourceTree = SOURCE_ROOT; };
 		275FFDC1128A382E00DD0E3A /* ofxMatrix3x3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxMatrix3x3.cpp; path = ../../../addons/ofxVectorMath/src/ofxMatrix3x3.cpp; sourceTree = SOURCE_ROOT; };
 		275FFDC2128A382E00DD0E3A /* ofxMatrix3x3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxMatrix3x3.h; path = ../../../addons/ofxVectorMath/src/ofxMatrix3x3.h; sourceTree = SOURCE_ROOT; };
@@ -1302,6 +1305,8 @@
 				27A9C5FE1290EC01006DFC26 /* Animation.h */,
 				27DF102112914D28006E1E6B /* AnimationManager.h */,
 				27F6C8021291737B00E0D24A /* Hole.h */,
+				273C3EB61293A1E60068D40C /* HoleManager.h */,
+				273C3EB71293A2610068D40C /* HoleManager.cpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1507,6 +1512,7 @@
 				27956E91128F470800596587 /* ofxLibdcPtGrey.cpp in Sources */,
 				27A9C4C71290795E006DFC26 /* Particle.cpp in Sources */,
 				27A9C4D112907E9A006DFC26 /* MSAPerlin.cpp in Sources */,
+				273C3EB81293A2610068D40C /* HoleManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

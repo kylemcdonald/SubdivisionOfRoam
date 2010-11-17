@@ -49,5 +49,5 @@ public:
 	ofxAutoControlPanel panel;
 	
 	ofxCvGrayscaleImage staticShadow;
-	Hole hole;
+	vector<Hole> holes;
 };

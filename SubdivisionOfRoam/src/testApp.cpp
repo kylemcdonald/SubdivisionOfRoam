@@ -1,7 +1,21 @@
 #include "testApp.h"
 
+// have birds attack
+// birds remove chunks
+// make it work with video
+// first pass of contour tracking as just using the same point number
+// add sounds
+// add feather explosions
+// render through 1920x1080 FBO + quad warping
+// threshold incoming video for proper camera-based interaction
 // birds should have momentum and no awkward moments
-// render through 1920x1080 FBO
+// shouldn't bite things touching the bottom of the screen
+
+// add debug mode to visualize what's going on
+//	birds trajectories
+//	rect outlines
+//	blob detection and normals
+//	attack state
 
 void testApp::setup(){
 	ofSetFrameRate(120);
@@ -12,14 +26,14 @@ void testApp::setup(){
 	camera.setMaxFramerate();
 	
 	ofImage img;
-	img.loadImage("person.png");
+	img.loadImage("people.png");
 	img.setImageType(OF_IMAGE_GRAYSCALE);
 	staticShadow.allocate(640, 480);
 	memcpy(staticShadow.getPixels(), img.getPixels(), 640 * 480);
 	staticShadow.invert();
 	staticShadow.flagImageChanged();
 	
-	hole.setup("holes/hole.png");
+	HoleManager::setup();
 	
 	ofSetLogLevel(OF_LOG_VERBOSE);
 
@@ -36,7 +50,7 @@ void testApp::setup(){
 	
 	Particle::setup();
 	
-	int n = 200;
+	int n = 500;
 	float radius = 250;
 	for(int i = 0; i < n; i++)
 		Particle::particles.push_back(Particle(radius));
@@ -56,7 +70,7 @@ void testApp::setup(){
 	panel.addSlider("size", "flockingSize", n, 1, 1000);
 	panel.addSlider("speed", "flockingSpeed", 1, 0, 10);
 	panel.addSlider("turbulence", "flockingTurbulence", 60, 1, 100);
-	panel.addSlider("spread", "flockingSpread", 40, 10, 100);
+	panel.addSlider("spread", "flockingSpread", 60, 10, 100);
 	panel.addSlider("viscosity", "flockingViscosity", .15, 0, 1);
 	panel.addSlider("independence", "flockingIndependence", .35, 0, 1);
 	panel.addSlider("neighborhood", "flockingNeighborhood", 200, 10, 1000);
@@ -70,8 +84,10 @@ void testApp::setup(){
 	panel.addDrawableRect("input", &curFrame, 200, 150);
 	
 	panel.addPanel("holes");
-	panel.addSlider("start", "holeStart", 0, 0, 400, true); // change to float
-	panel.addSlider("stop", "holeStop", 0, 0, 400, true); // change to float
+	panel.addToggle("randomize", "holeRandomize", false);
+	panel.addSlider("random seed", "holeRandomSeed", 0, 0, 1000, true);
+	panel.addSlider("count", "holeCount", 50, 0, 200);
+	panel.addSlider("max size", "holeMaxSize", 20, 0, 80);
 }
 
 void testApp::update() {
@@ -121,11 +137,23 @@ void testApp::update() {
 	contourFinder.findContours(staticShadow, 50, 640 * 480 * .2, 8, true, true);
 	
 	ofPoint offset(-640 / 2, (ofGetHeight() / 2) - 480);
+	holes.clear();
 	for(int i = 0; i < contourFinder.nBlobs; i++) {
 		ofxCvBlob& curBlob = contourFinder.blobs[i];
 		vector<ofPoint>& pts = curBlob.pts;
 		for(int j = 0; j < pts.size(); j++) {
 			pts[j] += offset;
+		}
+		
+		if(panel.getValueB("holeRandomize")) {
+			ofSeedRandom(panel.getValueI("holeRandomSeed"));
+			for(int i = 0; i < panel.getValueI("holeCount"); i++) {
+				int start = ofRandom(0, pts.size());
+				int stop = ofRandom(start, min((int) pts.size(), start + panel.getValueI("holeMaxSize")));
+				holes.push_back(Hole());
+				holes.back().setup();
+				holes.back().attach(curBlob, start, stop);
+			}
 		}
 	}
 }
@@ -145,16 +173,19 @@ void testApp::draw(){
 	
 	for (int i = 0; i < contourFinder.nBlobs; i++){
 		ofxCvBlob& curBlob = contourFinder.blobs[i];
-		
 		ofSetColor(0);
 		ofFill();
 		drawBlob(curBlob);
+	}
+	
+	for (int i = 0; i < holes.size(); i++){
+		holes[i].draw();
+	}
+	
+	if(panel.getValueB("blobDebug")) {
+		for (int i = 0; i < contourFinder.nBlobs; i++){
+			ofxCvBlob& curBlob = contourFinder.blobs[i];
 		
-		if(i == 0) {
-			hole.draw(curBlob, panel.getValueI("holeStart"), panel.getValueI("holeStop"));
-		}
-		
-		if(panel.getValueB("blobDebug")) {
 			drawNormals(curBlob, 4);
 			
 			ofSetColor(0, 255, 0);
