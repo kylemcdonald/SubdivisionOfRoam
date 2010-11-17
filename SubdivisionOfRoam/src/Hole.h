@@ -10,16 +10,14 @@ protected:
 public:
 	Hole() {
 	}
-	void setup() {
+	void setup(ofxCvBlob& blob, int start, int stop) {
 		img = HoleManager::randomHoleImage();
-	}
-	void attach(ofxCvBlob& blob, int start, int stop) {
 		this->blob = &blob;
 		this->start = start;
 		this->stop = stop;
 	}
 	void draw() {
-		if(start < stop) {
+		if(start < stop) {			
 			glColor4f(1, 0, 0, 1);
 			vector<ofPoint>& points = blob->pts;
 			

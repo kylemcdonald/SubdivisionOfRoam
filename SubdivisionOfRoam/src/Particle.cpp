@@ -85,20 +85,29 @@ void Particle::setSize(int size, float radius) {
 
 inline void Particle::drawAnimation() {
 	glPushMatrix();
-	glTranslatef(position.x, position.y, position.z * animationDepthScale);
+	glScalef(1, 1, animationDepthScale);
 	
 	if(testApp::debug) {
-		if(attackMode)
-			glColor4f(1, 0, 0, 1);
-		else
-			glColor4f(0, 1, 1, 1);
-		glBegin(GL_LINES);
-		glVertex3f(0, 0, 0);
-		ofxVec3f range = velocity * attackRange;
-		glVertex3fv(range.v);
-		glEnd();
+		glPushMatrix();
+		if(attackMode) {
+			glColor4f(1, 1, 0, 1);
+			glBegin(GL_LINE_STRIP);
+			glVertex3fv(position.v);
+			glVertex3fv(gaze.v);
+			glVertex3fv(target.v);
+			glEnd();
+		} else {
+			glColor4f(.8, .4, 0, .5);
+			glBegin(GL_LINES);
+			glVertex3fv(position.v);
+			glVertex3fv(gaze.v);
+			glEnd();
+		}
+		glPopMatrix();
 	}
-	
+
+	glPushMatrix();
+	glTranslatef(position.x, position.y, position.z);
 	float angle = atan2f(velocity.y, velocity.x);
 	glRotatef(ofRadToDeg(angle), 0, 0, 1);
 	if(angle > PI / 2 || angle < -PI / 2)
@@ -108,4 +117,57 @@ inline void Particle::drawAnimation() {
 	glColor4f(1, 1, 1, 1);
 	animation->draw(age);
 	glPopMatrix();
+	
+	glPopMatrix();
+}
+
+inline void Particle::update() {
+	force.set(0, 0, 0);
+	applyFlockingForce();
+	applyViscosityForce();
+	applyCenteringForce();
+	velocity += force; // mass = 1
+	position += velocity * speed;
+	
+	age += ofGetLastFrameTime() * animationBaseFramerate;
+	age += velocity.length() * animationVelocityFramerate;
+	
+	gaze = position + velocity * attackRange;
+	
+	attackMode = false;
+	ofxCvBlob* targetBlob;
+	int targetPoint;
+	if(abs(gaze.z) < attackPrecision) { // ignore anything too far from z = 0
+		vector<ofxCvBlob>& blobs = testApp::resampledBlobs;
+		float bestDist = 0;
+		for(int i = 0; i < blobs.size(); i++) {
+			ofxCvBlob& cur = blobs[i];
+			vector<ofPoint>& pts = cur.pts;
+			for(int j = 0; j < pts.size(); j++) {
+				float dist = gaze.distance(pts[j]);
+				if(dist < attackPrecision && (!attackMode || dist < bestDist)) {
+					bestDist = dist;
+					attackMode = true;
+					target = pts[j];
+					targetPoint = j;
+					targetBlob = &cur;
+				}
+			}
+		}
+	}
+	
+	// instead of just attacking, we need to lerp into an attack,
+	// bring up the animation + sounds, and fade the motion
+	if(attackMode == true) {
+		// doesn't work with holes on the loop boundary
+		int bit = 5;
+		testApp::holes.push_back(Hole());
+		// need to map targetPoint back onto targetBlob
+		// how do we keep there from being too many holes?
+		// holes need to disappear over time
+		//testApp::holes.back().setup(*targetBlob, targetPoint - bit, targetPoint + bit);
+	}
+	
+	// store time that the attack starts
+	// use this for fading between attacking and flocking
 }

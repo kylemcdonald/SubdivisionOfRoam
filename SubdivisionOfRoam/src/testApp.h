@@ -43,8 +43,8 @@ public:
 	ofxCvGrayscaleImage grayBg;
 	ofxCvGrayscaleImage grayDiff;
 
-	ofxCvContourFinder contourFinder;
-	vector<ofxCvBlob> resampledBlobs;
+	static ofxCvContourFinder contourFinder;
+	static vector<ofxCvBlob> resampledBlobs;
 
 	int threshold;
 	bool bLearnBakground;
@@ -52,5 +52,7 @@ public:
 	ofxAutoControlPanel panel;
 	
 	ofxCvGrayscaleImage staticShadow;
-	vector<Hole> holes;
+	static vector<Hole> holes;
+	
+	ofSoundPlayer ambience;
 };

@@ -3,7 +3,10 @@
 // have birds attack
 // birds remove chunks
 // make it work with video
-// first pass of contour tracking as just using the same point number
+// first pass of contour tracking as just using the same point number...
+//	same point number doesn't account for blob intersection/splitting
+//	instead just rely on nearest point. there will be some drifting
+//	but perhaps we can throw some box2d springs in to keep things at the right distances?
 // add sounds
 // add feather explosions
 // render through 1920x1080 FBO + quad warping
@@ -12,15 +15,21 @@
 // shouldn't bite things touching the bottom of the screen
 
 // debug visualization:
-//	birds trajectories
 //	rect outlines
 //	blob detection and normals
 //	attack state
 
 bool testApp::debug = false;
+ofxCvContourFinder testApp::contourFinder;
+vector<ofxCvBlob> testApp::resampledBlobs;
+vector<Hole> testApp::holes;
 
 void testApp::setup(){
 	ofSetFrameRate(120);
+	ofSetLogLevel(OF_LOG_VERBOSE);
+	
+	ambience.loadSound("sound/ambience/Amb1.aif");
+	ambience.play();
 	
 	camera.setPosition((752 - 640) / 2, 0);
 	camera.setFormat7(true);
@@ -36,8 +45,6 @@ void testApp::setup(){
 	staticShadow.flagImageChanged();
 	
 	HoleManager::setup();
-	
-	ofSetLogLevel(OF_LOG_VERBOSE);
 
 	//vidPlayer.loadMovie("theo.mov");
 	//vidPlayer.play();
@@ -85,6 +92,7 @@ void testApp::setup(){
 	panel.addSlider("precision", "attackingPrecision", 20, 1, 50);
 	
 	panel.addPanel("blob");
+	panel.addSlider("sample rate", "blobSampleRate", 8, 1, 16, true);
 	panel.addSlider("smoothing size", "blobSmoothingSize", 0, 0, 10, true);
 	panel.addSlider("smoothing amount", "blobSmoothingAmount", 0, 0, 1);
 	panel.addSlider("resample number", "blobResampleNumber", 100, 2, 500, true);
@@ -131,7 +139,9 @@ void testApp::update() {
 	// update blobs
 	contourFinder.findContours(staticShadow, 50, 640 * 480 * .2, 8, true, true);
 	ofPoint offset(-camera.getWidth() / 2, (ofGetHeight() / 2) - camera.getHeight());
-	holes.clear();
+	if(panel.getValueB("holeRandomize")) {
+		holes.clear();
+	}
 	for(int i = 0; i < contourFinder.nBlobs; i++) {
 		// offset blobs
 		ofxCvBlob& curBlob = contourFinder.blobs[i];
@@ -147,8 +157,7 @@ void testApp::update() {
 				int start = ofRandom(0, pts.size());
 				int stop = ofRandom(start, min((int) pts.size(), start + panel.getValueI("holeMaxSize")));
 				holes.push_back(Hole());
-				holes.back().setup();
-				holes.back().attach(curBlob, start, stop);
+				holes.back().setup(curBlob, start, stop);
 			}
 		}
 	}
@@ -158,7 +167,7 @@ void testApp::update() {
 	for (int i = 0; i < resampledBlobs.size(); i++){
 		ofxCvBlob& curBlob = resampledBlobs[i];
 		ContourMatcher::smoothBlob(curBlob, panel.getValueI("blobSmoothingSize"), panel.getValueF("blobSmoothingAmount"));
-		ContourMatcher::resampleBlob(curBlob, panel.getValueI("blobResampleNumber"));
+		ContourMatcher::resampleBlob(curBlob, panel.getValueI("blobSampleRate"), panel.getValueI("blobResampleNumber"));
 	}
 	
 	// update particles
@@ -192,6 +201,7 @@ void testApp::draw(){
 	
 	if(debug) {
 		ofRotateY(60 * sin(ofMap(mouseX, 0, ofGetWidth(), -HALF_PI, +HALF_PI)));
+		ofRotateX(30 * sin(ofMap(mouseY, ofGetHeight(), 0, -HALF_PI, +HALF_PI)));
 	}
 	
 	for (int i = 0; i < contourFinder.nBlobs; i++){

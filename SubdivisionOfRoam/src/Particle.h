@@ -33,7 +33,7 @@ public:
 	static void setSize(int size, float radius);
 
 	float age;
-  ofxVec3f position, velocity, force, localOffset, target;
+  ofxVec3f position, velocity, force, localOffset, gaze, target;
 	Animation* animation;
 	bool attackMode;
 	Particle() {
@@ -84,23 +84,5 @@ public:
     centeringForce *= -distanceToCenter / (spread * spread);
     force += centeringForce;
   }
-  inline void update() {
-    force.set(0, 0, 0);
-    applyFlockingForce();
-    applyViscosityForce();
-		applyCenteringForce();
-    velocity += force; // mass = 1
-    position += velocity * speed;
-		
-		age += ofGetLastFrameTime() * animationBaseFramerate;
-		age += velocity.length() * animationVelocityFramerate;
-		
-		target = position + velocity * attackRange;
-		attackMode = abs(target.z) < attackPrecision;
-		
-		// loop through resampled contours to see if there is really a target in range
-		// store that target and blob internally and draw a line to it
-		// store time that the attack starts
-		// use this for fading between attacking and flocking
-  }
+  void update();
 };

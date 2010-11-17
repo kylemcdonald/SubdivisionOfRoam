@@ -38,7 +38,7 @@ public:
 		// or the bounding box
 	}
 	
-	static void resampleBlob(ofxCvBlob& blob, float spacing) {
+	static void resampleBlob(ofxCvBlob& blob, int sampleRate, float spacing) {
 		vector<ofPoint>& pts = blob.pts;
 		vector<ofPoint> resampled;
 		
@@ -64,17 +64,21 @@ public:
 		}
 		*/
 		
+		// memo's interpolator is slowing things down...
+		// which is why i added sampleRate, so we do more with less here
+		
 		MSA::Interpolator2D spline;
 		spline.setUseLength(true);
 		spline.reserve(pts.size());
-		for(int i = 0; i < pts.size(); i++) {
+		int i;
+		for(i = 0; i < pts.size(); i += sampleRate) {
 			spline.push_back(MSA::Vec2f(pts[i].x, pts[i].y));
 		}
-		// loop back around
-		if(pts.size() > 0) {
+		// loop back around if we got to the beginning
+		if(pts.size() > 0 && i == pts.size()) {
 			spline.push_back(MSA::Vec2f(pts[0].x, pts[0].y));
 		}
-		for(int i = 0; i < spacing; i++) {
+		for(i = 0; i < spacing; i++) {
 			MSA::Vec2f interpolated = spline.sampleAt((float) i / spacing);
 			resampled.push_back(ofPoint(interpolated.x, interpolated.y));
 		}
