@@ -27,6 +27,9 @@ float
 AnimationManager
 	Particle::animationManager;
 
+float
+	Particle::attackRange;
+
 void Particle::setup() {
 	perlin.setup(4, 1, .5, (int) ofRandom(0, 1000));
 	globalOffset.set(0, 1. / 3, 2. / 3);
@@ -77,4 +80,28 @@ void Particle::setSize(int size, float radius) {
 	if(particles.size() > size) {
 		particles.resize(size);
 	}
+}
+
+inline void Particle::drawAnimation() {
+	glPushMatrix();
+	glTranslatef(position.x, position.y, position.z * animationDepthScale);
+	
+	if(testApp::debug) {
+		glColor4f(0, 1, 1, 1);
+		glBegin(GL_LINES);
+		glVertex3f(0, 0, 0);
+		ofxVec3f range = velocity * attackRange;
+		glVertex3fv(range.v);
+		glEnd();
+	}
+	
+	float angle = atan2f(velocity.y, velocity.x);
+	glRotatef(ofRadToDeg(angle), 0, 0, 1);
+	if(angle > PI / 2 || angle < -PI / 2)
+		glScalef(1, -1, 1);
+	glScalef(animationScale, animationScale, 1);
+	
+	glColor4f(1, 1, 1, 1);
+	animation->draw(age);
+	glPopMatrix();
 }

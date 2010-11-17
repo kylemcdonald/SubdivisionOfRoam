@@ -11,7 +11,7 @@
 // birds should have momentum and no awkward moments
 // shouldn't bite things touching the bottom of the screen
 
-// add debug mode to visualize what's going on
+// debug visualization:
 //	birds trajectories
 //	rect outlines
 //	blob detection and normals
@@ -62,7 +62,7 @@ void testApp::setup(){
 	panel.setXMLFilename("roamSettings.xml");
 	panel.setup("Control Panel", 5, 5, 300, 600);
 	panel.addPanel("general");
-	panel.addToggle("debug", "debug", false);
+	panel.addToggle("debug", "debug", true);
 	
 	panel.addPanel("animation");
 	panel.addSlider("base framerate", "animationBaseFramerate", 5, 0, 60);
@@ -79,6 +79,9 @@ void testApp::setup(){
 	panel.addSlider("viscosity", "flockingViscosity", .15, 0, 1);
 	panel.addSlider("independence", "flockingIndependence", .35, 0, 1);
 	panel.addSlider("neighborhood", "flockingNeighborhood", 200, 10, 1000);
+	
+	panel.addPanel("attacking");
+	panel.addSlider("range", "attackingRange", 200, 10, 600);
 	
 	panel.addPanel("blob");
 	panel.addSlider("smoothing size", "blobSmoothingSize", 0, 0, 10, true);
@@ -101,6 +104,7 @@ void testApp::update() {
 	Particle::animationVelocityFramerate = panel.getValueF("animationVelocityFramerate");
 	Particle::animationScale = panel.getValueF("animationScale");
 	Particle::animationDepthScale = panel.getValueF("animationDepthScale");
+	Particle::attackRange = panel.getValueF("attackingRange");
 	
 	if(panel.getValueB("flockingEnable")) {
 		Particle::setSize(panel.getValueI("flockingSize"), 250);
@@ -247,6 +251,8 @@ void testApp::drawNormals(ofxCvBlob& blob, float length) {
 
 void testApp::keyPressed(int key){
 	switch (key){
+		case 'd':
+			panel.setValueB("debug", panel.getValueB("debug") ? false : true);
 		case ' ':
 			bLearnBakground = true;
 			break;
