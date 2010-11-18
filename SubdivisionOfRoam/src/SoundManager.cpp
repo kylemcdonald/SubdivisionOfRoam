@@ -46,3 +46,21 @@ void SoundManager::randomSquawking() {
 void SoundManager::randomRipping() {
 	randomPlay(ripping);
 }
+
+void SoundManager::setVolume(vector<ofSoundPlayer*>& players, float volume) {
+	for(int i = 0; i < players.size(); i++) {
+		players[i]->setVolume(volume);
+	}
+}
+
+void SoundManager::setFlappingVolume(float volume) {
+	setVolume(flapping, volume);
+}
+
+void SoundManager::setSquawkingVolume(float volume) {
+	setVolume(squawking, volume);
+}
+
+void SoundManager::setRippingVolume(float volume) {
+	setVolume(ripping, volume);
+}

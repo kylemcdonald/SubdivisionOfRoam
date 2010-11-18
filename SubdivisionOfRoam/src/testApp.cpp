@@ -1,16 +1,16 @@
 #include "testApp.h"
 
-// add sounds
-// add turnarounds
-// lens blur (gaussian)
 // add feather explosions
+// make sure holes disappear
+// birds need to not come beneath the overhead unless they are attacking
+// lens blur (gaussian)
+// add turnarounds
 // birds need to wait when people come in to attack them
 
 // scale people to take up entire left/right space
 // allow birds to spread vertically more than horizontally
 // gravity should exist...?
 // animate neighborhood and independence values
-// slight sinusoidal displacement for flapping
 // motion blur
 // noise in animation playback
 // shouldn't bite things touching the bottom of the screen
@@ -70,9 +70,14 @@ void testApp::setupControlPanel() {
 	panel.setup("Control Panel", 5, 5, 300, 800);
 	panel.addPanel("general");
 	panel.addToggle("debug", "debug", true);
+	panel.addToggle("flip orientation", "flipOrientation", false);
 	
 	panel.addPanel("sound");
 	panel.addToggle("enable", "soundEnable", false);
+	panel.addSlider("flapping volume", "soundFlappingVolume", 1, 0, 1);
+	panel.addSlider("squawking volume", "soundSquawkingVolume", 1, 0, 1);
+	panel.addSlider("ripping volume", "soundRippingVolume", 1, 0, 1);
+	// density control
 	
 	panel.addPanel("animation");
 	panel.addSlider("base framerate", "animationBaseFramerate", 1, 0, 40);
@@ -143,6 +148,28 @@ void testApp::setupControlPanel() {
 void testApp::update() {		
 	debug = panel.getValueB("debug");
 	
+	if(panel.hasValueChanged("soundFlappingVolume")) {
+		SoundManager::setFlappingVolume(panel.getValueF("soundFlappingVolume"));
+	}
+	if(panel.hasValueChanged("soundSquawkingVolume")) {
+		SoundManager::setSquawkingVolume(panel.getValueF("soundSquawkingVolume"));
+	}
+	if(panel.hasValueChanged("soundRippingVolume")) {
+		SoundManager::setRippingVolume(panel.getValueF("soundRippingVolume"));
+	}
+	
+	if(panel.getValueB("flipOrientation")) {
+		panel.setValueF("warpNwx", 1);
+		panel.setValueF("warpNwy", 0);
+		panel.setValueF("warpNex", 1);
+		panel.setValueF("warpNey", 1);
+		panel.setValueF("warpSex", 0);
+		panel.setValueF("warpSey", 1);
+		panel.setValueF("warpSwx", 0);
+		panel.setValueF("warpSwy", 0);
+		panel.setValueB("flipOrientation", false);
+	}
+	
 	if(camera.grabVideo(curFrame)) {
 		curFrame.update();
 		
@@ -204,6 +231,8 @@ void testApp::update() {
 		Particle::turbulence = panel.getValueF("flockingTurbulence") * ofGetLastFrameTime();
 		Particle::updateAll();
 	}
+		 
+	panel.clearAllChanged();
 }
 
 
