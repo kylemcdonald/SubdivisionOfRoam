@@ -1,6 +1,6 @@
 #include "testApp.h"
 
-// have birds attack
+// add attack animation
 // birds remove chunks
 // first pass of contour tracking: nearest point (i.e., age-based-ish)
 // add sounds
@@ -9,10 +9,12 @@
 // shouldn't bite things touching the bottom of the screen
 // noise in animation playback
 // sinusoidal displacement for flapping
+// flap primarily when moving upwards, not downwards
 // motion blur? more importantly: lens blur (gaussian)
 // distort birds as they fly with warping the textures? makes them sketchier
 // manual controls for camera shutter, etc.
 // birds need to wait when people come in to attack them
+// allow birds to spread vertically more than horizontally
 
 // animate neighborhood and independence values
 
@@ -57,7 +59,7 @@ void testApp::setup(){
 }
 
 void testApp::setupControlPanel() {	
-	int n = 1;
+	int n = 500;
 	float radius = 250;
 	for(int i = 0; i < n; i++)
 		Particle::particles.push_back(Particle(radius));
@@ -315,7 +317,9 @@ void testApp::keyPressed(int key){
 			ofToggleFullscreen();
 			break;	
 		case 'a':
-			Particle::particles[0].attackAtRandom();
+			for(int i = 0; i < Particle::particles.size(); i++)
+				Particle::particles[i].attackAtRandom();
+			break;
 	}
 }
 

@@ -150,10 +150,6 @@ inline void Particle::update() {
 	
 	gaze = position + velocity * attackRange;
 	
-	/*
-	attackMode = false;
-	ofxCvBlob* targetBlob;
-	int targetPoint;
 	if(abs(gaze.z) < attackPrecision) { // ignore anything too far from z = 0
 		vector<ofxCvBlob>& blobs = testApp::resampledBlobs;
 		float bestDist = 0;
@@ -164,16 +160,17 @@ inline void Particle::update() {
 				float dist = gaze.distance(pts[j]);
 				if(dist < attackPrecision && (!attackMode || dist < bestDist)) {
 					bestDist = dist;
+					
 					attackMode = true;
 					attackStarted = ofGetElapsedTimef();
-					target = pts[j];
-					targetPoint = j;
-					targetBlob = &cur;
+					attackStartingPoint = position;
+					attackTarget = pts[j];
 				}
 			}
 		}
 	}
 	
+	/*
 	// instead of just attacking, we need to lerp into an attack,
 	// bring up the animation + sounds, and fade the motion	
 	if(attackMode == true) {
