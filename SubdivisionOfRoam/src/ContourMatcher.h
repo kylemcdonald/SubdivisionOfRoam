@@ -85,4 +85,27 @@ public:
 		
 		pts = resampled;
 	}
+	
+	static void getNearestPoint(ofxCvBlob& blob, ofxVec2f search, ofPoint& point, float& distance) {
+		vector<ofPoint>& pts = blob.pts;
+		for(int i = 0; i < pts.size(); i++) {
+			float curDistance = search.distance(pts[i]);
+			if(i == 0 || curDistance < distance) {
+				distance = curDistance;
+				point = pts[i];
+			}
+		}
+	}
+	
+	static void getNearestPoint(vector<ofxCvBlob>& blobs, ofxVec2f search, ofPoint& point, float& distance) {
+		for(int i = 0; i < blobs.size(); i++) {
+			ofPoint curPoint;
+			float curDistance;
+			getNearestPoint(blobs[i], search, curPoint, curDistance);
+			if(i == 0 || curDistance < distance) {
+				distance = curDistance;
+				point = curPoint;
+			}
+		}
+	}
 };

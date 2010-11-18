@@ -9,8 +9,9 @@
 // add feather explosions
 // birds need to wait when people come in to attack them
 
+// scale people to take up entire left/right space
 // allow birds to spread vertically more than horizontally
-// gravity should exist
+// gravity should exist...
 // animate neighborhood and independence values
 // slight sinusoidal displacement for flapping
 // motion blur
@@ -111,9 +112,6 @@ void testApp::setupControlPanel() {
 	panel.addSlider("resample spacing", "blobResampleSpacing", 10, 1, 10);
 	
 	panel.addPanel("holes");
-	panel.addToggle("randomize", "holeRandomize", false);
-	panel.addSlider("random seed", "holeRandomSeed", 0, 0, 1000, true);
-	panel.addSlider("count", "holeCount", 50, 0, 200);
 	panel.addSlider("max size", "holeMaxSize", 20, 0, 80);
 	
 	panel.addPanel("warp");
@@ -161,10 +159,7 @@ void testApp::update() {
 	
 	// update blobs
 	contourFinder.findContours(panel.getValueB("blobUseLiveVideo") ? grayDiff : staticShadow, 50, 640 * 480 * .2, 8, true, true);
-	ofPoint offset(-camera.getWidth() / 2, (targetHeight/ 2) - camera.getHeight()); // change this line. also, scale l/r
-	if(panel.getValueB("holeRandomize")) {
-		holes.clear();
-	}
+	ofPoint offset(-camera.getWidth() / 2, (targetHeight/ 2) - camera.getHeight());
 	for(int i = 0; i < contourFinder.nBlobs; i++) {
 		// offset blobs
 		ofxCvBlob& curBlob = contourFinder.blobs[i];
@@ -172,17 +167,11 @@ void testApp::update() {
 		for(int j = 0; j < pts.size(); j++) {
 			pts[j] += offset;
 		}
-		
-		// generate random holes
-		if(panel.getValueB("holeRandomize")) {
-			ofSeedRandom(panel.getValueI("holeRandomSeed"));
-			for(int i = 0; i < panel.getValueI("holeCount"); i++) {
-				int start = ofRandom(0, pts.size());
-				int stop = ofRandom(start, min((int) pts.size(), start + panel.getValueI("holeMaxSize")));
-				holes.push_back(Hole());
-				holes.back().setup(curBlob, start, stop);
-			}
-		}
+	}
+	
+	// update holes
+	for(int i = 0; i < holes.size(); i++) {
+		holes[i].update();
 	}
 	
 	// resample blobs

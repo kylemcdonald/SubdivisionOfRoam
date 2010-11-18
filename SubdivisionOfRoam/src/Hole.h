@@ -1,22 +1,26 @@
 #pragma once
 
+#include "testApp.h"
 #include "HoleManager.h"
 
 class Hole {
 protected:
 	ofImage* img;
+	ofxVec2f position;
+	
 	ofxCvBlob* blob;
 	int start, stop;
 public:
 	Hole() {
 	}
-	void setup(ofxCvBlob& blob, int start, int stop) {
+	void setup(ofxVec2f position) {
 		img = HoleManager::randomHoleImage();
-		this->blob = &blob;
-		this->start = start;
-		this->stop = stop;
+		this->position = position;
+	}
+	void update() {
 	}
 	void draw() {
+		/*
 		if(start < stop) {			
 			glColor4f(1, 0, 0, 1);
 			vector<ofPoint>& points = blob->pts;
@@ -41,5 +45,6 @@ public:
 			img->draw(0, 0);			
 			glPopMatrix();
 		}
+		 */
 	}
 };

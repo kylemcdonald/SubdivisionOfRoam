@@ -173,6 +173,11 @@ inline void Particle::beginAttack(ofPoint& target) {
 
 inline void Particle::endAttack() {
 	attackMode = false;
+	
+	testApp::holes.push_back(Hole());
+	testApp::holes.back().setup(position);
+	
+	cout << testApp::holes.size() << " ";
 }
 
 inline void Particle::checkForAttack() {
@@ -191,19 +196,4 @@ inline void Particle::checkForAttack() {
 			}
 		}
 	}
-	
-	/*
-	// instead of just attacking, we need to lerp into an attack,
-	// bring up the animation + sounds, and fade the motion	
-	if(attackMode == true) {
-		cout << "just attacked person" << endl;
-		// doesn't work with holes on the loop boundary
-		int bit = 5;
-		testApp::holes.push_back(Hole());
-		// need to map targetPoint back onto targetBlob
-		// how do we keep there from being too many holes?
-		// holes need to disappear over time
-		testApp::holes.back().setup(*targetBlob, targetPoint - bit, targetPoint + bit);
-	}
-	 */
 }
