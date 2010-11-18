@@ -23,6 +23,7 @@ float
 	Particle::animationBaseFramerate,
 	Particle::animationScale,
 	Particle::animationDepthScale,
+	Particle::animationForceFramerate,
 	Particle::animationVelocityFramerate;
 AnimationManager
 	Particle::animationManager;
@@ -132,7 +133,7 @@ void Particle::attackAtRandom() {
 	ofxCvBlob& curBlob = blobs[(int) ofRandom(0, blobs.size())];
 	vector<ofPoint>& pts = curBlob.pts;
 	ofPoint& curPoint = pts[(int) ofRandom(0, pts.size())];
-	triggerAttack(curPoint);
+	beginAttack(curPoint);
 }
 
 inline void Particle::update() {
@@ -146,6 +147,7 @@ inline void Particle::update() {
 	position += velocity * speed;
 	
 	age += ofGetLastFrameTime() * animationBaseFramerate;
+	age += force.length() * animationForceFramerate;
 	age += velocity.length() * animationVelocityFramerate;
 	
 	gaze = position + velocity * attackRange;
@@ -153,11 +155,15 @@ inline void Particle::update() {
 	checkForAttack();
 }
 
-inline void Particle::triggerAttack(ofPoint& target) {
+inline void Particle::beginAttack(ofPoint& target) {
 	attackMode = true;
 	attackStarted = ofGetElapsedTimef();
 	attackStartingPoint = position;
 	attackTarget = target;
+}
+
+inline void Particle::endAttack() {
+	attackMode = false;
 }
 
 inline void Particle::checkForAttack() {
@@ -171,7 +177,7 @@ inline void Particle::checkForAttack() {
 				float dist = gaze.distance(pts[j]);
 				if(dist < attackPrecision && (!attackMode || dist < bestDist)) {
 					bestDist = dist;
-					triggerAttack(pts[j]);
+					beginAttack(pts[j]);
 				}
 			}
 		}

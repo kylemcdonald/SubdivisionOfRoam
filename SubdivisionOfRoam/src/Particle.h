@@ -19,7 +19,7 @@ public:
 	static MSA::Perlin perlin;
 	static float speed, spread, viscosity, independence, turbulence, neighborhood;
 	
-	static float animationBaseFramerate, animationScale, animationDepthScale, animationVelocityFramerate;
+	static float animationBaseFramerate, animationScale, animationDepthScale, animationForceFramerate, animationVelocityFramerate;
 	static AnimationManager animationManager;
 	
 	static float attackRange, attackPrecision, attackDetermination, attackAccuracy;
@@ -49,6 +49,7 @@ public:
 		age = ofRandom(0, 10); // for frame offsets
 		flockingAnimation = animationManager.randomFlocking();
 		attackingAnimation = animationManager.randomAttacking();
+		attackMode = false;
   }
 	void drawAnimation();
   inline void draw() {
@@ -92,7 +93,7 @@ public:
 		if(attackMode) {
 			ofxVec3f targetDirection = attackTarget - position;
 			if(targetDirection.length() < attackAccuracy) {
-				attackMode = false;
+				endAttack();
 			} else {
 				targetDirection.normalize();
 				force += targetDirection * attackDetermination;
@@ -102,5 +103,6 @@ public:
   void update();
 	void checkForAttack();
 	void attackAtRandom();
-	void triggerAttack(ofPoint& target);
+	void beginAttack(ofPoint& target);
+	void endAttack();
 };

@@ -15,6 +15,7 @@
 // manual controls for camera shutter, etc.
 // birds need to wait when people come in to attack them
 // allow birds to spread vertically more than horizontally
+// gravity should exist
 
 // animate neighborhood and independence values
 
@@ -69,8 +70,9 @@ void testApp::setupControlPanel() {
 	panel.addToggle("debug", "debug", true);
 	
 	panel.addPanel("animation");
-	panel.addSlider("base framerate", "animationBaseFramerate", 5, 0, 60);
-	panel.addSlider("velocity framerate", "animationVelocityFramerate", .5, 0, 4);
+	panel.addSlider("base framerate", "animationBaseFramerate", 1, 0, 40);
+	panel.addSlider("force framerate", "animationForceFramerate", 15, 0, 40);
+	panel.addSlider("velocity framerate", "animationVelocityFramerate", .15, 0, 4);
 	panel.addSlider("scale", "animationScale", .20, 0, 2);
 	panel.addSlider("depth scale", "animationDepthScale", 2, 0, 10);
 	
@@ -85,10 +87,10 @@ void testApp::setupControlPanel() {
 	panel.addSlider("neighborhood", "flockingNeighborhood", 400, 10, 1000);
 	
 	panel.addPanel("attacking");
-	panel.addSlider("range", "attackingRange", 200, 10, 600);
-	panel.addSlider("precision", "attackingPrecision", 20, 1, 50);
-	panel.addSlider("determination", "attackingDetermination", .8, 0, 1);
-	panel.addSlider("accuracy", "attackingAccuracy", 10, 1, 50);
+	panel.addSlider("range", "attackingRange", 400, 10, 800);
+	panel.addSlider("precision", "attackingPrecision", 200, 1, 800);
+	panel.addSlider("determination", "attackingDetermination", .6, 0, 1);
+	panel.addSlider("accuracy", "attackingAccuracy", 40, 1, 80);
 	
 	panel.addPanel("input");
 	panel.addToggle("use live video", "blobUseLiveVideo", false);
@@ -189,6 +191,7 @@ void testApp::update() {
 	
 	// update particles
 	Particle::animationBaseFramerate = panel.getValueF("animationBaseFramerate");
+	Particle::animationForceFramerate = panel.getValueF("animationForceFramerate");
 	Particle::animationVelocityFramerate = panel.getValueF("animationVelocityFramerate");
 	Particle::animationScale = panel.getValueF("animationScale");
 	Particle::animationDepthScale = panel.getValueF("animationDepthScale");
@@ -256,7 +259,7 @@ void testApp::draw(){
 	
 	fbo.end();
 	
-	ofBackground(255, 255, 255);	
+	ofBackground(0, 0, 0);	
 	ofDisableAlphaBlending();
 	drawWarped();
 }
