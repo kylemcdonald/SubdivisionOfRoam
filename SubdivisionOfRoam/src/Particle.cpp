@@ -176,8 +176,6 @@ inline void Particle::endAttack() {
 	
 	testApp::holes.push_back(Hole());
 	testApp::holes.back().setup(position);
-	
-	cout << testApp::holes.size() << " ";
 }
 
 inline void Particle::checkForAttack() {

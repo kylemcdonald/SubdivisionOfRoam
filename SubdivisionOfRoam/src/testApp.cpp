@@ -93,7 +93,7 @@ void testApp::setupControlPanel() {
 	
 	panel.addPanel("attacking");
 	panel.addSlider("range", "attackingRange", 400, 10, 800);
-	panel.addSlider("precision", "attackingPrecision", 200, 1, 800);
+	panel.addSlider("precision", "attackingPrecision", 100, 1, 800);
 	panel.addSlider("determination", "attackingDetermination", .6, 0, 1);
 	panel.addSlider("accuracy", "attackingAccuracy", 40, 1, 80);
 	
@@ -158,7 +158,7 @@ void testApp::update() {
 	}
 	
 	// update blobs
-	contourFinder.findContours(panel.getValueB("blobUseLiveVideo") ? grayDiff : staticShadow, 50, 640 * 480 * .2, 8, true, true);
+	contourFinder.findContours(panel.getValueB("blobUseLiveVideo") ? grayDiff : staticShadow, 10, 640 * 480 * .2, 16, true, true);
 	ofPoint offset(-camera.getWidth() / 2, (targetHeight/ 2) - camera.getHeight());
 	for(int i = 0; i < contourFinder.nBlobs; i++) {
 		// offset blobs
@@ -167,11 +167,6 @@ void testApp::update() {
 		for(int j = 0; j < pts.size(); j++) {
 			pts[j] += offset;
 		}
-	}
-	
-	// update holes
-	for(int i = 0; i < holes.size(); i++) {
-		holes[i].update();
 	}
 	
 	// resample blobs
@@ -212,7 +207,6 @@ void testApp::draw(){
 	ofClear(255, 255, 255, 255);
 	
 	ofEnableAlphaBlending();
-	glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA); // something like darken
 	
 	glPushMatrix();
 	ofTranslate(targetWidth / 2, targetHeight / 2);
@@ -230,6 +224,7 @@ void testApp::draw(){
 	}
 	
 	for (int i = 0; i < holes.size(); i++){
+		holes[i].update();
 		holes[i].draw();
 	}
 	
@@ -247,6 +242,7 @@ void testApp::draw(){
 		}
 	}
 	
+	//glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA); // something like darken
 	Particle::drawAnimationAll();
 	
 	glPopMatrix();

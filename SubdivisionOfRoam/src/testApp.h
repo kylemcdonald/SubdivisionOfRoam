@@ -14,7 +14,9 @@
 #include "ofxAutoControlPanel.h"
 #include "ContourMatcher.h"
 #include "Particle.h"
+
 #include "Hole.h"
+class Hole;
 
 class testApp : public ofBaseApp{
 public:
