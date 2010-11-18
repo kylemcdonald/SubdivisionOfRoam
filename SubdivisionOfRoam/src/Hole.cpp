@@ -1,6 +1,9 @@
 #include "Hole.h"
 
+int Hole::holeRadius;
+
 Hole::Hole() {
+	birth = ofGetElapsedTimef();
 }
 
 void Hole::setup(ofxVec2f position) {
@@ -32,11 +35,11 @@ void Hole::draw() {
 	
 	ofxCvBlob& blob = testApp::contourFinder.blobs[blobIndex];
 	vector<ofPoint>& points = blob.pts;
-	int bit = 2;
-	int start = ofClamp(center - bit, 0, points.size());
-	int stop = ofClamp(center + bit, 0, points.size());
+	int start = ofClamp(center - holeRadius, 0, points.size());
+	int stop = ofClamp(center + holeRadius, 0, points.size());
 	
 	if(start < stop) {
+		ofFill();
 		glColor3f(1, 1, 1);
 		ofBeginShape();
 		for(int i = start; i < stop; i++) {
@@ -56,7 +59,13 @@ void Hole::draw() {
 		glScalef(scale, scale, 1);
 		img->draw(0, 0);
 		ofNoFill();
-		ofRect(0, 0, img->getWidth(), img->getHeight());
+		if(testApp::debug) {
+			ofRect(0, 0, img->getWidth(), img->getHeight());
+		}
 		glPopMatrix();
 	}
+}
+
+float Hole::distance(ofPoint& target) {
+	return position.distance(target);
 }

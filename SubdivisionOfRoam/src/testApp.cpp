@@ -1,7 +1,7 @@
 #include "testApp.h"
 
-// scale people to take up entire left/right space
 // make sure holes disappear
+// filling in holes
 // add feather explosions
 // birds need to not come beneath the overhead unless they are attacking
 // lens blur (gaussian)
@@ -23,7 +23,6 @@
 bool testApp::debug = false;
 ofxCvContourFinder testApp::contourFinder;
 vector<ofxCvBlob> testApp::resampledBlobs;
-vector<Hole> testApp::holes;
 
 void testApp::setup(){
 	ofSetLogLevel(OF_LOG_VERBOSE);
@@ -119,7 +118,8 @@ void testApp::setupControlPanel() {
 	panel.addSlider("resample spacing", "blobResampleSpacing", 10, 1, 10);
 	
 	panel.addPanel("holes");
-	panel.addSlider("max size", "holeMaxSize", 20, 0, 80);
+	panel.addSlider("radius", "holeRadius", 2, 1, 10);
+	panel.addSlider("spacing", "holeSpacing", 50, 1, 100);
 	
 	panel.addPanel("warp");
 	panel.addSlider("nwx", "warpNwx", 0, 0, 1);
@@ -157,6 +157,9 @@ void testApp::update() {
 	if(panel.hasValueChanged("soundRippingVolume")) {
 		SoundManager::setRippingVolume(panel.getValueF("soundRippingVolume"));
 	}
+	
+	Hole::holeRadius = panel.getValueF("holeRadius");
+	HoleManager::holeSpacing = panel.getValueF("holeSpacing");
 	
 	if(panel.getValueB("flipOrientation")) {
 		panel.setValueF("warpNwx", 1);
@@ -259,10 +262,8 @@ void testApp::draw(){
 		drawBlob(curBlob);
 	}
 	
-	for (int i = 0; i < holes.size(); i++){
-		//holes[i].update();
-		//holes[i].draw();
-	}
+	HoleManager::update();
+	HoleManager::draw();
 	
 	if(debug) {
 		ofNoFill();

@@ -4,16 +4,19 @@
 #include "testApp.h"
 
 class Hole {
-protected:
+protected:	
 	ofImage* img;
 	ofxVec2f position;
 	
 	int blobIndex;
 	int center;
-	int movement;
+	float birth;
 public:
 	Hole();
 	void setup(ofxVec2f position);
 	void update();
 	void draw();
+	float distance(ofPoint& point);
+	
+	static int holeRadius;
 };

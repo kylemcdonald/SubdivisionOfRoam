@@ -15,9 +15,7 @@
 #include "ContourMatcher.h"
 #include "Particle.h"
 
-#include "Hole.h"
-class Hole;
-
+#include "HoleManager.h"
 #include "SoundManager.h"
 
 class testApp : public ofBaseApp{
@@ -53,7 +51,6 @@ public:
 	ofxAutoControlPanel panel;
 	
 	ofxCvGrayscaleImage staticShadow;
-	static vector<Hole> holes;
 	
 	ofxFbo fbo;
 	

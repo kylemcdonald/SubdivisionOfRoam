@@ -171,19 +171,21 @@ inline void Particle::update() {
 }
 
 inline void Particle::beginAttack(ofPoint& target) {
-	attackMode = true;
-	attackStarted = ofGetElapsedTimef();
-	attackStartingPoint = position;
-	attackTarget = target;
-	
-	SoundManager::randomSquawking();
+	// do one last check before attacking
+	if(!HoleManager::intersects(target)) {
+		attackMode = true;
+		attackStarted = ofGetElapsedTimef();
+		attackStartingPoint = position;
+		attackTarget = target;
+		
+		SoundManager::randomSquawking();
+	}
 }
 
 inline void Particle::endAttack() {
 	attackMode = false;
 	
-	testApp::holes.push_back(Hole());
-	testApp::holes.back().setup(position);
+	HoleManager::add(position);
 	
 	SoundManager::randomRipping();
 }
