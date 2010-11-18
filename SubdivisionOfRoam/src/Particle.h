@@ -35,7 +35,8 @@ public:
 	float age;
   ofxVec3f position, velocity, force, localOffset;
 	ofxVec3f gaze, attackTarget, attackStartingPoint;
-	Animation* animation;
+	Animation* flockingAnimation;
+	Animation* attackingAnimation;
 	bool attackMode;
 	float attackStarted;
 	Particle() {
@@ -46,7 +47,8 @@ public:
   	position *= radius;
 		
 		age = ofRandom(0, 10); // for frame offsets
-		animation = animationManager.randomFlocking();
+		flockingAnimation = animationManager.randomFlocking();
+		attackingAnimation = animationManager.randomAttacking();
   }
 	void drawAnimation();
   inline void draw() {
@@ -98,5 +100,7 @@ public:
 		}
 	}
   void update();
+	void checkForAttack();
 	void attackAtRandom();
+	void triggerAttack(ofPoint& target);
 };

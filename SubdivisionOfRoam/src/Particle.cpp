@@ -117,7 +117,11 @@ inline void Particle::drawAnimation() {
 	glScalef(animationScale, animationScale, 1);
 	
 	glColor4f(1, 1, 1, 1);
-	animation->draw(age);
+	if(attackMode) {
+		attackingAnimation->draw(age);
+	} else {
+		flockingAnimation->draw(age);
+	}
 	glPopMatrix();
 	
 	glPopMatrix();
@@ -128,11 +132,7 @@ void Particle::attackAtRandom() {
 	ofxCvBlob& curBlob = blobs[(int) ofRandom(0, blobs.size())];
 	vector<ofPoint>& pts = curBlob.pts;
 	ofPoint& curPoint = pts[(int) ofRandom(0, pts.size())];
-	
-	attackMode = true;
-	attackStarted = ofGetElapsedTimef();
-	attackStartingPoint = position;
-	attackTarget = curPoint;
+	triggerAttack(curPoint);
 }
 
 inline void Particle::update() {
@@ -150,6 +150,17 @@ inline void Particle::update() {
 	
 	gaze = position + velocity * attackRange;
 	
+	checkForAttack();
+}
+
+inline void Particle::triggerAttack(ofPoint& target) {
+	attackMode = true;
+	attackStarted = ofGetElapsedTimef();
+	attackStartingPoint = position;
+	attackTarget = target;
+}
+
+inline void Particle::checkForAttack() {
 	if(abs(gaze.z) < attackPrecision) { // ignore anything too far from z = 0
 		vector<ofxCvBlob>& blobs = testApp::resampledBlobs;
 		float bestDist = 0;
@@ -160,11 +171,7 @@ inline void Particle::update() {
 				float dist = gaze.distance(pts[j]);
 				if(dist < attackPrecision && (!attackMode || dist < bestDist)) {
 					bestDist = dist;
-					
-					attackMode = true;
-					attackStarted = ofGetElapsedTimef();
-					attackStartingPoint = position;
-					attackTarget = pts[j];
+					triggerAttack(pts[j]);
 				}
 			}
 		}

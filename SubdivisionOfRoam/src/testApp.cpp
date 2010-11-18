@@ -1,6 +1,6 @@
 #include "testApp.h"
 
-// add attack animation
+// increment age based on force not velocity
 // birds remove chunks
 // first pass of contour tracking: nearest point (i.e., age-based-ish)
 // add sounds
