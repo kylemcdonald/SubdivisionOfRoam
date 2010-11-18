@@ -21,9 +21,14 @@ ofImage* HoleManager::randomHoleImage() {
 }
 
 void HoleManager::update() {
+	vector<Hole> remaining;
 	for(int i = 0; i < holes.size(); i++) {
 		holes[i].update();
+		if(holes[i].getAge() < Hole::maxHoleAge) {
+			remaining.push_back(holes[i]);
+		}
 	}
+	holes = remaining;
 }
 
 void HoleManager::draw() {

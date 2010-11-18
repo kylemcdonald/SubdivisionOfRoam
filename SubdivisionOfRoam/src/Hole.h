@@ -17,6 +17,8 @@ public:
 	void update();
 	void draw();
 	float distance(ofPoint& point);
+	float getAge();
 	
 	static int holeRadius;
+	static float maxHoleAge;
 };

@@ -120,6 +120,7 @@ void testApp::setupControlPanel() {
 	panel.addPanel("holes");
 	panel.addSlider("radius", "holeRadius", 2, 1, 10);
 	panel.addSlider("spacing", "holeSpacing", 50, 1, 100);
+	panel.addSlider("max age", "holeMaxAge", 30, 1, 60);
 	
 	panel.addPanel("warp");
 	panel.addSlider("nwx", "warpNwx", 0, 0, 1);
@@ -159,6 +160,7 @@ void testApp::update() {
 	}
 	
 	Hole::holeRadius = panel.getValueF("holeRadius");
+	Hole::maxHoleAge = panel.getValueF("holeMaxAge");
 	HoleManager::holeSpacing = panel.getValueF("holeSpacing");
 	
 	if(panel.getValueB("flipOrientation")) {

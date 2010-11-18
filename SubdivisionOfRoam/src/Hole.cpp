@@ -1,6 +1,7 @@
 #include "Hole.h"
 
 int Hole::holeRadius;
+float Hole::maxHoleAge;
 
 Hole::Hole() {
 	birth = ofGetElapsedTimef();
@@ -68,4 +69,8 @@ void Hole::draw() {
 
 float Hole::distance(ofPoint& target) {
 	return position.distance(target);
+}
+
+float Hole::getAge() {
+	return ofGetElapsedTimef() - birth;
 }
