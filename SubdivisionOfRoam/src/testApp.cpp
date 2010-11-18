@@ -1,5 +1,6 @@
 #include "testApp.h"
 
+// additive blending
 // have birds attack
 // birds remove chunks
 // first pass of contour tracking: nearest point (i.e., age-based-ish)
@@ -12,6 +13,9 @@
 // motion blur? more importantly: lens blur (gaussian)
 // distort birds as they fly with warping the textures? makes them sketchier
 // manual controls for camera shutter, etc.
+// birds need to wait when people come in to attack them
+
+// animate neighborhood and independence values
 
 bool testApp::debug = false;
 ofxCvContourFinder testApp::contourFinder;
@@ -20,8 +24,8 @@ vector<Hole> testApp::holes;
 
 void testApp::setup(){
 	ofSetLogLevel(OF_LOG_VERBOSE);
-	
 	glDisable(GL_DEPTH_TEST);
+	ofEnableAlphaBlending();
 	
 	ambience.loadSound("sound/ambience/Amb1.aif");
 	ambience.setLoop(true);
@@ -56,8 +60,6 @@ void testApp::setup(){
 	for(int i = 0; i < n; i++)
 		Particle::particles.push_back(Particle(radius));
 	
-	ofEnableAlphaBlending();
-	
 	panel.setup("Control Panel", 5, 5, 300, 800);
 	panel.addPanel("general");
 	panel.addToggle("debug", "debug", true);
@@ -65,18 +67,18 @@ void testApp::setup(){
 	panel.addPanel("animation");
 	panel.addSlider("base framerate", "animationBaseFramerate", 5, 0, 60);
 	panel.addSlider("velocity framerate", "animationVelocityFramerate", .5, 0, 4);
-	panel.addSlider("scale", "animationScale", .15, 0, 2);
+	panel.addSlider("scale", "animationScale", .20, 0, 2);
 	panel.addSlider("depth scale", "animationDepthScale", 2, 0, 10);
 	
 	panel.addPanel("flocking");
 	panel.addToggle("enable", "flockingEnable", true);
 	panel.addSlider("size", "flockingSize", n, 1, 1000);
-	panel.addSlider("speed", "flockingSpeed", 1, 0, 10);
+	panel.addSlider("speed", "flockingSpeed", 1.5, 0, 10);
 	panel.addSlider("turbulence", "flockingTurbulence", 60, 1, 100);
-	panel.addSlider("spread", "flockingSpread", 60, 10, 100);
+	panel.addSlider("spread", "flockingSpread", 85, 10, 120);
 	panel.addSlider("viscosity", "flockingViscosity", .15, 0, 1);
-	panel.addSlider("independence", "flockingIndependence", .35, 0, 1);
-	panel.addSlider("neighborhood", "flockingNeighborhood", 200, 10, 1000);
+	panel.addSlider("independence", "flockingIndependence", .15, 0, 1);
+	panel.addSlider("neighborhood", "flockingNeighborhood", 400, 10, 1000);
 	
 	panel.addPanel("attacking");
 	panel.addSlider("range", "attackingRange", 200, 10, 600);
@@ -210,6 +212,8 @@ void testApp::draw(){
 	fbo.begin();
 	ofClear(255, 255, 255, 255);
 	
+	glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA); // something like darken
+	
 	glPushMatrix();
 	ofTranslate(targetWidth / 2, targetHeight / 2);
 	
@@ -248,7 +252,8 @@ void testApp::draw(){
 	glPopMatrix();
 	
 	fbo.end();
-	
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // standard blend function
 	drawWarped();
 	
 	ofPopStyle();
