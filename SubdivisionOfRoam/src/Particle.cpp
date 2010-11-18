@@ -175,6 +175,8 @@ inline void Particle::beginAttack(ofPoint& target) {
 	attackStarted = ofGetElapsedTimef();
 	attackStartingPoint = position;
 	attackTarget = target;
+	
+	SoundManager::randomSquawking();
 }
 
 inline void Particle::endAttack() {
@@ -182,6 +184,8 @@ inline void Particle::endAttack() {
 	
 	testApp::holes.push_back(Hole());
 	testApp::holes.back().setup(position);
+	
+	SoundManager::randomRipping();
 }
 
 inline void Particle::checkForAttack() {

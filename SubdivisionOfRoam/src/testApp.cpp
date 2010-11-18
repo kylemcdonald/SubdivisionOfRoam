@@ -48,6 +48,7 @@ void testApp::setup(){
 	
 	fbo.setup(targetWidth, targetHeight);
 	
+	SoundManager::setup();
 	HoleManager::setup();
 	
 	grayImage.allocate(camera.getWidth(), camera.getHeight());
@@ -69,6 +70,9 @@ void testApp::setupControlPanel() {
 	panel.setup("Control Panel", 5, 5, 300, 800);
 	panel.addPanel("general");
 	panel.addToggle("debug", "debug", true);
+	
+	panel.addPanel("sound");
+	panel.addToggle("enable", "soundEnable", false);
 	
 	panel.addPanel("animation");
 	panel.addSlider("base framerate", "animationBaseFramerate", 1, 0, 40);
@@ -136,7 +140,7 @@ void testApp::setupControlPanel() {
 	panel.loadSettings("roamSettings.xml");
 }
 
-void testApp::update() {	
+void testApp::update() {		
 	debug = panel.getValueB("debug");
 	
 	if(camera.grabVideo(curFrame)) {
@@ -154,6 +158,8 @@ void testApp::update() {
 		grayDiff.threshold(panel.getValueI("blobThreshold"));
 		grayDiff.flagImageChanged();
 	}
+	
+	SoundManager::enabled = panel.getValueB("soundEnable");
 	
 	// update blobs
 	contourFinder.findContours(panel.getValueB("blobUseLiveVideo") ? grayDiff : staticShadow, 10, 640 * 480 * .2, 16, true, true);

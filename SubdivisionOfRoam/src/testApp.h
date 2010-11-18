@@ -18,6 +18,8 @@
 #include "Hole.h"
 class Hole;
 
+#include "SoundManager.h"
+
 class testApp : public ofBaseApp{
 public:
 	static bool debug;
