@@ -1,23 +1,26 @@
 #include "testApp.h"
 
-// increment age based on force not velocity
 // birds remove chunks
 // first pass of contour tracking: nearest point (i.e., age-based-ish)
 // add sounds
+// add turnarounds
+// birds should have momentum
+// lens blur (gaussian)
 // add feather explosions
-// birds should have momentum and no awkward moments
-// shouldn't bite things touching the bottom of the screen
-// noise in animation playback
-// sinusoidal displacement for flapping
-// flap primarily when moving upwards, not downwards
-// motion blur? more importantly: lens blur (gaussian)
-// distort birds as they fly with warping the textures? makes them sketchier
-// manual controls for camera shutter, etc.
 // birds need to wait when people come in to attack them
+
 // allow birds to spread vertically more than horizontally
 // gravity should exist
-
 // animate neighborhood and independence values
+// slight sinusoidal displacement for flapping
+// motion blur
+// noise in animation playback
+// shouldn't bite things touching the bottom of the screen
+// flap primarily when moving upwards, not downwards
+// distort birds as they fly with warping the textures? makes them sketchier
+
+// manual controls for camera shutter, etc.
+// add very slow averaging for difference image so it works over the whole day
 
 bool testApp::debug = false;
 ofxCvContourFinder testApp::contourFinder;
@@ -71,8 +74,9 @@ void testApp::setupControlPanel() {
 	
 	panel.addPanel("animation");
 	panel.addSlider("base framerate", "animationBaseFramerate", 1, 0, 40);
-	panel.addSlider("force framerate", "animationForceFramerate", 15, 0, 40);
-	panel.addSlider("velocity framerate", "animationVelocityFramerate", .15, 0, 4);
+	panel.addSlider("force framerate", "animationForceFramerate", 5, 0, 40);
+	panel.addSlider("velocity framerate", "animationVelocityFramerate", .2, 0, 4);
+	panel.addSlider("flap displacement", "animationFlapDisplacement", 4, 0, 30);
 	panel.addSlider("scale", "animationScale", .20, 0, 2);
 	panel.addSlider("depth scale", "animationDepthScale", 2, 0, 10);
 	
@@ -199,6 +203,7 @@ void testApp::update() {
 	Particle::attackPrecision = panel.getValueF("attackingPrecision");
 	Particle::attackDetermination = panel.getValueF("attackingDetermination");
 	Particle::attackAccuracy = panel.getValueF("attackingAccuracy");
+	Particle::flapDisplacement = panel.getValueF("animationFlapDisplacement");
 	
 	if(panel.getValueB("flockingEnable")) {
 		Particle::setSize(panel.getValueI("flockingSize"), 250);

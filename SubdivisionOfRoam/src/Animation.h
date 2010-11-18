@@ -19,12 +19,18 @@ public:
 			frames.push_back(cur);
 		}
 	}
+	float getPercent(float i) {
+		float cur = fmodf(i, frames.size());
+		return cur / frames.size();
+	}
 	~Animation() {
 		for(int i = 0; i < frames.size(); i++) {
 			delete frames[i];
 		}
 	}
-	void draw(int i) {
-		frames[i % frames.size()]->draw(0, 0);
+	bool draw(int i) {
+		int cur = i % frames.size();
+		frames[cur]->draw(0, 0);
+		return cur == frames.size() - 1;
 	}
 };

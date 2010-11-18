@@ -24,7 +24,8 @@ float
 	Particle::animationScale,
 	Particle::animationDepthScale,
 	Particle::animationForceFramerate,
-	Particle::animationVelocityFramerate;
+	Particle::animationVelocityFramerate,
+	Particle::flapDisplacement;
 AnimationManager
 	Particle::animationManager;
 
@@ -111,17 +112,25 @@ inline void Particle::drawAnimation() {
 
 	glPushMatrix();
 	glTranslatef(position.x, position.y, position.z);
+		
+	float agePercent = (attackMode ? attackingAnimation : flockingAnimation)->getPercent(age);
+	
 	float angle = atan2f(velocity.y, velocity.x);
-	glRotatef(ofRadToDeg(angle), 0, 0, 1);
+	glRotatef(ofRadToDeg(angle), 0, 0, 1);	
 	if(angle > PI / 2 || angle < -PI / 2)
 		glScalef(1, -1, 1);
+	
+	glTranslatef(0, cos(agePercent * TWO_PI + HALF_PI) * flapDisplacement, 0);
 	glScalef(animationScale, animationScale, 1);
 	
 	glColor4f(1, 1, 1, 1);
 	if(attackMode) {
 		attackingAnimation->draw(age);
 	} else {
-		flockingAnimation->draw(age);
+		if(flockingAnimation->draw(age)) {
+			// switch out flocking animations randomly
+			//flockingAnimation = animationManager.randomFlocking();
+		}
 	}
 	glPopMatrix();
 	
@@ -196,8 +205,5 @@ inline void Particle::checkForAttack() {
 		// holes need to disappear over time
 		testApp::holes.back().setup(*targetBlob, targetPoint - bit, targetPoint + bit);
 	}
-	
-	// store time that the attack starts
-	// use this for fading between attacking and flocking
 	 */
 }
