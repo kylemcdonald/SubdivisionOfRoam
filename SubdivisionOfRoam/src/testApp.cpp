@@ -1,6 +1,5 @@
 #include "testApp.h"
 
-// additive blending
 // have birds attack
 // birds remove chunks
 // first pass of contour tracking: nearest point (i.e., age-based-ish)
@@ -25,7 +24,6 @@ vector<Hole> testApp::holes;
 void testApp::setup(){
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	glDisable(GL_DEPTH_TEST);
-	ofEnableAlphaBlending();
 	
 	ambience.loadSound("sound/ambience/Amb1.aif");
 	ambience.setLoop(true);
@@ -47,7 +45,7 @@ void testApp::setup(){
 	fbo.setup(targetWidth, targetHeight);
 	
 	HoleManager::setup();
-
+	
 	grayImage.allocate(camera.getWidth(), camera.getHeight());
 	grayBg.allocate(camera.getWidth(), camera.getHeight());
 	grayDiff.allocate(camera.getWidth(), camera.getHeight());
@@ -55,7 +53,11 @@ void testApp::setup(){
 	
 	Particle::setup();
 	
-	int n = 500;
+	setupControlPanel();
+}
+
+void testApp::setupControlPanel() {	
+	int n = 1;
 	float radius = 250;
 	for(int i = 0; i < n; i++)
 		Particle::particles.push_back(Particle(radius));
@@ -83,7 +85,8 @@ void testApp::setup(){
 	panel.addPanel("attacking");
 	panel.addSlider("range", "attackingRange", 200, 10, 600);
 	panel.addSlider("precision", "attackingPrecision", 20, 1, 50);
-	panel.addSlider("duration", "attackingDuration", 1, 0, 3);
+	panel.addSlider("determination", "attackingDetermination", .8, 0, 1);
+	panel.addSlider("accuracy", "attackingAccuracy", 10, 1, 50);
 	
 	panel.addPanel("input");
 	panel.addToggle("use live video", "blobUseLiveVideo", false);
@@ -189,7 +192,8 @@ void testApp::update() {
 	Particle::animationDepthScale = panel.getValueF("animationDepthScale");
 	Particle::attackRange = panel.getValueF("attackingRange");
 	Particle::attackPrecision = panel.getValueF("attackingPrecision");
-	Particle::attackDuration = panel.getValueF("attackingDuration");
+	Particle::attackDetermination = panel.getValueF("attackingDetermination");
+	Particle::attackAccuracy = panel.getValueF("attackingAccuracy");
 	
 	if(panel.getValueB("flockingEnable")) {
 		Particle::setSize(panel.getValueI("flockingSize"), 250);
@@ -205,13 +209,10 @@ void testApp::update() {
 
 
 void testApp::draw(){
-	ofPushStyle();
-	
-	ofBackground(255, 255, 255);
-
 	fbo.begin();
 	ofClear(255, 255, 255, 255);
 	
+	ofEnableAlphaBlending();
 	glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA); // something like darken
 	
 	glPushMatrix();
@@ -252,11 +253,10 @@ void testApp::draw(){
 	glPopMatrix();
 	
 	fbo.end();
-
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // standard blend function
-	drawWarped();
 	
-	ofPopStyle();
+	ofBackground(255, 255, 255);	
+	ofDisableAlphaBlending();
+	drawWarped();
 }
 
 void testApp::drawWarped() {
@@ -271,6 +271,7 @@ void testApp::drawWarped() {
 	glTexCoord2f(0, targetHeight);
 	glVertex2f(ofGetWidth() * (panel.getValueF("warpSwx") + panel.getValueF("warpSwxFine")), ofGetHeight() * (panel.getValueF("warpSwy") + panel.getValueF("warpSwyFine")));
 	glEnd();
+	fbo.getTexture(0).unbind();
 }
 
 void testApp::drawBlob(ofxCvBlob& blob) {
@@ -312,7 +313,9 @@ void testApp::keyPressed(int key){
 			break;
 		case 'f':
 			ofToggleFullscreen();
-			break;			
+			break;	
+		case 'a':
+			Particle::particles[0].attackAtRandom();
 	}
 }
 

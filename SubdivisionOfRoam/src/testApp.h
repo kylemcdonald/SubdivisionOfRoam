@@ -21,6 +21,7 @@ public:
 	static bool debug;
 	
 	void setup();
+	void setupControlPanel();
 	void update();
 	void draw();
 	void drawWarped();

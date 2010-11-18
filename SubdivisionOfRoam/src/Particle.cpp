@@ -30,7 +30,8 @@ AnimationManager
 float
 	Particle::attackRange,
 	Particle::attackPrecision,
-	Particle::attackDuration;
+	Particle::attackDetermination,
+	Particle::attackAccuracy;
 
 void Particle::setup() {
 	perlin.setup(4, 1, .5, (int) ofRandom(0, 1000));
@@ -42,7 +43,7 @@ void Particle::setup() {
   neighborhood = 700;
 	turbulence = 1;
 	
-	animationManager.setup();	
+	animationManager.setup();
 }
 
 void Particle::drawAll() {
@@ -91,14 +92,14 @@ inline void Particle::drawAnimation() {
 	if(testApp::debug) {
 		glPushMatrix();
 		if(attackMode) {
-			glColor4f(1, 1, 0, 1);
+			glColor4f(1, 0, 0, 1);
 			glBegin(GL_LINE_STRIP);
 			glVertex3fv(position.v);
 			glVertex3fv(gaze.v);
-			glVertex3fv(target.v);
+			glVertex3fv(attackTarget.v);
 			glEnd();
 		} else {
-			glColor4f(.8, .4, 0, .5);
+			glColor4f(0, 0, 0, .5);
 			glBegin(GL_LINES);
 			glVertex3fv(position.v);
 			glVertex3fv(gaze.v);
@@ -122,11 +123,25 @@ inline void Particle::drawAnimation() {
 	glPopMatrix();
 }
 
+void Particle::attackAtRandom() {
+	vector<ofxCvBlob>& blobs = testApp::resampledBlobs;
+	ofxCvBlob& curBlob = blobs[(int) ofRandom(0, blobs.size())];
+	vector<ofPoint>& pts = curBlob.pts;
+	ofPoint& curPoint = pts[(int) ofRandom(0, pts.size())];
+	
+	attackMode = true;
+	attackStarted = ofGetElapsedTimef();
+	attackStartingPoint = position;
+	attackTarget = curPoint;
+}
+
 inline void Particle::update() {
+	// calculate standard flocking stuff
 	force.set(0, 0, 0);
 	applyFlockingForce();
 	applyViscosityForce();
 	applyCenteringForce();
+	applyAttackingForce();
 	velocity += force; // mass = 1
 	position += velocity * speed;
 	
@@ -135,6 +150,7 @@ inline void Particle::update() {
 	
 	gaze = position + velocity * attackRange;
 	
+	/*
 	attackMode = false;
 	ofxCvBlob* targetBlob;
 	int targetPoint;
@@ -161,15 +177,17 @@ inline void Particle::update() {
 	// instead of just attacking, we need to lerp into an attack,
 	// bring up the animation + sounds, and fade the motion	
 	if(attackMode == true) {
+		cout << "just attacked person" << endl;
 		// doesn't work with holes on the loop boundary
 		int bit = 5;
 		testApp::holes.push_back(Hole());
 		// need to map targetPoint back onto targetBlob
 		// how do we keep there from being too many holes?
 		// holes need to disappear over time
-		//testApp::holes.back().setup(*targetBlob, targetPoint - bit, targetPoint + bit);
+		testApp::holes.back().setup(*targetBlob, targetPoint - bit, targetPoint + bit);
 	}
 	
 	// store time that the attack starts
 	// use this for fading between attacking and flocking
+	 */
 }

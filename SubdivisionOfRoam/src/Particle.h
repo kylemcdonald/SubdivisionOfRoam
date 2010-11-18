@@ -22,7 +22,7 @@ public:
 	static float animationBaseFramerate, animationScale, animationDepthScale, animationVelocityFramerate;
 	static AnimationManager animationManager;
 	
-	static float attackRange, attackPrecision, attackDuration;
+	static float attackRange, attackPrecision, attackDetermination, attackAccuracy;
 	
 	static vector<Particle> particles;
 	static void setup();
@@ -33,7 +33,8 @@ public:
 	static void setSize(int size, float radius);
 
 	float age;
-  ofxVec3f position, velocity, force, localOffset, gaze, target;
+  ofxVec3f position, velocity, force, localOffset;
+	ofxVec3f gaze, attackTarget, attackStartingPoint;
 	Animation* animation;
 	bool attackMode;
 	float attackStarted;
@@ -85,5 +86,17 @@ public:
     centeringForce *= -distanceToCenter / (spread * spread);
     force += centeringForce;
   }
+	inline void applyAttackingForce() {
+		if(attackMode) {
+			ofxVec3f targetDirection = attackTarget - position;
+			if(targetDirection.length() < attackAccuracy) {
+				attackMode = false;
+			} else {
+				targetDirection.normalize();
+				force += targetDirection * attackDetermination;
+			}
+		}
+	}
   void update();
+	void attackAtRandom();
 };
