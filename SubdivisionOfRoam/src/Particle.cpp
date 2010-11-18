@@ -12,6 +12,7 @@ MSA::Perlin
 	Particle::perlin;
 
 float
+	Particle::minimumSpeed,
 	Particle::speed,
 	Particle::spread,
 	Particle::viscosity,
@@ -101,7 +102,7 @@ inline void Particle::drawAnimation() {
 			glVertex3fv(attackTarget.v);
 			glEnd();
 		} else {
-			glColor4f(0, 0, 0, .5);
+			glColor4f(0, 0, 0, 1);
 			glBegin(GL_LINES);
 			glVertex3fv(position.v);
 			glVertex3fv(gaze.v);
@@ -153,6 +154,11 @@ inline void Particle::update() {
 	applyCenteringForce();
 	applyAttackingForce();
 	velocity += force; // mass = 1
+	
+	float curSpeed = velocity.length();
+	velocity.normalize();
+	velocity *= max(minimumSpeed, curSpeed);
+	
 	position += velocity * speed;
 	
 	age += ofGetLastFrameTime() * animationBaseFramerate;

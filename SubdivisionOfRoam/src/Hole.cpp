@@ -55,6 +55,8 @@ void Hole::draw() {
 		float scale = diff.length() / img->getHeight();
 		glScalef(scale, scale, 1);
 		img->draw(0, 0);
+		ofNoFill();
+		ofRect(0, 0, img->getWidth(), img->getHeight());
 		glPopMatrix();
 	}
 }

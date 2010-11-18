@@ -17,7 +17,7 @@ class Particle {
 public:
 	static ofxVec3f centeringForce, globalOffset, avg;
 	static MSA::Perlin perlin;
-	static float speed, spread, viscosity, independence, turbulence, neighborhood;
+	static float minimumSpeed, speed, spread, viscosity, independence, turbulence, neighborhood;
 	
 	static float animationBaseFramerate, animationScale, animationDepthScale, animationForceFramerate, animationVelocityFramerate, flapDisplacement;
 	static AnimationManager animationManager;

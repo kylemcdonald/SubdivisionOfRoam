@@ -1,17 +1,14 @@
 #include "testApp.h"
 
-// birds remove chunks
-// first pass of contour tracking: nearest point (i.e., age-based-ish)
 // add sounds
 // add turnarounds
-// birds should have momentum
 // lens blur (gaussian)
 // add feather explosions
 // birds need to wait when people come in to attack them
 
 // scale people to take up entire left/right space
 // allow birds to spread vertically more than horizontally
-// gravity should exist...
+// gravity should exist...?
 // animate neighborhood and independence values
 // slight sinusoidal displacement for flapping
 // motion blur
@@ -84,6 +81,7 @@ void testApp::setupControlPanel() {
 	panel.addPanel("flocking");
 	panel.addToggle("enable", "flockingEnable", true);
 	panel.addSlider("size", "flockingSize", n, 1, 1000);
+	panel.addSlider("minimum speed", "flockingMinimumSpeed", .8, 0, 4);
 	panel.addSlider("speed", "flockingSpeed", 1.5, 0, 10);
 	panel.addSlider("turbulence", "flockingTurbulence", 60, 1, 100);
 	panel.addSlider("spread", "flockingSpread", 85, 10, 120);
@@ -191,6 +189,7 @@ void testApp::update() {
 	
 	if(panel.getValueB("flockingEnable")) {
 		Particle::setSize(panel.getValueI("flockingSize"), 250);
+		Particle::minimumSpeed = panel.getValueF("flockingMinimumSpeed");
 		Particle::speed = panel.getValueF("flockingSpeed") * ofGetLastFrameTime() * 256;
 		Particle::spread = panel.getValueF("flockingSpread");
 		Particle::viscosity = panel.getValueF("flockingViscosity");
@@ -224,8 +223,8 @@ void testApp::draw(){
 	}
 	
 	for (int i = 0; i < holes.size(); i++){
-		holes[i].update();
-		holes[i].draw();
+		//holes[i].update();
+		//holes[i].draw();
 	}
 	
 	if(debug) {
@@ -242,7 +241,7 @@ void testApp::draw(){
 		}
 	}
 	
-	//glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA); // something like darken
+	glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA); // something like darken
 	Particle::drawAnimationAll();
 	
 	glPopMatrix();
