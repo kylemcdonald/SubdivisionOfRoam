@@ -10,6 +10,7 @@ protected:
 	
 	int blobIndex;
 	int center;
+	int movement;
 public:
 	Hole();
 	void setup(ofxVec2f position);

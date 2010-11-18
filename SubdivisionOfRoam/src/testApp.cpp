@@ -1,13 +1,13 @@
 #include "testApp.h"
 
-// add feather explosions
+// scale people to take up entire left/right space
 // make sure holes disappear
+// add feather explosions
 // birds need to not come beneath the overhead unless they are attacking
 // lens blur (gaussian)
 // add turnarounds
 // birds need to wait when people come in to attack them
 
-// scale people to take up entire left/right space
 // allow birds to spread vertically more than horizontally
 // gravity should exist...?
 // animate neighborhood and independence values
@@ -73,10 +73,10 @@ void testApp::setupControlPanel() {
 	panel.addToggle("flip orientation", "flipOrientation", false);
 	
 	panel.addPanel("sound");
-	panel.addToggle("enable", "soundEnable", false);
-	panel.addSlider("flapping volume", "soundFlappingVolume", 1, 0, 1);
-	panel.addSlider("squawking volume", "soundSquawkingVolume", 1, 0, 1);
-	panel.addSlider("ripping volume", "soundRippingVolume", 1, 0, 1);
+	panel.addToggle("enable", "soundEnable", true);
+	panel.addSlider("flapping volume", "soundFlappingVolume", .1, 0, 1);
+	panel.addSlider("squawking volume", "soundSquawkingVolume", .1, 0, 1);
+	panel.addSlider("ripping volume", "soundRippingVolume", .1, 0, 1);
 	// density control
 	
 	panel.addPanel("animation");
@@ -190,13 +190,15 @@ void testApp::update() {
 	
 	// update blobs
 	contourFinder.findContours(panel.getValueB("blobUseLiveVideo") ? grayDiff : staticShadow, 10, 640 * 480 * .2, 16, true, true);
-	ofPoint offset(-camera.getWidth() / 2, (targetHeight/ 2) - camera.getHeight());
+	float scaleBlobs = targetWidth / camera.getWidth();
+	ofPoint offset(-camera.getWidth() / 2, (targetHeight/ 2) - camera.getHeight() * scaleBlobs);
 	for(int i = 0; i < contourFinder.nBlobs; i++) {
 		// offset blobs
 		ofxCvBlob& curBlob = contourFinder.blobs[i];
 		vector<ofPoint>& pts = curBlob.pts;
 		for(int j = 0; j < pts.size(); j++) {
 			pts[j] += offset;
+			pts[j] *= scaleBlobs;
 		}
 	}
 	
