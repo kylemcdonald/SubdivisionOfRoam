@@ -49,5 +49,10 @@ public:
 	ofxCvGrayscaleImage staticShadow;
 	static vector<Hole> holes;
 	
+	ofxFbo fbo;
+	
 	ofSoundPlayer ambience;
+	
+	static const int targetWidth = 1080;
+	static const int targetHeight = 1920;
 };

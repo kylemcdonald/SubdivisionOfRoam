@@ -159,7 +159,7 @@ inline void Particle::update() {
 	}
 	
 	// instead of just attacking, we need to lerp into an attack,
-	// bring up the animation + sounds, and fade the motion
+	// bring up the animation + sounds, and fade the motion	
 	if(attackMode == true) {
 		// doesn't work with holes on the loop boundary
 		int bit = 5;

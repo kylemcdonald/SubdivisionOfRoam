@@ -9,7 +9,6 @@
 //	but perhaps we can throw some box2d springs in to keep things at the right distances?
 // add sounds
 // add feather explosions
-// render through 1920x1080 FBO + quad warping
 // threshold incoming video for proper camera-based interaction
 // birds should have momentum and no awkward moments
 // shouldn't bite things touching the bottom of the screen
@@ -25,10 +24,12 @@ vector<ofxCvBlob> testApp::resampledBlobs;
 vector<Hole> testApp::holes;
 
 void testApp::setup(){
-	ofSetFrameRate(120);
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	
+	glDisable(GL_DEPTH_TEST);
+	
 	ambience.loadSound("sound/ambience/Amb1.aif");
+	ambience.setLoop(true);
 	ambience.play();
 	
 	camera.setPosition((752 - 640) / 2, 0);
@@ -43,6 +44,8 @@ void testApp::setup(){
 	memcpy(staticShadow.getPixels(), img.getPixels(), 640 * 480);
 	staticShadow.invert();
 	staticShadow.flagImageChanged();
+	
+	fbo.setup(targetWidth, targetHeight);
 	
 	HoleManager::setup();
 
@@ -105,9 +108,29 @@ void testApp::setup(){
 	panel.addSlider("random seed", "holeRandomSeed", 0, 0, 1000, true);
 	panel.addSlider("count", "holeCount", 50, 0, 200);
 	panel.addSlider("max size", "holeMaxSize", 20, 0, 80);
+	
+	panel.addPanel("warp");
+	panel.addSlider("nwx", "warpNwx", 0, 0, 1);
+	panel.addSlider("nwy", "warpNwy", 0, 0, 1);
+	panel.addSlider("nex", "warpNex", 1, 0, 1);
+	panel.addSlider("ney", "warpNey", 0, 0, 1);
+	panel.addSlider("swx", "warpSwx", 0, 0, 1);
+	panel.addSlider("swy", "warpSwy", 1, 0, 1);
+	panel.addSlider("sex", "warpSex", 1, 0, 1);
+	panel.addSlider("sey", "warpSey", 1, 0, 1);
+	
+	float fineRange = .01;
+	panel.addSlider("nwx fine", "warpNwxFine", 0, -fineRange, fineRange);
+	panel.addSlider("nwy fine", "warpNwyFine", 0, -fineRange, fineRange);
+	panel.addSlider("nex fine", "warpNexFine", 0, -fineRange, fineRange);
+	panel.addSlider("ney fine", "warpNeyFine", 0, -fineRange, fineRange);
+	panel.addSlider("swx fine", "warpSwxFine", 0, -fineRange, fineRange);
+	panel.addSlider("swy fine", "warpSwyFine", 0, -fineRange, fineRange);
+	panel.addSlider("sex fine", "warpSexFine", 0, -fineRange, fineRange);
+	panel.addSlider("sey fine", "warpSeyFine", 0, -fineRange, fineRange);
 }
 
-void testApp::update() {
+void testApp::update() {	
 	debug = panel.getValueB("debug");
 	
 	if(camera.grabVideo(curFrame)) {
@@ -128,7 +151,7 @@ void testApp::update() {
 	
 	// update blobs
 	contourFinder.findContours(panel.getValueB("blobUseLiveVideo") ? grayDiff : staticShadow, 50, 640 * 480 * .2, 8, true, true);
-	ofPoint offset(-camera.getWidth() / 2, (ofGetHeight() / 2) - camera.getHeight());
+	ofPoint offset(-camera.getWidth() / 2, (targetHeight/ 2) - camera.getHeight()); // change this line. also, scale l/r
 	if(panel.getValueB("holeRandomize")) {
 		holes.clear();
 	}
@@ -183,12 +206,13 @@ void testApp::update() {
 
 
 void testApp::draw(){
-	glDisable(GL_DEPTH_TEST);
-	
-	ofBackground(255, 255, 255);
+	ofBackground(128, 128, 128);
+
+	fbo.begin();
+	ofClear(255, 255, 255, 255);
 	
 	glPushMatrix();
-	ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2);
+	ofTranslate(targetWidth / 2, targetHeight / 2);
 	
 	if(debug) {
 		ofRotateY(60 * sin(ofMap(mouseX, 0, ofGetWidth(), -HALF_PI, +HALF_PI)));
@@ -223,6 +247,21 @@ void testApp::draw(){
 	Particle::drawAnimationAll();
 	
 	glPopMatrix();
+	
+	fbo.end();
+	
+	fbo.getTexture(0).bind();
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0);
+	glVertex2f(ofGetWidth() * (panel.getValueF("warpNwx") + panel.getValueF("warpNwxFine")), ofGetHeight() * (panel.getValueF("warpNwy") + panel.getValueF("warpNwyFine")));
+	glTexCoord2f(targetWidth, 0);
+	glVertex2f(ofGetWidth() * (panel.getValueF("warpNex") + panel.getValueF("warpNexFine")), ofGetHeight() * (panel.getValueF("warpNey") + panel.getValueF("warpNeyFine")));
+	glTexCoord2f(targetWidth, targetHeight);
+	glVertex2f(ofGetWidth() * (panel.getValueF("warpSex") + panel.getValueF("warpSexFine")), ofGetHeight() * (panel.getValueF("warpSey") + panel.getValueF("warpSeyFine")));
+	glTexCoord2f(0, targetHeight);
+	glVertex2f(ofGetWidth() * (panel.getValueF("warpSwx") + panel.getValueF("warpSwxFine")), ofGetHeight() * (panel.getValueF("warpSwy") + panel.getValueF("warpSwyFine")));
+	glEnd();
+	//fbo.draw(0, 0, 1080 * .5, 1920 * .5);
 }
 
 void testApp::drawBlob(ofxCvBlob& blob) {
@@ -261,7 +300,10 @@ void testApp::keyPressed(int key){
 	switch (key){
 		case 'd':
 			panel.setValueB("debug", panel.getValueB("debug") ? false : true);
-			
+			break;
+		case 'f':
+			ofToggleFullscreen();
+			break;			
 	}
 }
 
