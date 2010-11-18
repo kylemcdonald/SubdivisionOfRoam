@@ -23,6 +23,7 @@ public:
 	void setup();
 	void update();
 	void draw();
+	void drawWarped();
 
 	void keyPressed(int key);
 	void mouseMoved(int x, int y);

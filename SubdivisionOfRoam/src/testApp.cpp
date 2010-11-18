@@ -2,21 +2,16 @@
 
 // have birds attack
 // birds remove chunks
-// make it work with video
-// first pass of contour tracking as just using the same point number...
-//	same point number doesn't account for blob intersection/splitting
-//	instead just rely on nearest point. there will be some drifting
-//	but perhaps we can throw some box2d springs in to keep things at the right distances?
+// first pass of contour tracking: nearest point (i.e., age-based-ish)
 // add sounds
 // add feather explosions
-// threshold incoming video for proper camera-based interaction
 // birds should have momentum and no awkward moments
 // shouldn't bite things touching the bottom of the screen
-
-// debug visualization:
-//	rect outlines
-//	blob detection and normals
-//	attack state
+// noise in animation playback
+// sinusoidal displacement for flapping
+// motion blur? more importantly: lens blur (gaussian)
+// distort birds as they fly with warping the textures? makes them sketchier
+// manual controls for camera shutter, etc.
 
 bool testApp::debug = false;
 ofxCvContourFinder testApp::contourFinder;
@@ -63,7 +58,6 @@ void testApp::setup(){
 	
 	ofEnableAlphaBlending();
 	
-	panel.setXMLFilename("roamSettings.xml");
 	panel.setup("Control Panel", 5, 5, 300, 800);
 	panel.addPanel("general");
 	panel.addToggle("debug", "debug", true);
@@ -128,6 +122,9 @@ void testApp::setup(){
 	panel.addSlider("swy fine", "warpSwyFine", 0, -fineRange, fineRange);
 	panel.addSlider("sex fine", "warpSexFine", 0, -fineRange, fineRange);
 	panel.addSlider("sey fine", "warpSeyFine", 0, -fineRange, fineRange);
+	
+	panel.setXMLFilename("roamSettings.xml");
+	panel.loadSettings("roamSettings.xml");
 }
 
 void testApp::update() {	
@@ -206,7 +203,9 @@ void testApp::update() {
 
 
 void testApp::draw(){
-	ofBackground(128, 128, 128);
+	ofPushStyle();
+	
+	ofBackground(255, 255, 255);
 
 	fbo.begin();
 	ofClear(255, 255, 255, 255);
@@ -250,6 +249,12 @@ void testApp::draw(){
 	
 	fbo.end();
 	
+	drawWarped();
+	
+	ofPopStyle();
+}
+
+void testApp::drawWarped() {
 	fbo.getTexture(0).bind();
 	glBegin(GL_QUADS);
 	glTexCoord2f(0, 0);
@@ -261,7 +266,6 @@ void testApp::draw(){
 	glTexCoord2f(0, targetHeight);
 	glVertex2f(ofGetWidth() * (panel.getValueF("warpSwx") + panel.getValueF("warpSwxFine")), ofGetHeight() * (panel.getValueF("warpSwy") + panel.getValueF("warpSwyFine")));
 	glEnd();
-	//fbo.draw(0, 0, 1080 * .5, 1920 * .5);
 }
 
 void testApp::drawBlob(ofxCvBlob& blob) {

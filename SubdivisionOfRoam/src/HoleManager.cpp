@@ -8,6 +8,7 @@ void HoleManager::setup() {
 	for(int i = 0; i < n; i++) {
 		ofImage* cur = new ofImage();
 		cur->loadImage(dir.getPath(i));
+		cur->resize(cur->getWidth() / 2, cur->getHeight() / 2);
 		holeImages.push_back(cur);
 	}
 }
