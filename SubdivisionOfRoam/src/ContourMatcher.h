@@ -52,6 +52,10 @@ public:
 	
 	static ofxVec2f closestPoint(ofxCvBlob& blob, const ofxVec2f& target) {
 		vector<ofPoint>& pts = blob.pts;
+		
+		if(pts.size() == 0)
+			return target;
+		
 		int nearest = 0;
 		float distance = 0;
 		for(int i = 0; i < pts.size(); i++) {
@@ -74,6 +78,23 @@ public:
 		} else {
 			return rightClosest;
 		}
+	}
+	
+	static ofxVec2f closestPoint(vector<ofxCvBlob>& blobs, const ofxVec2f& target) {
+		ofxVec2f closest = target; // for when blobs.size() = 0
+		float distance;
+		for(int i = 0; i < blobs.size(); i++) {
+			ofxCvBlob& cur = blobs[i];
+			if(cur.pts.size() > 0) {
+				ofxVec2f curClosest = closestPoint(cur, target);
+				float curDistance = curClosest.distance(target);
+				if(curDistance < distance) {
+					distance = curDistance;
+					closest = curClosest;
+				}
+			}
+		}
+		return closest;
 	}
 	
 	static void resampleBlob(ofxCvBlob& blob, int sampleRate, float spacing) {

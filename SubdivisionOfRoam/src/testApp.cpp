@@ -1,6 +1,6 @@
 #include "testApp.h"
 
-// fix projector color
+// fix projector color..?
 
 // less jittery holes
 // add feather explosions
@@ -73,7 +73,12 @@ void testApp::setupControlPanel() {
 	panel.setup("Control Panel", 5, 5, 300, 900);
 	panel.addPanel("general");
 	panel.addToggle("debug", "debug", true);
-	panel.addToggle("flip orientation", "flipOrientation", false);
+	panel.addToggle("use live video", "blobUseLiveVideo", false);
+	panel.addToggle("reset background", "blobResetBackground", true);
+	panel.addSlider("threshold", "blobThreshold", 128, 0, 255, true);
+	panel.addDrawableRect("curFrame", &curFrame, 200, 150);
+	panel.addDrawableRect("background", &grayBg, 200, 150);
+	panel.addDrawableRect("difference", &grayDiff, 200, 150);
 	
 	panel.addPanel("sound");
 	panel.addToggle("enable", "soundEnable", true);
@@ -107,19 +112,17 @@ void testApp::setupControlPanel() {
 	panel.addSlider("determination", "attackingDetermination", .6, 0, 1);
 	panel.addSlider("accuracy", "attackingAccuracy", 40, 1, 80);
 	
+	/*
 	panel.addPanel("input");
-	panel.addToggle("use live video", "blobUseLiveVideo", false);
-	panel.addToggle("reset background", "blobResetBackground", true);
-	panel.addSlider("threshold", "blobThreshold", 128, 0, 255, true);
 	panel.addSlider("brightness", "brightnessShutter", 0, 0, 1);
 	panel.addSlider("exposure", "exposureShutter", 0, 0, 1);
 	panel.addSlider("gain", "gainShutter", 0, 0, 1);
 	panel.addSlider("shutter", "inputShutter", 0, 0, 1);
-	panel.addDrawableRect("curFrame", &curFrame, 200, 150);
-	panel.addDrawableRect("background", &grayBg, 200, 150);
-	panel.addDrawableRect("difference", &grayDiff, 200, 150);
+	 */
 	
 	panel.addPanel("blob");
+	panel.addSlider("min blob diameter", "blobMinDiameter", 20, 10, 100);
+	panel.addSlider("max blob diameter", "blobMaxDiameter", 400, 10, 640);
 	panel.addSlider("sample rate", "blobSampleRate", 8, 1, 16, true);
 	panel.addSlider("smoothing size", "blobSmoothingSize", 0, 0, 10, true);
 	panel.addSlider("smoothing amount", "blobSmoothingAmount", 0, 0, 1);
@@ -131,6 +134,8 @@ void testApp::setupControlPanel() {
 	panel.addSlider("max age", "holeMaxAge", 30, 1, 60);
 	
 	panel.addPanel("warp");
+	panel.addToggle("flip orientation", "flipOrientation", false);
+	
 	panel.addSlider("nwx", "warpNwx", 0, 0, 1);
 	panel.addSlider("nwy", "warpNwy", 0, 0, 1);
 	panel.addSlider("nex", "warpNex", 1, 0, 1);
@@ -212,7 +217,9 @@ void testApp::update() {
 	SoundManager::enabled = panel.getValueB("soundEnable");
 	
 	// update blobs
-	contourFinder.findContours(panel.getValueB("blobUseLiveVideo") ? grayDiff : staticShadow, 40 * 40, 640 * 480 / 2, 16, true, true);
+	float minBlobSize = PI * powf(panel.getValueF("blobMinDiameter") / 2, 2);
+	float maxBlobSize = PI * powf(panel.getValueF("blobMaxDiameter") / 2, 2);
+	contourFinder.findContours(panel.getValueB("blobUseLiveVideo") ? grayDiff : staticShadow, minBlobSize, maxBlobSize, 16, true, true);
 	float scaleBlobs = targetWidth / camera.getWidth();
 	// this doesn't project the smallest part on the bottom but avoids showing people with their feet missing
 	ofPoint offset(-camera.getWidth() / 2, targetHeight / 2 - (camera.getHeight() * scaleBlobs));
