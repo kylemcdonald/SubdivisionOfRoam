@@ -16,6 +16,8 @@ void Hole::update() {
 	vector<ofxCvBlob>& blobs = testApp::contourFinder.blobs;
 	float distance;
 	ofxVec2f bestPosition;
+	center = 0;
+	blobIndex = 0;
 	for(int i = 0; i < blobs.size(); i++) {
 		vector<ofPoint>& pts = blobs[i].pts;
 		for(int j = 0; j < pts.size(); j++) {

@@ -1,14 +1,17 @@
 #include "testApp.h"
 
-// make sure holes disappear
-// filling in holes
+// fix projector color
+
+// less jittery holes
 // add feather explosions
 // birds need to not come beneath the overhead unless they are attacking
 // lens blur (gaussian)
-// add turnarounds
+// add turnarounds + any other animations
 // birds need to wait when people come in to attack them
+// add the rest of the sounds
 
 // allow birds to spread vertically more than horizontally
+// birds should escape backwards after attacking
 // gravity should exist...?
 // animate neighborhood and independence values
 // motion blur
@@ -19,6 +22,7 @@
 
 // manual controls for camera shutter, etc.
 // add very slow averaging for difference image so it works over the whole day
+// everything should be automatic: autostart on login, take a background image
 
 bool testApp::debug = false;
 ofxCvContourFinder testApp::contourFinder;
@@ -66,7 +70,7 @@ void testApp::setupControlPanel() {
 	for(int i = 0; i < n; i++)
 		Particle::particles.push_back(Particle(radius));
 	
-	panel.setup("Control Panel", 5, 5, 300, 800);
+	panel.setup("Control Panel", 5, 5, 300, 900);
 	panel.addPanel("general");
 	panel.addToggle("debug", "debug", true);
 	panel.addToggle("flip orientation", "flipOrientation", false);
@@ -107,6 +111,10 @@ void testApp::setupControlPanel() {
 	panel.addToggle("use live video", "blobUseLiveVideo", false);
 	panel.addToggle("reset background", "blobResetBackground", true);
 	panel.addSlider("threshold", "blobThreshold", 128, 0, 255, true);
+	panel.addSlider("brightness", "brightnessShutter", 0, 0, 1);
+	panel.addSlider("exposure", "exposureShutter", 0, 0, 1);
+	panel.addSlider("gain", "gainShutter", 0, 0, 1);
+	panel.addSlider("shutter", "inputShutter", 0, 0, 1);
 	panel.addDrawableRect("curFrame", &curFrame, 200, 150);
 	panel.addDrawableRect("background", &grayBg, 200, 150);
 	panel.addDrawableRect("difference", &grayDiff, 200, 150);
@@ -175,6 +183,16 @@ void testApp::update() {
 		panel.setValueB("flipOrientation", false);
 	}
 	
+	if(panel.getValueB("blobUseLiveVideo")) {
+		// not sure this is working
+		/*
+		camera.setBrightnessNorm(panel.getValueF("cameraBrightness"));
+		camera.setExposureNorm(panel.getValueF("cameraExposure"));
+		camera.setShutterNorm(panel.getValueF("cameraShutter"));
+		camera.setGainNorm(panel.getValueF("cameraGain"));
+		 */
+	}
+	
 	if(camera.grabVideo(curFrame)) {
 		curFrame.update();
 		
@@ -194,14 +212,16 @@ void testApp::update() {
 	SoundManager::enabled = panel.getValueB("soundEnable");
 	
 	// update blobs
-	contourFinder.findContours(panel.getValueB("blobUseLiveVideo") ? grayDiff : staticShadow, 10, 640 * 480 * .2, 16, true, true);
+	contourFinder.findContours(panel.getValueB("blobUseLiveVideo") ? grayDiff : staticShadow, 40 * 40, 640 * 480 / 2, 16, true, true);
 	float scaleBlobs = targetWidth / camera.getWidth();
-	ofPoint offset(-camera.getWidth() / 2, (targetHeight/ 2) - camera.getHeight() * scaleBlobs);
+	// this doesn't project the smallest part on the bottom but avoids showing people with their feet missing
+	ofPoint offset(-camera.getWidth() / 2, targetHeight / 2 - (camera.getHeight() * scaleBlobs));
 	for(int i = 0; i < contourFinder.nBlobs; i++) {
 		// offset blobs
 		ofxCvBlob& curBlob = contourFinder.blobs[i];
 		vector<ofPoint>& pts = curBlob.pts;
 		for(int j = 0; j < pts.size(); j++) {
+			// could add something here to extend legs further instead of raising image
 			pts[j] += offset;
 			pts[j] *= scaleBlobs;
 		}
@@ -259,7 +279,7 @@ void testApp::draw(){
 	
 	for (int i = 0; i < contourFinder.nBlobs; i++){
 		ofxCvBlob& curBlob = contourFinder.blobs[i];
-		ofSetColor(0);
+		ofSetColor(curBlob.hole ? 0 : 255);
 		ofFill();
 		drawBlob(curBlob);
 	}

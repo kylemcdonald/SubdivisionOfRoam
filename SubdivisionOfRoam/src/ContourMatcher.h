@@ -38,6 +38,44 @@ public:
 		// or the bounding box
 	}
 	
+	static ofxVec2f closestPoint(const ofxVec2f& p1, const ofxVec2f& p2, const ofxVec2f& p3) {
+		float u = (p3.x - p1.x) * (p2.x - p1.x);
+		u += (p3.y - p1.y) * (p2.y - p1.y);
+		u /= (p2 - p1).length();
+		return p1.interpolated(p2, u);
+	}
+	
+	template <class T>
+	static T& loopGet(vector<T>& vec, int i) {
+		return vec[(i + vec.size()) % vec.size()];
+	}
+	
+	static ofxVec2f closestPoint(ofxCvBlob& blob, const ofxVec2f& target) {
+		vector<ofPoint>& pts = blob.pts;
+		int nearest = 0;
+		float distance = 0;
+		for(int i = 0; i < pts.size(); i++) {
+			float curDistance = target.distance(pts[i]);
+			if(i == 0 || curDistance < distance) {
+				distance = curDistance;
+				nearest = i;
+			}
+		}
+		
+		ofxVec2f left = loopGet(pts, nearest - 1);
+		ofxVec2f center = pts[nearest];
+		ofxVec2f right = loopGet(pts, nearest + 1);
+		
+		ofxVec2f leftClosest = closestPoint(left, center, target);
+		ofxVec2f rightClosest = closestPoint(center, right, target);
+		
+		if(leftClosest.distance(target) < rightClosest.distance(target)) {
+			return leftClosest;
+		} else {
+			return rightClosest;
+		}
+	}
+	
 	static void resampleBlob(ofxCvBlob& blob, int sampleRate, float spacing) {
 		vector<ofPoint>& pts = blob.pts;
 		vector<ofPoint> resampled;
