@@ -307,7 +307,7 @@ void testApp::draw(){
 			drawNormals(cur, 8);
 		}
 	}
-	
+
 	glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA); // something like darken
 	Particle::drawAnimationAll();
 	

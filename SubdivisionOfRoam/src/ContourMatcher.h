@@ -42,6 +42,12 @@ public:
 		float u = (p3.x - p1.x) * (p2.x - p1.x);
 		u += (p3.y - p1.y) * (p2.y - p1.y);
 		u /= (p2 - p1).length();
+		// clamp u
+		if(u > 1) {
+			u = 1;
+		} else if(u < 0) {
+			u = 0;
+		}
 		return p1.interpolated(p2, u);
 	}
 	
@@ -53,8 +59,9 @@ public:
 	static ofxVec2f closestPoint(ofxCvBlob& blob, const ofxVec2f& target) {
 		vector<ofPoint>& pts = blob.pts;
 		
-		if(pts.size() == 0)
+		if(pts.size() == 0) {
 			return target;
+		}
 		
 		int nearest = 0;
 		float distance = 0;
@@ -65,7 +72,7 @@ public:
 				nearest = i;
 			}
 		}
-		
+
 		ofxVec2f left = loopGet(pts, nearest - 1);
 		ofxVec2f center = pts[nearest];
 		ofxVec2f right = loopGet(pts, nearest + 1);
@@ -81,20 +88,25 @@ public:
 	}
 	
 	static ofxVec2f closestPoint(vector<ofxCvBlob>& blobs, const ofxVec2f& target) {
-		ofxVec2f closest = target; // for when blobs.size() = 0
+		ofxVec2f closest;
 		float distance;
+		bool hasPoints = false;
 		for(int i = 0; i < blobs.size(); i++) {
 			ofxCvBlob& cur = blobs[i];
 			if(cur.pts.size() > 0) {
+				hasPoints = true;
 				ofxVec2f curClosest = closestPoint(cur, target);
 				float curDistance = curClosest.distance(target);
-				if(curDistance < distance) {
+				if(i == 0 || curDistance < distance) {
 					distance = curDistance;
 					closest = curClosest;
 				}
 			}
 		}
-		return closest;
+		if(hasPoints)
+			return closest;
+		else
+			return target;
 	}
 	
 	static void resampleBlob(ofxCvBlob& blob, int sampleRate, float spacing) {

@@ -1,5 +1,7 @@
 #include "Hole.h"
 
+//#define USE_JITTERS
+
 int Hole::holeRadius;
 float Hole::maxHoleAge;
 
@@ -13,6 +15,7 @@ void Hole::setup(ofxVec2f position) {
 }
 
 void Hole::update() {
+#ifdef USE_JITTERS
 	vector<ofxCvBlob>& blobs = testApp::contourFinder.blobs;
 	float distance;
 	ofxVec2f bestPosition;
@@ -31,14 +34,21 @@ void Hole::update() {
 		}
 	}
 	position = bestPosition;
+#else
+	vector<ofxCvBlob>& blobs = testApp::contourFinder.blobs;
+	position = ContourMatcher::closestPoint(blobs, position);
+#endif
 }
 
 void Hole::draw() {
-	//cout << "drawing hole at " << blobIndex << "/" << center << " " << position.x << "/" << position.y << endl;
+	ofSetColor(255);
+	ofEllipse(position.x, position.y, 10, 10);
 	
+	//cout << "drawing hole at " << blobIndex << "/" << center << " " << position.x << "/" << position.y << endl;
+	/*
 	ofxCvBlob& blob = testApp::contourFinder.blobs[blobIndex];
 	vector<ofPoint>& points = blob.pts;
-	int start = ofClamp(center - holeRadius, 0, points.size());
+	int start = loopGet(center - holeRadius)
 	int stop = ofClamp(center + holeRadius, 0, points.size());
 	
 	if(start < stop) {
@@ -67,6 +77,7 @@ void Hole::draw() {
 		}
 		glPopMatrix();
 	}
+	*/
 }
 
 float Hole::distance(ofPoint& target) {
