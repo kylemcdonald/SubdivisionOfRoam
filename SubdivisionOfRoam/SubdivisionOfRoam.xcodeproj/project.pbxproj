@@ -130,6 +130,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		271B8AD812988B6100DFB044 /* ContourUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContourUtils.h; path = src/ContourUtils.h; sourceTree = SOURCE_ROOT; };
 		273C3EB61293A1E60068D40C /* HoleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HoleManager.h; sourceTree = "<group>"; };
 		273C3EB71293A2610068D40C /* HoleManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HoleManager.cpp; sourceTree = "<group>"; };
 		275FFDBF128A382E00DD0E3A /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = install.xml; path = ../../../addons/ofxVectorMath/install.xml; sourceTree = SOURCE_ROOT; };
@@ -207,7 +208,6 @@
 		27C60D6812953C7000301410 /* Hole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hole.cpp; sourceTree = "<group>"; };
 		27C611281295915500301410 /* SoundManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundManager.h; sourceTree = "<group>"; };
 		27C6113F129593A200301410 /* SoundManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundManager.cpp; sourceTree = "<group>"; };
-		27CD95C6128B8C3500E5E841 /* ContourMatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContourMatcher.h; sourceTree = "<group>"; };
 		27CD9604128B982400E5E841 /* MSAInterpolationTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MSAInterpolationTypes.h; path = ../../../../../msalibs/MSAInterpolator/src/MSAInterpolationTypes.h; sourceTree = SOURCE_ROOT; };
 		27CD9605128B982400E5E841 /* MSAInterpolator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MSAInterpolator.h; path = ../../../../../msalibs/MSAInterpolator/src/MSAInterpolator.h; sourceTree = SOURCE_ROOT; };
 		27CD9606128B982400E5E841 /* MSAInterpolator1D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MSAInterpolator1D.h; path = ../../../../../msalibs/MSAInterpolator/src/MSAInterpolator1D.h; sourceTree = SOURCE_ROOT; };
@@ -1304,10 +1304,10 @@
 				27A9C4C61290795E006DFC26 /* Particle.h */,
 				27C611281295915500301410 /* SoundManager.h */,
 				27C6113F129593A200301410 /* SoundManager.cpp */,
+				271B8AD812988B6100DFB044 /* ContourUtils.h */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
-				27CD95C6128B8C3500E5E841 /* ContourMatcher.h */,
 				27CFA8C4129073A9005936DC /* ofxAutoControlPanel.h */,
 				27A9C5FE1290EC01006DFC26 /* Animation.h */,
 				27DF102112914D28006E1E6B /* AnimationManager.h */,

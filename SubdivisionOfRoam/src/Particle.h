@@ -100,6 +100,7 @@ public:
 			}
 		}
 	}
+	// add gravitational force right here <-
   void update();
 	void checkForAttack();
 	void attackAtRandom();

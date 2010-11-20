@@ -1,27 +1,29 @@
 #include "testApp.h"
 
-// fix hole drawing so it's not ellipses
-// add feather explosions
-// birds need to not come beneath the overhead unless they are attacking
-// lens blur (gaussian)
-// add turnarounds + any other animations
-// birds need to wait when people come in to attack them
-// add the rest of the sounds
-
-// allow birds to spread vertically more than horizontally
-// birds should escape backwards after attacking
-// gravity should exist...?
-// animate neighborhood and independence values
-// motion blur
-// noise in animation playback
-// shouldn't bite things touching the bottom of the screen
-// flap primarily when moving upwards, not downwards
-// distort birds as they fly with warping the textures? makes them sketchier
-
-// everything should be automatic: autostart on login, take a background image
-// manual controls for camera shutter, etc. this is important for if the app restarts
-// add very slow averaging for difference image so it works over the whole day
-
+/*
+ to finish:
+ 
+ proper hole drawing
+ adaptive background
+ depth blur
+ feather explosions
+ anti-ground force except during attack
+ leftover sounds
+ app starts fullscreen
+ manual camera controls to reset camera on restart
+ 
+ to perfect:
+ 
+ allow birds to spread vertically more than horizontally
+ add some explicit form of gravity
+ animate neighborhood and independence values
+ motion blur
+ noise in animation playback
+ shouldn't bite things touching the bottom of the screen
+ flap primarily when moving upwards, not downwards
+ distort birds as they fly with warping the textures, makes them sketchier
+*/
+ 
 bool testApp::debug = false;
 ofxCvContourFinder testApp::contourFinder;
 vector<ofxCvBlob> testApp::resampledBlobs;
@@ -70,7 +72,7 @@ void testApp::setupControlPanel() {
 	
 	panel.setup("Control Panel", 5, 5, 300, 900);
 	panel.addPanel("general");
-	panel.addToggle("debug", "debug", true);
+	panel.addToggle("debug", "debug", false);
 	panel.addToggle("use live video", "blobUseLiveVideo", false);
 	panel.addToggle("reset background", "blobResetBackground", true);
 	panel.addSlider("threshold", "blobThreshold", 128, 0, 255, true);
