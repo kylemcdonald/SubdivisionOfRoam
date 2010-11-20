@@ -21,4 +21,7 @@ public:
 	
 	static int holeRadius;
 	static float maxHoleAge;
+	static bool useEllipses;
+	static float deshake;
+	
 };

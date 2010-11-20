@@ -1,8 +1,6 @@
 #include "testApp.h"
 
-// fix projector color..?
-
-// less jittery holes
+// fix hole drawing so it's not ellipses
 // add feather explosions
 // birds need to not come beneath the overhead unless they are attacking
 // lens blur (gaussian)
@@ -20,9 +18,9 @@
 // flap primarily when moving upwards, not downwards
 // distort birds as they fly with warping the textures? makes them sketchier
 
-// manual controls for camera shutter, etc.
-// add very slow averaging for difference image so it works over the whole day
 // everything should be automatic: autostart on login, take a background image
+// manual controls for camera shutter, etc. this is important for if the app restarts
+// add very slow averaging for difference image so it works over the whole day
 
 bool testApp::debug = false;
 ofxCvContourFinder testApp::contourFinder;
@@ -129,9 +127,11 @@ void testApp::setupControlPanel() {
 	panel.addSlider("resample spacing", "blobResampleSpacing", 10, 1, 10);
 	
 	panel.addPanel("holes");
-	panel.addSlider("radius", "holeRadius", 2, 1, 10);
+	panel.addSlider("radius", "holeRadius", 2, 1, 40);
 	panel.addSlider("spacing", "holeSpacing", 50, 1, 100);
 	panel.addSlider("max age", "holeMaxAge", 30, 1, 60);
+	panel.addToggle("use ellipses", "holeUseEllipses", true);
+	panel.addSlider("deshake", "holeDeshake", 0.1, 0, 1);
 	
 	panel.addPanel("warp");
 	panel.addToggle("flip orientation", "flipOrientation", false);
@@ -174,6 +174,8 @@ void testApp::update() {
 	
 	Hole::holeRadius = panel.getValueF("holeRadius");
 	Hole::maxHoleAge = panel.getValueF("holeMaxAge");
+	Hole::useEllipses = panel.getValueB("holeUseEllipses");
+	Hole::deshake = panel.getValueB("holeDeshake");
 	HoleManager::holeSpacing = panel.getValueF("holeSpacing");
 	
 	if(panel.getValueB("flipOrientation")) {
