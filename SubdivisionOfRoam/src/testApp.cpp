@@ -179,7 +179,7 @@ void testApp::update() {
 	Hole::holeRadius = panel.getValueF("holeRadius");
 	Hole::maxHoleAge = panel.getValueF("holeMaxAge");
 	Hole::useEllipses = panel.getValueB("holeUseEllipses");
-	Hole::deshake = panel.getValueB("holeDeshake");
+	Hole::deshake = panel.getValueF("holeDeshake");
 	HoleManager::holeSpacing = panel.getValueF("holeSpacing");
 	
 	if(panel.getValueB("flipOrientation")) {
