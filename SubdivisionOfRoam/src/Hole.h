@@ -8,8 +8,9 @@ protected:
 	ofImage* img;
 	ofxVec2f position;
 	
-	int blobIndex;
-	int center;
+	ofxCvBlob* matchedBlob;
+	int matchedIndex;
+	
 	float birth;
 public:
 	Hole();

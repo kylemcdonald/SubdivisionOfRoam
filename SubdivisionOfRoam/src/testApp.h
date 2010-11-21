@@ -12,7 +12,7 @@
 #include "ofxLibdcPtGrey.h" // https://github.com/kylemcdonald/ofxLibdc
 
 #include "ofxAutoControlPanel.h"
-#include "ContourMatcher.h"
+#include "ContourUtils.h"
 #include "Particle.h"
 
 #include "HoleManager.h"

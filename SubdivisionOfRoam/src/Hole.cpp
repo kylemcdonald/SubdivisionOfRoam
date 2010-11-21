@@ -1,7 +1,5 @@
 #include "Hole.h"
 
-//#define USE_JITTERS
-
 int Hole::holeRadius;
 float Hole::maxHoleAge;
 bool Hole::useEllipses;
@@ -18,7 +16,7 @@ void Hole::setup(ofxVec2f position) {
 
 void Hole::update() {
 	vector<ofxCvBlob>& blobs = testApp::contourFinder.blobs;
-	position.interpolate(ContourMatcher::closestPoint(blobs, position), deshake);
+	position.interpolate(ContourUtils::closestPoint(blobs, position, matchedBlob, matchedIndex), deshake);
 }
 
 void Hole::draw() {
@@ -27,7 +25,7 @@ void Hole::draw() {
 		ofEllipse(position.x, position.y, holeRadius, holeRadius);
 	} else {	
 		//cout << "drawing hole at " << blobIndex << "/" << center << " " << position.x << "/" << position.y << endl;
-		
+		/*
 		ofxCvBlob& blob = testApp::contourFinder.blobs[blobIndex];
 		vector<ofPoint>& points = blob.pts;
 		int start = ofClamp(center - holeRadius, 0, points.size());
@@ -59,6 +57,7 @@ void Hole::draw() {
 			}
 			glPopMatrix();
 		}
+		 */
 	}
 }
 

@@ -121,6 +121,8 @@ void testApp::setupControlPanel() {
 	 */
 	
 	panel.addPanel("blob");
+	panel.addSlider("general motion", "blobGeneralMotion", 5, 0, 20);
+	panel.addSlider("contour motion", "blobContourMotion", 2, 0, 10);
 	panel.addSlider("min blob diameter", "blobMinDiameter", 20, 10, 100);
 	panel.addSlider("max blob diameter", "blobMaxDiameter", 400, 10, 640);
 	panel.addSlider("sample rate", "blobSampleRate", 8, 1, 16, true);
@@ -227,6 +229,8 @@ void testApp::update() {
 	float scaleBlobs = targetWidth / camera.getWidth();
 	// this doesn't project the smallest part on the bottom but avoids showing people with their feet missing
 	ofPoint offset(-camera.getWidth() / 2, targetHeight / 2 - (camera.getHeight() * scaleBlobs));
+	offset += ofPoint(ofSignedNoise(ofGetElapsedTimef(), 1), ofSignedNoise(1, ofGetElapsedTimef())) * panel.getValueF("blobGeneralMotion");
+	float contourNoise = panel.getValueF("blobContourMotion");
 	for(int i = 0; i < contourFinder.nBlobs; i++) {
 		// offset blobs
 		ofxCvBlob& curBlob = contourFinder.blobs[i];
@@ -235,15 +239,20 @@ void testApp::update() {
 			// could add something here to extend legs further instead of raising image
 			pts[j] += offset;
 			pts[j] *= scaleBlobs;
+			if(contourNoise > 0) {
+				pts[j].x += ofRandomf() * contourNoise;
+				pts[j].y += ofRandomf() * contourNoise;
+			}
 		}
 	}
+	
+	ContourUtils::smoothBlobs(contourFinder.blobs, panel.getValueI("blobSmoothingSize"), panel.getValueF("blobSmoothingAmount"));
 	
 	// resample blobs
 	resampledBlobs = contourFinder.blobs;
 	for (int i = 0; i < resampledBlobs.size(); i++){
 		ofxCvBlob& curBlob = resampledBlobs[i];
-		ContourMatcher::smoothBlob(curBlob, panel.getValueI("blobSmoothingSize"), panel.getValueF("blobSmoothingAmount"));
-		ContourMatcher::resampleBlob(curBlob, panel.getValueI("blobSampleRate"), panel.getValueI("blobResampleSpacing"));
+		ContourUtils::resampleBlob(curBlob, panel.getValueI("blobSampleRate"), panel.getValueI("blobResampleSpacing"));
 	}
 	
 	// update particles

@@ -160,7 +160,7 @@ public:
 		pts = resampled;
 	}
 	
-	static void ContourUtils::getOffsetPoint(ofxCvBlob& blob, int start, float radius, int& lastIndex, ofPoint& point) {
+	static void getOffsetPoint(ofxCvBlob& blob, int start, float radius, int& lastIndex, ofPoint& point) {
 		/*
 		 vector<ofPoint>& pts = blob.pts;
 		if(radius > 0) {
@@ -183,7 +183,7 @@ public:
 		 */
 	}
 	
-	static void ContourUtils::getCenteredSegment(ofxCvBlob& blob, int center, float radius, int& startIndex, int& stopIndex, ofxVec2f& firstPoint, ofxVec2f& lastPoint) {
+	static void getCenteredSegment(ofxCvBlob& blob, int center, float radius, int& startIndex, int& stopIndex, ofxVec2f& firstPoint, ofxVec2f& lastPoint) {
 		//getOffsetPoint(blob, center, -radius, startIndex, firstPoint);
 		//getOffsetPoint(blob, center, +radius, stopIndex, lastPoint);
 	}
