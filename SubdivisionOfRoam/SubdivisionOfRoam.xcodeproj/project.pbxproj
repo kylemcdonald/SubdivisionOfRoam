@@ -11,6 +11,7 @@
 		275FFDCE128A382E00DD0E3A /* ofxMatrix3x3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275FFDC1128A382E00DD0E3A /* ofxMatrix3x3.cpp */; };
 		275FFDCF128A382E00DD0E3A /* ofxMatrix4x4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275FFDC3128A382E00DD0E3A /* ofxMatrix4x4.cpp */; };
 		275FFDD0128A382E00DD0E3A /* ofxQuaternion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275FFDC8128A382E00DD0E3A /* ofxQuaternion.cpp */; };
+		276495FA1298EC38003603BD /* ContourUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276495F91298EC38003603BD /* ContourUtils.cpp */; };
 		27956E8E128F470800596587 /* libdc1394.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27956E85128F470800596587 /* libdc1394.a */; };
 		27956E8F128F470800596587 /* ofxLibdc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27956E88128F470800596587 /* ofxLibdc.cpp */; };
 		27956E90128F470800596587 /* ofxLibdcGrabber.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27956E8A128F470800596587 /* ofxLibdcGrabber.cpp */; };
@@ -147,6 +148,7 @@
 		275FFDCB128A382E00DD0E3A /* ofxVec3f.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxVec3f.h; path = ../../../addons/ofxVectorMath/src/ofxVec3f.h; sourceTree = SOURCE_ROOT; };
 		275FFDCC128A382E00DD0E3A /* ofxVec4f.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxVec4f.h; path = ../../../addons/ofxVectorMath/src/ofxVec4f.h; sourceTree = SOURCE_ROOT; };
 		275FFDCD128A382E00DD0E3A /* ofxVectorMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxVectorMath.h; path = ../../../addons/ofxVectorMath/src/ofxVectorMath.h; sourceTree = SOURCE_ROOT; };
+		276495F91298EC38003603BD /* ContourUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ContourUtils.cpp; sourceTree = "<group>"; };
 		27956E3F128F470800596587 /* COMMIT_EDITMSG */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = COMMIT_EDITMSG; path = ../../../addons/ofxLibdc/.git/COMMIT_EDITMSG; sourceTree = SOURCE_ROOT; };
 		27956E40128F470800596587 /* config */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = config; path = ../../../addons/ofxLibdc/.git/config; sourceTree = SOURCE_ROOT; };
 		27956E41128F470800596587 /* description */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = description; path = ../../../addons/ofxLibdc/.git/description; sourceTree = SOURCE_ROOT; };
@@ -1305,6 +1307,7 @@
 				27C611281295915500301410 /* SoundManager.h */,
 				27C6113F129593A200301410 /* SoundManager.cpp */,
 				271B8AD812988B6100DFB044 /* ContourUtils.h */,
+				276495F91298EC38003603BD /* ContourUtils.cpp */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
@@ -1523,6 +1526,7 @@
 				273C3EB81293A2610068D40C /* HoleManager.cpp in Sources */,
 				27C60D6912953C7000301410 /* Hole.cpp in Sources */,
 				27C61140129593A200301410 /* SoundManager.cpp in Sources */,
+				276495FA1298EC38003603BD /* ContourUtils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

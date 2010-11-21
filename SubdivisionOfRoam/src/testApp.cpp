@@ -28,6 +28,26 @@ bool testApp::debug = false;
 ofxCvContourFinder testApp::contourFinder;
 vector<ofxCvBlob> testApp::resampledBlobs;
 
+float ofDistFast(float x1, float y1, float x2, float y2) {
+	float xd = x1 - x2;
+	float yd = y1 - y2;
+	return sqrtf(xd * xd + yd * yd);
+}
+
+float ofDistSquaredFast(float x1, float y1, float x2, float y2) {
+	float xd = x1 - x2;
+	float yd = y1 - y2;
+	return xd * xd + yd * yd;
+}
+
+float ofDistSlow(float x1, float y1, float x2, float y2) {
+	return sqrt((double) ((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
+}
+
+float ofDistSquaredSlow(float x1, float y1, float x2, float y2) {
+	return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+}
+
 void testApp::setup(){
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	glDisable(GL_DEPTH_TEST);
@@ -134,7 +154,7 @@ void testApp::setupControlPanel() {
 	panel.addSlider("radius", "holeRadius", 2, 1, 40);
 	panel.addSlider("spacing", "holeSpacing", 50, 1, 100);
 	panel.addSlider("max age", "holeMaxAge", 30, 1, 60);
-	panel.addToggle("use ellipses", "holeUseEllipses", true);
+	panel.addToggle("use ellipses", "holeUseEllipses", false);
 	panel.addSlider("deshake", "holeDeshake", 0.1, 0, 1);
 	
 	panel.addPanel("warp");
