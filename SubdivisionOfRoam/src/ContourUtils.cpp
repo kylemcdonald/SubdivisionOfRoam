@@ -151,10 +151,14 @@ void ContourUtils::resampleBlob(ofxCvBlob& blob, int sampleRate, float spacing) 
 	pts = resampled;
 }
 
+inline int ContourUtils::loopMod(int i, int n) {
+	i = i % n;
+	return i < 0 ? i + n : i;
+}
+
 template <class T>
 inline T& ContourUtils::loopGet(vector<T>& vec, int i) {
-	i = i % vec.size();
-	return vec[i < 0 ? i + vec.size() : i];
+	return vec[loopMod(i, vec.size())];
 }
 
 // if possible, these two conditions should be combined into one big case
@@ -164,45 +168,47 @@ void ContourUtils::getOffsetPoint(ofxCvBlob& blob, int start, float radius, int&
 	if(radius > 0) {
 		float curRadius = 0;
 		lastIndex = start;
-		 // find the first index after the radius
-		 do {
-			 ofPoint& lastPoint = loopGet(pts, lastIndex);
-			 lastIndex++;
-			 ofPoint& curPoint = loopGet(pts, lastIndex);
-			 float curLength = ofDist(lastPoint.x, lastPoint.y, curPoint.x, curPoint.y);
-			 curRadius += curLength;			 
-		 } while(curRadius < radius);
-		 // overshoots once, bring back
-		 lastIndex--;
-		 ofPoint& lastPoint = loopGet(pts, lastIndex);
-		 ofPoint& pastPoint = loopGet(pts, lastIndex + 1);
-		 float lastLength = ofDist(lastPoint.x, lastPoint.y, pastPoint.x, pastPoint.y);
-		 curRadius -= lastLength;
-		 // then interpolate
-		 float remainingLength = radius - curRadius;
-		 point = lastPoint;
-		 point.interpolate(pastPoint, remainingLength / lastLength);
+		// find the first index after the radius
+		do {
+			ofPoint& lastPoint = loopGet(pts, lastIndex);
+			lastIndex++;
+			ofPoint& curPoint = loopGet(pts, lastIndex);
+			float curLength = ofDist(lastPoint.x, lastPoint.y, curPoint.x, curPoint.y);
+			curRadius += curLength;			 
+		} while(curRadius < radius);
+		// overshoots once, bring back
+		lastIndex--;
+		ofPoint& lastPoint = loopGet(pts, lastIndex);
+		ofPoint& pastPoint = loopGet(pts, lastIndex + 1);
+		float lastLength = ofDist(lastPoint.x, lastPoint.y, pastPoint.x, pastPoint.y);
+		curRadius -= lastLength;
+		// then interpolate
+		float remainingLength = radius - curRadius;
+		point = lastPoint;
+		point.interpolate(pastPoint, remainingLength / lastLength);
+		lastIndex = loopMod(lastIndex, pts.size()); // clean lastIndex before returning it
 	} else {
 		float curRadius = 0;
 		lastIndex = start;
 		// find the first index before the radius
-		 do {
-			 ofPoint& lastPoint = loopGet(pts, lastIndex);
-			 lastIndex--;
-			 ofPoint& curPoint = loopGet(pts, lastIndex);
-			 float curLength = ofDist(lastPoint.x, lastPoint.y, curPoint.x, curPoint.y);
-			 curRadius -= curLength;
-		 } while(curRadius > radius);
-		 // overshoots once, bring back
-		 lastIndex++;
-		 ofPoint& lastPoint = loopGet(pts, lastIndex);
-		 ofPoint& pastPoint = loopGet(pts, lastIndex - 1);
-		 float lastLength = ofDist(lastPoint.x, lastPoint.y, pastPoint.x, pastPoint.y);
-		 curRadius += lastLength;
-		 // then interpolate
-		 float remainingLength = curRadius - radius;
-		 point = lastPoint;
-		 point.interpolate(pastPoint, remainingLength / lastLength);
+		do {
+			ofPoint& lastPoint = loopGet(pts, lastIndex);
+			lastIndex--;
+			ofPoint& curPoint = loopGet(pts, lastIndex);
+			float curLength = ofDist(lastPoint.x, lastPoint.y, curPoint.x, curPoint.y);
+			curRadius -= curLength;
+		} while(curRadius > radius);
+		// overshoots once, bring back
+		lastIndex++;
+		ofPoint& lastPoint = loopGet(pts, lastIndex);
+		ofPoint& pastPoint = loopGet(pts, lastIndex - 1);
+		float lastLength = ofDist(lastPoint.x, lastPoint.y, pastPoint.x, pastPoint.y);
+		curRadius += lastLength;
+		// then interpolate
+		float remainingLength = curRadius - radius;
+		point = lastPoint;
+		point.interpolate(pastPoint, remainingLength / lastLength);
+		lastIndex = loopMod(lastIndex, pts.size()); // clean lastIndex before returning it
 	}
 }
 

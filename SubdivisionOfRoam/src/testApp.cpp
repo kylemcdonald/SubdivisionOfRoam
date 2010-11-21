@@ -146,12 +146,12 @@ void testApp::setupControlPanel() {
 	panel.addSlider("min blob diameter", "blobMinDiameter", 20, 10, 100);
 	panel.addSlider("max blob diameter", "blobMaxDiameter", 400, 10, 640);
 	panel.addSlider("sample rate", "blobSampleRate", 8, 1, 16, true);
-	panel.addSlider("smoothing size", "blobSmoothingSize", 0, 0, 10, true);
-	panel.addSlider("smoothing amount", "blobSmoothingAmount", 0, 0, 1);
+	panel.addSlider("smoothing size", "blobSmoothingSize", 3, 0, 10, true);
+	panel.addSlider("smoothing amount", "blobSmoothingAmount", .4, 0, 1);
 	panel.addSlider("resample spacing", "blobResampleSpacing", 10, 1, 10);
 	
 	panel.addPanel("holes");
-	panel.addSlider("radius", "holeRadius", 2, 1, 40);
+	panel.addSlider("radius", "holeRadius", 10, 1, 40);
 	panel.addSlider("spacing", "holeSpacing", 50, 1, 100);
 	panel.addSlider("max age", "holeMaxAge", 30, 1, 60);
 	panel.addToggle("use ellipses", "holeUseEllipses", false);

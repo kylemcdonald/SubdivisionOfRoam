@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ContourUtils.h"
 #include "HoleManager.h"
 #include "testApp.h"
 

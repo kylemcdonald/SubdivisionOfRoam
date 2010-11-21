@@ -33,69 +33,58 @@ void Hole::draw() {
 			
 			vector<ofPoint>& pts = matchedBlob->pts;
 			
-			firstPoint = pts[startIndex];
-			lastPoint = pts[stopIndex];
-			
-			ofSetColor(255, 0, 0);
-			ofCircle(firstPoint, 5);
-			ofSetColor(0, 0, 255);
-			ofCircle(lastPoint, 5);
-			ofSetColor(0, 255, 0);
-			ofLine(firstPoint, lastPoint);
-			/*
-			if(startIndex < stopIndex) {	
-				
-				// first draw white polygon
-				ofFill();
-				glColor3f(1, 1, 1);
-				ofBeginShape();
-				ofVertex(firstPoint);
-				int i = startIndex;
-				do {
-					ofVertex(pts[i]);
-					i++;
-					if(i >= pts.size()) {
-						i -= pts.size();
-					}
-				} while(i != stopIndex);
-				ofVertex(pts[stopIndex]);
-				ofVertex(lastPoint);
-				ofEndShape();
-			}*/
-			
-			/*
-			ofxCvBlob& blob = testApp::contourFinder.blobs[blobIndex];
-			vector<ofPoint>& points = blob.pts;
-			int start = ofClamp(center - holeRadius, 0, points.size());
-			int stop = ofClamp(center + holeRadius, 0, points.size());
-			
-			if(start < stop) {
-				ofFill();
-				glColor3f(1, 1, 1);
-				ofBeginShape();
-				for(int i = start; i < stop; i++) {
-					ofPoint& cur = points[i];
-					ofVertex(cur.x, cur.y);
-				}
-				ofEndShape();
-
-				ofxVec2f startPoint(points[start]);
-				ofxVec2f stopPoint(points[stop - 1]);
-				ofxVec2f diff = stopPoint - startPoint;
-				float angle = atan2f(diff.y, diff.x) - PI / 2;
-				glPushMatrix();
-				glTranslatef(startPoint.x, startPoint.y, 0);
-				glRotatef(ofRadToDeg(angle), 0, 0, 1);
-				float scale = diff.length() / img->getHeight();
-				glScalef(scale, scale, 1);
-				img->draw(0, 0);
-				ofNoFill();
-				if(testApp::debug) {
-					ofRect(0, 0, img->getWidth(), img->getHeight());
-				}
-				glPopMatrix();
+			if(testApp::debug) {
+				ofSetColor(255, 0, 0);
+				ofCircle(firstPoint, 5);
+				ofSetColor(0, 0, 255);
+				ofCircle(lastPoint, 5);
+				ofSetColor(0, 255, 0);
+				ofLine(firstPoint, lastPoint);
 			}
-			 */
+			
+			glColor3f(1, 1, 1);
+			
+			// first draw white polygon
+			ofFill();
+			ofBeginShape();
+			ofVertex(firstPoint);
+			
+			if(startIndex == stopIndex) {
+				// only need one vertex
+				ofVertex(pts[startIndex]);
+			} else if(startIndex < stopIndex) {
+				// they're in order, one pass
+				for(int i = startIndex; i <= stopIndex; i++) {
+					ofVertex(pts[i]);
+				}
+			} else {
+				// cross over the seam, do the first part
+				for(int i = startIndex; i < pts.size(); i++) {
+					ofVertex(pts[i]);
+				}
+				// then the second part
+				for(int i = 0; i <= stopIndex; i++) {
+					ofVertex(pts[i]);
+				}					
+			}
+			
+			ofVertex(lastPoint);
+			ofEndShape();
+			
+			// then draw hole image on top of that
+			glPushMatrix();
+			glTranslatef(firstPoint.x, firstPoint.y, 0);
+			ofxVec2f diff = lastPoint - firstPoint;
+			float angle = atan2f(diff.y, diff.x) - PI / 2;
+			glRotatef(ofRadToDeg(angle), 0, 0, 1);
+			float scale = diff.length() / img->getHeight();
+			glScalef(scale, scale, 1);
+			img->draw(0, 0);
+			ofNoFill();
+			if(testApp::debug) {
+				ofRect(0, 0, img->getWidth(), img->getHeight());
+			}
+			glPopMatrix();
 		}
 	}
 }
