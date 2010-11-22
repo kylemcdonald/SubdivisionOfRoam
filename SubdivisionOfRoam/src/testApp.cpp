@@ -3,19 +3,19 @@
 /*
  to finish:
  
- proper hole drawing
- adaptive background
  depth blur
  feather explosions
  anti-ground force except during attack
  leftover sounds
  app starts fullscreen
  manual camera controls to reset camera on restart
+ fly away with chunks
+ add some explicit form of gravity
+ adaptive background <-- add this once i have a fw cable again
  
  to perfect:
  
  allow birds to spread vertically more than horizontally
- add some explicit form of gravity
  animate neighborhood and independence values
  motion blur
  noise in animation playback
