@@ -14,8 +14,8 @@ public:
 	void setup(int width, int height) {
 		ping.setup(width, height);
 		pong.setup(width, height);
-		horizontalBlur.setup("", "horizontalBlur.fs");
-		verticalBlur.setup("", "verticalBlur.fs");
+		horizontalBlur.setup("", "shaders/horizontalBlur.fs");
+		verticalBlur.setup("", "shaders/verticalBlur.fs");
 	}
 	void setPasses(int passes) {
 		this->passes = passes;
