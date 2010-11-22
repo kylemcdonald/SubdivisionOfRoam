@@ -6,6 +6,8 @@
 
 #include "AnimationManager.h"
 
+#include "ofxBlur.h"
+
 inline void randomize(ofxVec3f& v) {
 	v.x = ofRandomf();
 	v.y = ofRandomf();

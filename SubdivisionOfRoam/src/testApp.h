@@ -11,6 +11,7 @@
 #include "ofxControlPanel.h" // https://github.com/ofTheo/ofxControlPanel
 #include "ofxLibdcPtGrey.h" // https://github.com/kylemcdonald/ofxLibdc
 
+#include "ofxBlur.h"
 #include "ofxAutoControlPanel.h"
 #include "ContourUtils.h"
 #include "Particle.h"
@@ -53,6 +54,7 @@ public:
 	ofxCvGrayscaleImage staticShadow;
 	
 	ofxFbo fbo;
+	ofxBlur blur;
 	
 	ofSoundPlayer ambience;
 	

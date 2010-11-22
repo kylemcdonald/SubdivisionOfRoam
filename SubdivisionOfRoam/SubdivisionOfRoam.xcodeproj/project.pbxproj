@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2701381B129B0F0B0060F188 /* ofxShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27013819129B0F0B0060F188 /* ofxShader.cpp */; };
 		273C3EB81293A2610068D40C /* HoleManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 273C3EB71293A2610068D40C /* HoleManager.cpp */; };
 		275FFDCE128A382E00DD0E3A /* ofxMatrix3x3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275FFDC1128A382E00DD0E3A /* ofxMatrix3x3.cpp */; };
 		275FFDCF128A382E00DD0E3A /* ofxMatrix4x4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275FFDC3128A382E00DD0E3A /* ofxMatrix4x4.cpp */; };
@@ -131,6 +132,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		27013819129B0F0B0060F188 /* ofxShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxShader.cpp; sourceTree = "<group>"; };
+		2701381A129B0F0B0060F188 /* ofxShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxShader.h; sourceTree = "<group>"; };
+		27013822129B11930060F188 /* ofxBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxBlur.h; path = ../GaussianBlur/src/ofxBlur.h; sourceTree = SOURCE_ROOT; };
 		273C3EB61293A1E60068D40C /* HoleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HoleManager.h; sourceTree = "<group>"; };
 		273C3EB71293A2610068D40C /* HoleManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HoleManager.cpp; sourceTree = "<group>"; };
 		275FFDBF128A382E00DD0E3A /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = install.xml; path = ../../../addons/ofxVectorMath/install.xml; sourceTree = SOURCE_ROOT; };
@@ -410,6 +414,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		27013817129B0F0B0060F188 /* ofxShader */ = {
+			isa = PBXGroup;
+			children = (
+				27013818129B0F0B0060F188 /* src */,
+			);
+			path = ofxShader;
+			sourceTree = "<group>";
+		};
+		27013818129B0F0B0060F188 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				27013819129B0F0B0060F188 /* ofxShader.cpp */,
+				2701381A129B0F0B0060F188 /* ofxShader.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		275FFDBE128A382E00DD0E3A /* ofxVectorMath */ = {
 			isa = PBXGroup;
 			children = (
@@ -992,6 +1013,7 @@
 		E44665C70F5B3E03005D0BF0 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				27013817129B0F0B0060F188 /* ofxShader */,
 				27A9C4CD12907E9A006DFC26 /* MSAPerlin */,
 				27956E3C128F470800596587 /* ofxLibdc */,
 				27E2E6D9128F389F0018A8CC /* ofxFbo */,
@@ -1302,6 +1324,7 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				27013822129B11930060F188 /* ofxBlur.h */,
 				27C7B6AA1299CE3E0013D0E2 /* ContourUtils.cpp */,
 				27C7B6AB1299CE3E0013D0E2 /* ContourUtils.h */,
 				27A9C4C51290795E006DFC26 /* Particle.cpp */,
@@ -1527,6 +1550,7 @@
 				27C60D6912953C7000301410 /* Hole.cpp in Sources */,
 				27C61140129593A200301410 /* SoundManager.cpp in Sources */,
 				27C7B6AC1299CE3E0013D0E2 /* ContourUtils.cpp in Sources */,
+				2701381B129B0F0B0060F188 /* ofxShader.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

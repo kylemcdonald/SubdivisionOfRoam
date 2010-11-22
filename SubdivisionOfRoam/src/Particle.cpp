@@ -36,7 +36,7 @@ float
 	Particle::attackDetermination,
 	Particle::attackAccuracy;
 
-void Particle::setup() {
+void Particle::setup() {	
 	perlin.setup(4, 1, .5, (int) ofRandom(0, 1000));
 	globalOffset.set(0, 1. / 3, 2. / 3);
 	speed = 24;
@@ -128,11 +128,9 @@ inline void Particle::drawAnimation() {
 	if(attackMode) {
 		attackingAnimation->draw(age);
 	} else {
-		if(flockingAnimation->draw(age)) {
-			// switch out flocking animations randomly
-			//flockingAnimation = animationManager.randomFlocking();
-		}
+		flockingAnimation->draw(age);
 	}
+	
 	glPopMatrix();
 	
 	glPopMatrix();

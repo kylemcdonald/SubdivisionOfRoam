@@ -28,7 +28,7 @@ public:
 		ofPushMatrix();
 		pong.begin();
 	}
-	void end() {
+	void end(bool draw = true) {
 		pong.end();
 		
 		glColor4f(1, 1, 1, 1);
@@ -48,8 +48,13 @@ public:
 			pong.end();
 		}
 		
-		pong.draw(0, 0);
+		if(draw) {
+			pong.draw(0, 0);
+		}
 		ofPopStyle();
 		ofPopMatrix();
+	}
+	void bind() {
+		pong.bind();
 	}
 };

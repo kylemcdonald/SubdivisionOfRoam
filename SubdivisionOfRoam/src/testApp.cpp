@@ -52,6 +52,8 @@ void testApp::setup(){
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	glDisable(GL_DEPTH_TEST);
 	
+	blur.setup(targetWidth, targetHeight);
+	
 	ambience.loadSound("sound/ambience/Amb1.aif");
 	ambience.setLoop(true);
 	ambience.play();
@@ -105,7 +107,11 @@ void testApp::setupControlPanel() {
 	panel.addSlider("flapping volume", "soundFlappingVolume", .1, 0, 1);
 	panel.addSlider("squawking volume", "soundSquawkingVolume", .1, 0, 1);
 	panel.addSlider("ripping volume", "soundRippingVolume", .1, 0, 1);
-	// density control
+	// density control?
+	
+	panel.addPanel("blur");
+	panel.addSlider("global radius", "blurGlobalRadius", 0, 0, 20);
+	panel.addSlider("global passes", "blurGlobalPasses", 0, 0, 20, true);
 	
 	panel.addPanel("animation");
 	panel.addSlider("base framerate", "animationBaseFramerate", 1, 0, 40);
@@ -305,9 +311,11 @@ void testApp::update() {
 
 void testApp::draw(){
 	fbo.begin();
+	
 	ofClear(255, 255, 255, 255);
 	
 	ofEnableAlphaBlending();
+	
 	
 	glPushMatrix();
 	ofTranslate(targetWidth / 2, targetHeight / 2);
@@ -340,7 +348,7 @@ void testApp::draw(){
 			drawNormals(cur, 8);
 		}
 	}
-
+	
 	glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA); // something like darken
 	Particle::drawAnimationAll();
 	
@@ -350,11 +358,18 @@ void testApp::draw(){
 	
 	ofBackground(0, 0, 0);	
 	ofDisableAlphaBlending();
+	
+	blur.setRadius(panel.getValueF("blurGlobalRadius"));
+	blur.setPasses(panel.getValueF("blurGlobalPasses"));
+	blur.begin();
+	ofClear(1, 1, 1, 0);
 	drawWarped();
+	blur.end();
 }
 
 void testApp::drawWarped() {
 	fbo.getTexture(0).bind();
+	ofClear(0, 0, 0, 1);
 	glBegin(GL_QUADS);
 	glTexCoord2f(0, 0);
 	glVertex2f(ofGetWidth() * (panel.getValueF("warpNwx") + panel.getValueF("warpNwxFine")), ofGetHeight() * (panel.getValueF("warpNwy") + panel.getValueF("warpNwyFine")));
