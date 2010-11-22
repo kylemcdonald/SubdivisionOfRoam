@@ -16,6 +16,7 @@
 #include "ContourUtils.h"
 #include "Particle.h"
 
+#include "AnimationManager.h"
 #include "HoleManager.h"
 #include "SoundManager.h"
 

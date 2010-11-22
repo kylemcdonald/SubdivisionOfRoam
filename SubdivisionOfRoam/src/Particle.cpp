@@ -27,8 +27,6 @@ float
 	Particle::animationForceFramerate,
 	Particle::animationVelocityFramerate,
 	Particle::flapDisplacement;
-AnimationManager
-	Particle::animationManager;
 
 float
 	Particle::attackRange,
@@ -45,8 +43,6 @@ void Particle::setup() {
   independence = .15;
   neighborhood = 700;
 	turbulence = 1;
-	
-	animationManager.setup();
 }
 
 void Particle::drawAll() {
@@ -184,7 +180,7 @@ inline void Particle::endAttack() {
 	attackMode = false;
 	
 	HoleManager::add(position);
-	
+	DebrisManager::add(position);
 	SoundManager::randomRipping();
 }
 

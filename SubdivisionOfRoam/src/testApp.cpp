@@ -3,7 +3,6 @@
 /*
  to finish:
  
- depth blur
  feather explosions
  anti-ground force except during attack
  leftover sounds
@@ -12,7 +11,7 @@
  fly away with chunks
  add some explicit form of gravity
  adaptive background <-- add this once i have a fw cable again
- 
+  
  to perfect:
  
  allow birds to spread vertically more than horizontally
@@ -75,6 +74,8 @@ void testApp::setup(){
 	
 	SoundManager::setup();
 	HoleManager::setup();
+	AnimationManager::setup();
+	DebrisManager::setup();
 	
 	grayImage.allocate(camera.getWidth(), camera.getHeight());
 	grayBg.allocate(camera.getWidth(), camera.getHeight());
@@ -110,8 +111,8 @@ void testApp::setupControlPanel() {
 	// density control?
 	
 	panel.addPanel("blur");
-	panel.addSlider("global radius", "blurGlobalRadius", 0, 0, 20);
-	panel.addSlider("global passes", "blurGlobalPasses", 0, 0, 20, true);
+	panel.addSlider("global radius", "blurGlobalRadius", 2, 0, 20);
+	panel.addSlider("global passes", "blurGlobalPasses", 1, 0, 20, true);
 	
 	panel.addPanel("animation");
 	panel.addSlider("base framerate", "animationBaseFramerate", 1, 0, 40);

@@ -23,6 +23,9 @@
 		27C7B6AC1299CE3E0013D0E2 /* ContourUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C7B6AA1299CE3E0013D0E2 /* ContourUtils.cpp */; };
 		27CD9630128B989300E5E841 /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27CD9626128B989300E5E841 /* Color.cpp */; };
 		27CD9631128B989300E5E841 /* MSACoreGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27CD962D128B989300E5E841 /* MSACoreGL.cpp */; };
+		27DA0390129B290A00044865 /* DebrisManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27DA038F129B290A00044865 /* DebrisManager.cpp */; };
+		27DA03A8129B2B9A00044865 /* Debris.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27DA03A7129B2B9A00044865 /* Debris.cpp */; };
+		27DA03E8129B334500044865 /* AnimationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27DA03E7129B334500044865 /* AnimationManager.cpp */; };
 		27E2E694128F342A0018A8CC /* guiBaseObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E2E65D128F342A0018A8CC /* guiBaseObject.cpp */; };
 		27E2E695128F342A0018A8CC /* guiCallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E2E65F128F342A0018A8CC /* guiCallback.cpp */; };
 		27E2E696128F342A0018A8CC /* guiCallbackValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E2E661128F342A0018A8CC /* guiCallbackValue.cpp */; };
@@ -234,6 +237,11 @@
 		27CD962E128B989300E5E841 /* MSACoreGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MSACoreGL.h; path = ../../../../../msalibs/MSACore/src/MSACoreGL.h; sourceTree = SOURCE_ROOT; };
 		27CD962F128B989300E5E841 /* MSACoreMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MSACoreMath.h; path = ../../../../../msalibs/MSACore/src/MSACoreMath.h; sourceTree = SOURCE_ROOT; };
 		27CFA8C4129073A9005936DC /* ofxAutoControlPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAutoControlPanel.h; sourceTree = "<group>"; };
+		27DA038E129B290A00044865 /* DebrisManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebrisManager.h; sourceTree = "<group>"; };
+		27DA038F129B290A00044865 /* DebrisManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebrisManager.cpp; sourceTree = "<group>"; };
+		27DA03A6129B2B9A00044865 /* Debris.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Debris.h; sourceTree = "<group>"; };
+		27DA03A7129B2B9A00044865 /* Debris.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Debris.cpp; sourceTree = "<group>"; };
+		27DA03E7129B334500044865 /* AnimationManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationManager.cpp; sourceTree = "<group>"; };
 		27DF102112914D28006E1E6B /* AnimationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationManager.h; sourceTree = "<group>"; };
 		27E2E65D128F342A0018A8CC /* guiBaseObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = guiBaseObject.cpp; path = ../../../addons/ofxControlPanel/src/guiBaseObject.cpp; sourceTree = SOURCE_ROOT; };
 		27E2E65E128F342A0018A8CC /* guiBaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = guiBaseObject.h; path = ../../../addons/ofxControlPanel/src/guiBaseObject.h; sourceTree = SOURCE_ROOT; };
@@ -1336,11 +1344,16 @@
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
 				27CFA8C4129073A9005936DC /* ofxAutoControlPanel.h */,
 				27A9C5FE1290EC01006DFC26 /* Animation.h */,
+				27DA03E7129B334500044865 /* AnimationManager.cpp */,
 				27DF102112914D28006E1E6B /* AnimationManager.h */,
 				27F6C8021291737B00E0D24A /* Hole.h */,
 				27C60D6812953C7000301410 /* Hole.cpp */,
 				273C3EB61293A1E60068D40C /* HoleManager.h */,
 				273C3EB71293A2610068D40C /* HoleManager.cpp */,
+				27DA038E129B290A00044865 /* DebrisManager.h */,
+				27DA038F129B290A00044865 /* DebrisManager.cpp */,
+				27DA03A6129B2B9A00044865 /* Debris.h */,
+				27DA03A7129B2B9A00044865 /* Debris.cpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1551,6 +1564,9 @@
 				27C61140129593A200301410 /* SoundManager.cpp in Sources */,
 				27C7B6AC1299CE3E0013D0E2 /* ContourUtils.cpp in Sources */,
 				2701381B129B0F0B0060F188 /* ofxShader.cpp in Sources */,
+				27DA0390129B290A00044865 /* DebrisManager.cpp in Sources */,
+				27DA03A8129B2B9A00044865 /* Debris.cpp in Sources */,
+				27DA03E8129B334500044865 /* AnimationManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

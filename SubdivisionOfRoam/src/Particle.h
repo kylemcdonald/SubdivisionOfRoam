@@ -5,6 +5,7 @@
 #include "MSAPerlin.h"
 
 #include "AnimationManager.h"
+#include "DebrisManager.h"
 
 #include "ofxBlur.h"
 
@@ -22,7 +23,6 @@ public:
 	static float minimumSpeed, speed, spread, viscosity, independence, turbulence, neighborhood;
 	
 	static float animationBaseFramerate, animationScale, animationDepthScale, animationForceFramerate, animationVelocityFramerate, flapDisplacement;
-	static AnimationManager animationManager;
 	
 	static float attackRange, attackPrecision, attackDetermination, attackAccuracy;
 	
@@ -49,8 +49,8 @@ public:
   	position *= radius;
 		
 		age = ofRandom(0, 10); // for frame offsets
-		flockingAnimation = animationManager.randomFlocking();
-		attackingAnimation = animationManager.randomAttacking();
+		flockingAnimation = AnimationManager::randomFlocking();
+		attackingAnimation = AnimationManager::randomAttacking();
 		attackMode = false;
   }
 	void drawAnimation();
