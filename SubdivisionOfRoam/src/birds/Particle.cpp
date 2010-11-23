@@ -42,6 +42,9 @@ float
 float
 	Particle::gravity;
 
+float
+	Particle::escapeDistance;
+
 EventTexture
 	Particle::attackingTexture;
 
@@ -54,7 +57,6 @@ void Particle::setup() {
   independence = .15;
   neighborhood = 700;
 	turbulence = 1;
-
 	attackingTexture.setup("sound/attacking");
 }
 
@@ -77,7 +79,7 @@ void Particle::drawOrthoAll() {
 	glEnd();
 }
 
-void Particle::updateAll() {
+void Particle::updateAll() {	
 	avg.set(0, 0, 0);
 	ofxVec3f sum;
 	for(int i = 0; i < particles.size(); i++) {
@@ -86,6 +88,15 @@ void Particle::updateAll() {
 	}
 	avg = sum / particles.size();
 	globalOffset += turbulence / neighborhood;
+	
+	// throw out any particles that have gotten too far away
+	vector<Particle> remaining;
+	for(int i = 0; i < particles.size(); i++) {
+		if(particles[i].position.length() < escapeDistance) {
+			remaining.push_back(particles[i]);
+		}
+	}
+	particles = remaining;
 }
 
 void Particle::setSize(int size, float radius) {
@@ -145,6 +156,9 @@ inline void Particle::drawAnimation() {
 				flockingAnimation = AnimationManager::randomFlocking();
 			}
 		}
+		if(hasChunk) {
+			chunk.draw();
+		}
 	}
 	
 	glPopMatrix();
@@ -202,6 +216,7 @@ inline void Particle::beginAttack(ofPoint& target) {
 
 inline void Particle::endAttack() {
 	attackMode = false;
+	hasChunk = true;
 	
 	HoleManager::add(position);
 	DebrisManager::add(position);

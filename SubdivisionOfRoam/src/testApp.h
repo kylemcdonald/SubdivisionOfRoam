@@ -22,6 +22,8 @@
 #include "LoopTexture.h"
 #include "EventTexture.h"
 
+#include "Chunk.h"
+
 class testApp : public ofBaseApp{
 public:
 	static bool debug;

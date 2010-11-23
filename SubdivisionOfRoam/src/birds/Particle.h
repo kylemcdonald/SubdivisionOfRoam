@@ -29,6 +29,7 @@ public:
 	static float attackRange, attackPrecision, attackDetermination, attackAccuracy;
 	static float groundForceStart, groundForceAmount, groundPosition;
 	static float gravity;
+	static float escapeDistance;
 	
 	static vector<Particle> particles;
 	static void setup();
@@ -46,8 +47,11 @@ public:
 	Animation* flockingAnimation;
 	Animation* attackingAnimation;
 	bool attackMode;
+	bool hasChunk;
 	float attackStarted;
-	Particle() {
+	Chunk chunk;
+	
+	Particle() {		
 	}
   Particle(float radius) {
     randomize(localOffset);
@@ -58,6 +62,9 @@ public:
 		flockingAnimation = AnimationManager::randomFlocking();
 		attackingAnimation = AnimationManager::randomAttacking();
 		attackMode = false;
+		hasChunk = false;
+		
+		chunk.setup();
   }
 	void drawAnimation();
   inline void draw() {
@@ -98,7 +105,11 @@ public:
     float distanceToCenter = centeringForce.length();
     centeringForce.normalize();
     centeringForce *= -distanceToCenter / (spread * spread);
-    force += centeringForce;
+		if(hasChunk) {
+			force -= centeringForce; // run away with chunks
+		} else {
+			force += centeringForce; // otherwise, keep together
+		}
   }
 	inline void applyAttackingForce() {
 		if(attackMode) {

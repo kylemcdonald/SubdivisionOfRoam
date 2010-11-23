@@ -122,6 +122,9 @@ void testApp::setupControlPanel() {
 	panel.addSlider("precision", "attackingPrecision", 100, 1, 800);
 	panel.addSlider("determination", "attackingDetermination", .4, 0, 1);
 	panel.addSlider("accuracy", "attackingAccuracy", 40, 1, 80);
+	panel.addSlider("chunk scale", "chunkScale", 2, 0, 5);
+	panel.addSlider("chunk carry distance", "chunkCarryDistance", .8, 0, 1.5);
+	panel.addSlider("escape distance", "escapeDistance", 2, 1, 6);
 	
 	/*
 	panel.addPanel("input");
@@ -299,6 +302,10 @@ void testApp::update() {
 	Particle::groundForceAmount = panel.getValueF("groundForceAmount");
 	Particle::groundPosition = panel.getValueF("groundPosition");
 	Particle::gravity = panel.getValueF("flockingGravity");
+	Particle::escapeDistance = panel.getValueF("escapeDistance") * targetHeight / 2;
+	
+	Chunk::carryDistance = panel.getValueF("chunkCarryDistance");
+	Chunk::chunkScale = panel.getValueF("chunkScale");
 	
 	Particle::setSize(panel.getValueI("flockingSize"), 250);
 	Particle::minimumSpeed = panel.getValueF("flockingMinimumSpeed");
@@ -390,6 +397,7 @@ void testApp::draw(){
 	if(!debug) {
 		blur.begin();
 	}
+	glColor4f(1, 1, 1, 1);
 	fbo.draw(0, 0);
 	if(!debug) {
 		blur.end(false);
