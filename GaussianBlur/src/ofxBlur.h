@@ -54,7 +54,7 @@ public:
 		ofPopStyle();
 		ofPopMatrix();
 	}
-	void bind() {
-		pong.bind();
+	ofTexture& getTexture() {
+		return pong.getTexture(0);
 	}
 };

@@ -3,9 +3,8 @@
 /*
  to finish:
  
- app starts fullscreen
  fly away with chunks
- add some explicit form of gravity
+ add some explicit form of gravity?
  manual camera controls to reset camera on restart
  adaptive background <-- add this once i have a fw cable again
   
@@ -401,24 +400,31 @@ void testApp::draw(){
 	
 	fbo.end();
 	
-	ofBackground(0, 0, 0);	
+	ofBackground(0, 0, 0);
+	ofEnableAlphaBlending();
 	ofDisableAlphaBlending();
 	
 	blur.setRadius(panel.getValueF("blurGlobalRadius"));
-	blur.setPasses(panel.getValueF("blurGlobalPasses"));
+	blur.setPasses(panel.getValueF("blurGlobalPasses"));	
 	if(!debug) {
-		//blur.begin();
+		blur.begin();
 	}
-	ofClear(1, 1, 1, 0);
+	fbo.draw(0, 0);
+	if(!debug) {
+		blur.end(false);
+	}
+	
 	drawWarped();
-	if(!debug) {
-		//blur.end();
-	}
 }
 
 void testApp::drawWarped() {
-	fbo.getTexture(0).bind();
+	if(debug) {
+		fbo.getTexture(0).bind();
+	} else {
+		blur.getTexture().bind();
+	}
 	ofClear(0, 0, 0, 1);
+	glColor4f(1, 1, 1, 1);
 	glBegin(GL_QUADS);
 	glTexCoord2f(0, 0);
 	glVertex2f(ofGetWidth() * (panel.getValueF("warpNwx") + panel.getValueF("warpNwxFine")), ofGetHeight() * (panel.getValueF("warpNwy") + panel.getValueF("warpNwyFine")));
@@ -429,7 +435,11 @@ void testApp::drawWarped() {
 	glTexCoord2f(0, targetHeight);
 	glVertex2f(ofGetWidth() * (panel.getValueF("warpSwx") + panel.getValueF("warpSwxFine")), ofGetHeight() * (panel.getValueF("warpSwy") + panel.getValueF("warpSwyFine")));
 	glEnd();
-	fbo.getTexture(0).unbind();
+	if(debug) {
+		fbo.getTexture(0).unbind();
+	} else {
+		blur.getTexture().unbind();
+	}
 }
 
 void testApp::drawBlob(ofxCvBlob& blob) {
