@@ -39,6 +39,9 @@ float
 	Particle::groundForceAmount,
 	Particle::groundPosition;
 
+EventTexture
+	Particle::attackingTexture;
+
 void Particle::setup() {	
 	perlin.setup(4, 1, .5, (int) ofRandom(0, 1000));
 	globalOffset.set(0, 1. / 3, 2. / 3);
@@ -48,6 +51,8 @@ void Particle::setup() {
   independence = .15;
   neighborhood = 700;
 	turbulence = 1;
+
+	attackingTexture.setup("sound/attacking");
 }
 
 void Particle::drawAll() {
@@ -168,6 +173,9 @@ inline void Particle::update() {
 	gaze = position + velocity * attackRange;
 	
 	checkForAttack();
+	if(attackMode) {
+		attackingTexture.update();
+	}
 }
 
 inline void Particle::beginAttack(ofPoint& target) {

@@ -27,6 +27,7 @@
 		27DA03A8129B2B9A00044865 /* Debris.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27DA03A7129B2B9A00044865 /* Debris.cpp */; };
 		27DA03E8129B334500044865 /* AnimationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27DA03E7129B334500044865 /* AnimationManager.cpp */; };
 		27DA04ED129B958100044865 /* LoopTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27DA04EC129B958100044865 /* LoopTexture.cpp */; };
+		27DA054B129B9D4D00044865 /* EventTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27DA054A129B9D4D00044865 /* EventTexture.cpp */; };
 		27E2E694128F342A0018A8CC /* guiBaseObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E2E65D128F342A0018A8CC /* guiBaseObject.cpp */; };
 		27E2E695128F342A0018A8CC /* guiCallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E2E65F128F342A0018A8CC /* guiCallback.cpp */; };
 		27E2E696128F342A0018A8CC /* guiCallbackValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E2E661128F342A0018A8CC /* guiCallbackValue.cpp */; };
@@ -245,6 +246,8 @@
 		27DA03E7129B334500044865 /* AnimationManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationManager.cpp; sourceTree = "<group>"; };
 		27DA04EB129B958100044865 /* LoopTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoopTexture.h; sourceTree = "<group>"; };
 		27DA04EC129B958100044865 /* LoopTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LoopTexture.cpp; sourceTree = "<group>"; };
+		27DA0549129B9D4D00044865 /* EventTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventTexture.h; sourceTree = "<group>"; };
+		27DA054A129B9D4D00044865 /* EventTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EventTexture.cpp; sourceTree = "<group>"; };
 		27DF102112914D28006E1E6B /* AnimationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationManager.h; sourceTree = "<group>"; };
 		27E2E65D128F342A0018A8CC /* guiBaseObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = guiBaseObject.cpp; path = ../../../addons/ofxControlPanel/src/guiBaseObject.cpp; sourceTree = SOURCE_ROOT; };
 		27E2E65E128F342A0018A8CC /* guiBaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = guiBaseObject.h; path = ../../../addons/ofxControlPanel/src/guiBaseObject.h; sourceTree = SOURCE_ROOT; };
@@ -1359,6 +1362,8 @@
 				27DA03A7129B2B9A00044865 /* Debris.cpp */,
 				27DA04EB129B958100044865 /* LoopTexture.h */,
 				27DA04EC129B958100044865 /* LoopTexture.cpp */,
+				27DA0549129B9D4D00044865 /* EventTexture.h */,
+				27DA054A129B9D4D00044865 /* EventTexture.cpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1573,6 +1578,7 @@
 				27DA03A8129B2B9A00044865 /* Debris.cpp in Sources */,
 				27DA03E8129B334500044865 /* AnimationManager.cpp in Sources */,
 				27DA04ED129B958100044865 /* LoopTexture.cpp in Sources */,
+				27DA054B129B9D4D00044865 /* EventTexture.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -3,7 +3,6 @@
 /*
  to finish:
  
- leftover sounds: flapping, gliding, ambience mixing
  app starts fullscreen
  fly away with chunks
  add some explicit form of gravity
@@ -45,13 +44,14 @@ float ofDistSquaredSlow(float x1, float y1, float x2, float y2) {
 	return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
 }
 
-void testApp::setup(){
+void testApp::setup(){	
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	glDisable(GL_DEPTH_TEST);
 	
 	blur.setup(targetWidth, targetHeight);
 	
 	ambienceTexture.setup("sound/ambience");
+	flappingTexture.setup("sound/flapping");
 	
 	camera.setPosition((752 - 640) / 2, 0);
 	camera.setFormat7(true);
@@ -91,6 +91,7 @@ void testApp::setupControlPanel() {
 	
 	panel.setup("Control Panel", 5, 5, 300, 900);
 	panel.addPanel("general");
+	panel.addToggle("fullscreen", "fullscreen", false);
 	panel.addToggle("debug", "debug", false);
 	panel.addToggle("use live video", "blobUseLiveVideo", false);
 	panel.addToggle("reset background", "blobResetBackground", true);
@@ -101,14 +102,14 @@ void testApp::setupControlPanel() {
 	
 	panel.addPanel("sound");
 	panel.addToggle("enable", "soundEnable", true);
-	panel.addSlider("ambience rate", "soundAmbienceRate", .5, 0, 5);
-	panel.addSlider("ambience volume", "soundAmbienceVolume", 1, 0, 1);
-	panel.addSlider("attacking volume", "soundAttackingVolume", .1, 0, 1);
-	panel.addSlider("flapping volume", "soundFlappingVolume", .1, 0, 1);
-	panel.addSlider("ripping volume", "soundRippingVolume", .1, 0, 1);
+	panel.addSlider("ambience rate", "soundAmbienceRate", 2, 0, 5);
+	panel.addSlider("ambience volume", "soundAmbienceVolume", .2, 0, 1);
+	panel.addSlider("flapping volume", "soundFlappingVolume", .4, 0, 1);
+	panel.addSlider("flapping density", "soundFlappingDensity", .6, 0, 1);
+	panel.addSlider("ripping volume", "soundRippingVolume", .12, 0, 1);
 	panel.addSlider("squawking volume", "soundSquawkingVolume", .1, 0, 1);
-	panel.addSlider("ripping volume", "soundRippingVolume", .1, 0, 1);
-	panel.addSlider("gliding volume", "soundGlidingVolume", .1, 0, 1);
+	panel.addSlider("attacking volume", "soundAttackingVolume", .25, 0, 1);
+	panel.addSlider("attacking density", "soundAttackingDensity", 3, 0, 10);
 	
 	panel.addPanel("blur");
 	panel.addSlider("global radius", "blurGlobalRadius", 2, 0, 20);
@@ -195,16 +196,20 @@ void testApp::setupControlPanel() {
 }
 
 void testApp::update() {		
+	if(panel.hasValueChanged("fullscreen")) {
+		ofSetFullscreen(panel.getValueB("fullscreen"));
+	}
+	
 	debug = panel.getValueB("debug");
 	
 	ambienceTexture.rate = panel.getValueF("soundAmbienceRate");
 	ambienceTexture.overallVolume = panel.getValueF("soundAmbienceVolume");
 	
-	if(panel.hasValueChanged("sounAttackingVolume")) {
-		SoundManager::setAttackingVolume(panel.getValueF("soundAttackingVolume"));
-	}
+	flappingTexture.density = panel.getValueF("soundFlappingDensity");
+	Particle::setAttackingDensity(panel.getValueF("soundAttackingDensity"));
+	
 	if(panel.hasValueChanged("soundFlappingVolume")) {
-		SoundManager::setFlappingVolume(panel.getValueF("soundFlappingVolume"));
+		flappingTexture.setVolume(panel.getValueF("soundFlappingVolume"));
 	}
 	if(panel.hasValueChanged("soundRippingVolume")) {
 		SoundManager::setRippingVolume(panel.getValueF("soundRippingVolume"));
@@ -212,9 +217,13 @@ void testApp::update() {
 	if(panel.hasValueChanged("soundSquawkingVolume")) {
 		SoundManager::setSquawkingVolume(panel.getValueF("soundSquawkingVolume"));
 	}
-	if(panel.hasValueChanged("soundGlidingVolume")) {
-		SoundManager::setGlidingVolume(panel.getValueF("soundGlidingVolume"));
+	if(panel.hasValueChanged("soundAttackingVolume")) {
+		Particle::attackingTexture.setVolume(panel.getValueF("soundAttackingVolume"));
 	}
+	
+	SoundManager::enabled = panel.getValueB("soundEnable");
+	ambienceTexture.update();
+	flappingTexture.update();
 	
 	Hole::holeRadius = panel.getValueF("holeRadius");
 	Hole::maxHoleAge = panel.getValueF("holeMaxAge");
@@ -261,9 +270,6 @@ void testApp::update() {
 		grayDiff.threshold(panel.getValueI("blobThreshold"));
 		grayDiff.flagImageChanged();
 	}
-	
-	SoundManager::enabled = panel.getValueB("soundEnable");
-	ambienceTexture.update();
 	
 	// update blobs
 	float minBlobSize = PI * powf(panel.getValueF("blobMinDiameter") / 2, 2);
@@ -401,12 +407,12 @@ void testApp::draw(){
 	blur.setRadius(panel.getValueF("blurGlobalRadius"));
 	blur.setPasses(panel.getValueF("blurGlobalPasses"));
 	if(!debug) {
-		blur.begin();
+		//blur.begin();
 	}
 	ofClear(1, 1, 1, 0);
 	drawWarped();
 	if(!debug) {
-		blur.end();
+		//blur.end();
 	}
 }
 
@@ -464,7 +470,8 @@ void testApp::keyPressed(int key){
 			panel.setValueB("debug", panel.getValueB("debug") ? false : true);
 			break;
 		case 'f':
-			ofToggleFullscreen();
+			panel.setValueB("fullscreen", !panel.getValueB("fullscreen"));
+			//ofToggleFullscreen();
 			break;	
 		case 'a':
 			for(int i = 0; i < Particle::particles.size(); i++)

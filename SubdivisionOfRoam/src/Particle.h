@@ -7,7 +7,7 @@
 #include "AnimationManager.h"
 #include "DebrisManager.h"
 
-#include "ofxBlur.h"
+#include "EventTexture.h"
 
 inline void randomize(ofxVec3f& v) {
 	v.x = ofRandomf();
@@ -34,6 +34,8 @@ public:
 	static void drawOrthoAll();
   static void updateAll();
 	static void setSize(int size, float radius);
+	
+	static EventTexture attackingTexture;
 
 	float age;
   ofxVec3f position, velocity, force, localOffset;
@@ -114,4 +116,8 @@ public:
 	void attackAtRandom();
 	void beginAttack(ofPoint& target);
 	void endAttack();
+	
+	static void setAttackingDensity(float density) {
+		attackingTexture.density = density / particles.size();
+	}
 };

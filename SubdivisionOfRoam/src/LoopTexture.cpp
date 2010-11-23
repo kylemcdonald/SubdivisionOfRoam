@@ -26,5 +26,7 @@ void LoopTexture::update() const {
 	for(int i = 0; i < loops.size(); i++) {
 		float curVolume = overallVolume * ofNoise(curPosition + noiseOffset[i]);
 		loops[i]->setVolume(curVolume);
+		if(!loops[i]->getIsPlaying())
+			loops[i]->play();
 	}
 }

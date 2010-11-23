@@ -29,13 +29,13 @@ void AnimationManager::setup() {
 }
 
 Animation* AnimationManager::randomFlocking() {
-	return flocking[(int) ofRandom(0, flocking.size())];
+	return flocking[rand() % flocking.size()];
 }
 
 Animation* AnimationManager::randomAttacking() {
-	return attacking[(int) ofRandom(0, attacking.size())];
+	return attacking[rand() % attacking.size()];
 }
 
 Animation* AnimationManager::randomDebris() {
-	return debris[(int) ofRandom(0, debris.size())];
+	return debris[rand() % debris.size()];
 }
