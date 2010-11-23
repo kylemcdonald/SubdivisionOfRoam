@@ -34,6 +34,11 @@ float
 	Particle::attackDetermination,
 	Particle::attackAccuracy;
 
+float
+	Particle::groundForceStart,
+	Particle::groundForceAmount,
+	Particle::groundPosition;
+
 void Particle::setup() {	
 	perlin.setup(4, 1, .5, (int) ofRandom(0, 1000));
 	globalOffset.set(0, 1. / 3, 2. / 3);
@@ -147,6 +152,7 @@ inline void Particle::update() {
 	applyViscosityForce();
 	applyCenteringForce();
 	applyAttackingForce();
+	applyGroundAvoidanceForce();
 	velocity += force; // mass = 1
 	
 	float curSpeed = velocity.length();

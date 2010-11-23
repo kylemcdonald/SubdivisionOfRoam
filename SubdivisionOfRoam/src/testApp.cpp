@@ -3,7 +3,6 @@
 /*
  to finish:
  
- feather explosions
  anti-ground force except during attack
  leftover sounds
  app starts fullscreen
@@ -135,6 +134,9 @@ void testApp::setupControlPanel() {
 	panel.addSlider("neighborhood", "flockingNeighborhood", 400, 10, 1000);
 	
 	panel.addPanel("attacking");
+	panel.addSlider("ground force start", "groundForceStart", 0, -targetHeight / 2, targetHeight / 2);
+	panel.addSlider("ground force amount", "groundForceAmount", 1, 0, 5);
+	panel.addSlider("ground position", "groundPosition", targetHeight / 4, -targetHeight / 2, targetHeight / 2);
 	panel.addSlider("range", "attackingRange", 400, 10, 800);
 	panel.addSlider("precision", "attackingPrecision", 100, 1, 800);
 	panel.addSlider("determination", "attackingDetermination", .6, 0, 1);
@@ -296,16 +298,20 @@ void testApp::update() {
 	Particle::attackDetermination = panel.getValueF("attackingDetermination");
 	Particle::attackAccuracy = panel.getValueF("attackingAccuracy");
 	Particle::flapDisplacement = panel.getValueF("animationFlapDisplacement");
+	Particle::groundForceStart = panel.getValueF("groundForceStart");
+	Particle::groundForceAmount = panel.getValueF("groundForceAmount");
+	Particle::groundPosition = panel.getValueF("groundPosition");
+	
+	Particle::setSize(panel.getValueI("flockingSize"), 250);
+	Particle::minimumSpeed = panel.getValueF("flockingMinimumSpeed");
+	Particle::speed = panel.getValueF("flockingSpeed") * ofGetLastFrameTime() * 256;
+	Particle::spread = panel.getValueF("flockingSpread");
+	Particle::viscosity = panel.getValueF("flockingViscosity");
+	Particle::independence = panel.getValueF("flockingIndependence");
+	Particle::neighborhood = panel.getValueF("flockingNeighborhood");
+	Particle::turbulence = panel.getValueF("flockingTurbulence") * ofGetLastFrameTime();
 	
 	if(panel.getValueB("flockingEnable")) {
-		Particle::setSize(panel.getValueI("flockingSize"), 250);
-		Particle::minimumSpeed = panel.getValueF("flockingMinimumSpeed");
-		Particle::speed = panel.getValueF("flockingSpeed") * ofGetLastFrameTime() * 256;
-		Particle::spread = panel.getValueF("flockingSpread");
-		Particle::viscosity = panel.getValueF("flockingViscosity");
-		Particle::independence = panel.getValueF("flockingIndependence");
-		Particle::neighborhood = panel.getValueF("flockingNeighborhood");
-		Particle::turbulence = panel.getValueF("flockingTurbulence") * ofGetLastFrameTime();
 		Particle::updateAll();
 	}
 	
@@ -353,6 +359,21 @@ void testApp::draw(){
 			drawBlob(cur);
 			drawNormals(cur, 8);
 		}
+		
+		ofFill();
+		ofPushMatrix();
+		ofSetColor(128, 128);
+		ofRotateX(-90);
+		ofTranslate(-targetWidth / 2, -targetWidth / 2);
+		ofPushMatrix();
+		ofTranslate(0, 0, Particle::groundForceStart);
+		ofRect(0, 0, targetWidth, targetWidth);
+		ofPopMatrix();
+		ofPushMatrix();
+		ofTranslate(0, 0, Particle::groundPosition);
+		ofRect(0, 0, targetWidth, targetWidth);
+		ofPopMatrix();
+		ofPopMatrix();
 	}
 	
 	glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA); // something like darken
@@ -368,10 +389,14 @@ void testApp::draw(){
 	
 	blur.setRadius(panel.getValueF("blurGlobalRadius"));
 	blur.setPasses(panel.getValueF("blurGlobalPasses"));
-	blur.begin();
+	if(!debug) {
+		blur.begin();
+	}
 	ofClear(1, 1, 1, 0);
 	drawWarped();
-	blur.end();
+	if(!debug) {
+		blur.end();
+	}
 }
 
 void testApp::drawWarped() {

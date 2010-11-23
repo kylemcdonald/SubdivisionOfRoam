@@ -25,6 +25,7 @@ public:
 	static float animationBaseFramerate, animationScale, animationDepthScale, animationForceFramerate, animationVelocityFramerate, flapDisplacement;
 	
 	static float attackRange, attackPrecision, attackDetermination, attackAccuracy;
+	static float groundForceStart, groundForceAmount, groundPosition;
 	
 	static vector<Particle> particles;
 	static void setup();
@@ -100,6 +101,11 @@ public:
 				targetDirection.normalize();
 				force += targetDirection * attackDetermination;
 			}
+		}
+	}
+	inline void applyGroundAvoidanceForce() {
+		if(!attackMode) {
+			force.y -= powf(ofMap(position.y, groundForceStart, groundPosition, 0, 1, true), 2) * groundForceAmount;
 		}
 	}
 	// add gravitational force right here <-
