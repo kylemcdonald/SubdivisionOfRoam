@@ -121,6 +121,7 @@ void testApp::setupControlPanel() {
 	panel.addSlider("flap displacement", "animationFlapDisplacement", 4, 0, 30);
 	panel.addSlider("scale", "animationScale", .20, 0, 2);
 	panel.addSlider("depth scale", "animationDepthScale", 2, 0, 10);
+	panel.addSlider("debris max age", "animationDebrisMaxAge", 1, 0, 5);
 	
 	panel.addPanel("flocking");
 	panel.addToggle("enable", "flockingEnable", true);
@@ -208,6 +209,8 @@ void testApp::update() {
 	Hole::useEllipses = panel.getValueB("holeUseEllipses");
 	Hole::deshake = panel.getValueF("holeDeshake");
 	HoleManager::holeSpacing = panel.getValueF("holeSpacing");
+	
+	Debris::maxAge = panel.getValueF("animationDebrisMaxAge");
 	
 	if(panel.getValueB("flipOrientation")) {
 		panel.setValueF("warpNwx", 1);
@@ -305,7 +308,10 @@ void testApp::update() {
 		Particle::turbulence = panel.getValueF("flockingTurbulence") * ofGetLastFrameTime();
 		Particle::updateAll();
 	}
-		 
+	
+	HoleManager::update();
+	DebrisManager::update();
+	
 	panel.clearAllChanged();
 }
 
@@ -333,7 +339,6 @@ void testApp::draw(){
 		drawBlob(curBlob);
 	}
 	
-	HoleManager::update();
 	HoleManager::draw();
 	
 	if(debug) {
@@ -351,6 +356,7 @@ void testApp::draw(){
 	}
 	
 	glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA); // something like darken
+	DebrisManager::draw();
 	Particle::drawAnimationAll();
 	
 	glPopMatrix();

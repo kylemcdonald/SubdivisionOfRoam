@@ -15,7 +15,7 @@ public:
 			ofImage* cur = new ofImage();
 			cur->loadImage(dir.getPath(i));
 			cur->setAnchorPercent(.5, .5);
-			// if possible, set GL type to just alpha
+			// if possible, set GL type to just alpha?
 			frames.push_back(cur);
 		}
 	}
@@ -32,5 +32,9 @@ public:
 		int cur = i % frames.size();
 		frames[cur]->draw(0, 0);
 		return cur == frames.size() - 1;
+	}
+	bool drawPercent(float percent) {
+		int i = ofClamp(percent * frames.size(), 0, frames.size() - 1);
+		return draw(i);
 	}
 };

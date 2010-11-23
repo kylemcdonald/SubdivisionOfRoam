@@ -9,5 +9,6 @@ private:
 public:
 	static void setup();
 	static void add(ofPoint position);
+	static void update();
 	static void draw();
 };
