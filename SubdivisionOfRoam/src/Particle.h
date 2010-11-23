@@ -26,6 +26,7 @@ public:
 	
 	static float attackRange, attackPrecision, attackDetermination, attackAccuracy;
 	static float groundForceStart, groundForceAmount, groundPosition;
+	static float gravity;
 	
 	static vector<Particle> particles;
 	static void setup();
@@ -85,6 +86,9 @@ public:
   }
   inline void applyViscosityForce() {
     force += velocity * -viscosity;
+		if(gravity != 0) {
+			force.y += gravity / velocity.length();
+		}
   }
   inline void applyCenteringForce() {
     centeringForce.set(position);
@@ -110,7 +114,6 @@ public:
 			force.y -= powf(ofMap(position.y, groundForceStart, groundPosition, 0, 1, true), 2) * groundForceAmount;
 		}
 	}
-	// add gravitational force right here <-
   void update();
 	void checkForAttack();
 	void attackAtRandom();

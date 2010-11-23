@@ -39,6 +39,9 @@ float
 	Particle::groundForceAmount,
 	Particle::groundPosition;
 
+float
+	Particle::gravity;
+
 EventTexture
 	Particle::attackingTexture;
 

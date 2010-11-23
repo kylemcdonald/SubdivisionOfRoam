@@ -113,6 +113,7 @@ void testApp::setupControlPanel() {
 	panel.addSlider("viscosity", "flockingViscosity", .15, 0, 1);
 	panel.addSlider("independence", "flockingIndependence", .15, 0, 1);
 	panel.addSlider("neighborhood", "flockingNeighborhood", 400, 10, 1000);
+	panel.addSlider("gravity", "flockingGravity", 0, 0, 1);
 	
 	panel.addPanel("attacking");
 	panel.addSlider("ground force start", "groundForceStart", 0, -targetHeight / 2, targetHeight / 2);
@@ -297,6 +298,7 @@ void testApp::update() {
 	Particle::groundForceStart = panel.getValueF("groundForceStart");
 	Particle::groundForceAmount = panel.getValueF("groundForceAmount");
 	Particle::groundPosition = panel.getValueF("groundPosition");
+	Particle::gravity = panel.getValueF("flockingGravity");
 	
 	Particle::setSize(panel.getValueI("flockingSize"), 250);
 	Particle::minimumSpeed = panel.getValueF("flockingMinimumSpeed");
