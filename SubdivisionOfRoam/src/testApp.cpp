@@ -4,7 +4,6 @@
  to finish:
  
  fly away with chunks
- turnarounds and extra animations
  manual camera controls to reset camera on restart
  adaptive background <-- add this once i have a fw cable again
   
@@ -98,7 +97,7 @@ void testApp::setupControlPanel() {
 	panel.addSlider("base framerate", "animationBaseFramerate", 1, 0, 40);
 	panel.addSlider("force framerate", "animationForceFramerate", 5, 0, 40);
 	panel.addSlider("velocity framerate", "animationVelocityFramerate", .2, 0, 4);
-	panel.addSlider("flap displacement", "animationFlapDisplacement", 4, 0, 30);
+	panel.addSlider("flap displacement", "animationFlapDisplacement", 8, 0, 30);
 	panel.addSlider("scale", "animationScale", .3, 0, 2);
 	panel.addSlider("depth scale", "animationDepthScale", 2, 0, 10);
 	panel.addSlider("debris max age", "animationDebrisMaxAge", .4, 0, 2);
@@ -173,6 +172,7 @@ void testApp::setupControlPanel() {
 	
 	panel.setXMLFilename("roamSettings.xml");
 	panel.loadSettings("roamSettings.xml");
+	panel.hide();
 }
 
 void testApp::update() {		

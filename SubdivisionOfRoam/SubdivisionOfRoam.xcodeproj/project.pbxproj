@@ -248,6 +248,7 @@
 		27DA04EC129B958100044865 /* LoopTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LoopTexture.cpp; sourceTree = "<group>"; };
 		27DA0549129B9D4D00044865 /* EventTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventTexture.h; sourceTree = "<group>"; };
 		27DA054A129B9D4D00044865 /* EventTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EventTexture.cpp; sourceTree = "<group>"; };
+		27DA0706129BD00D00044865 /* Chunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chunk.h; sourceTree = "<group>"; };
 		27DF102112914D28006E1E6B /* AnimationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationManager.h; sourceTree = "<group>"; };
 		27E2E65D128F342A0018A8CC /* guiBaseObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = guiBaseObject.cpp; path = ../../../addons/ofxControlPanel/src/guiBaseObject.cpp; sourceTree = SOURCE_ROOT; };
 		27E2E65E128F342A0018A8CC /* guiBaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = guiBaseObject.h; path = ../../../addons/ofxControlPanel/src/guiBaseObject.h; sourceTree = SOURCE_ROOT; };
@@ -1364,6 +1365,7 @@
 				27DA04EC129B958100044865 /* LoopTexture.cpp */,
 				27DA0549129B9D4D00044865 /* EventTexture.h */,
 				27DA054A129B9D4D00044865 /* EventTexture.cpp */,
+				27DA0706129BD00D00044865 /* Chunk.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
