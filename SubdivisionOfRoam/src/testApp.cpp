@@ -327,7 +327,6 @@ void testApp::draw(){
 	
 	ofEnableAlphaBlending();
 	
-	
 	glPushMatrix();
 	ofTranslate(targetWidth / 2, targetHeight / 2);
 	
