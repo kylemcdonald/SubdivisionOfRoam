@@ -7,7 +7,8 @@ vector<ofSoundPlayer*>
 	SoundManager::attacking,
 	SoundManager::flapping,
 	SoundManager::ripping,
-	SoundManager::squawking;
+	SoundManager::squawking,
+	SoundManager::gliding;
 	
 void SoundManager::loadSounds(vector<ofSoundPlayer*>& players,	string path) {
 	ofLog(OF_LOG_VERBOSE, "Loading sounds from " + path);
@@ -27,6 +28,7 @@ void SoundManager::setup() {
 	loadSounds(flapping, "sound/flapping");
 	loadSounds(ripping, "sound/ripping");
 	loadSounds(squawking, "sound/squawking");
+	loadSounds(gliding, "sound/gliding");
 }
 
 void SoundManager::randomPlay(vector<ofSoundPlayer*>& players) {
@@ -35,32 +37,56 @@ void SoundManager::randomPlay(vector<ofSoundPlayer*>& players) {
 	}
 }
 
-void SoundManager::randomFlapping() {
-	randomPlay(flapping);
-}
-
-void SoundManager::randomSquawking() {
-	randomPlay(squawking);
-}
-
-void SoundManager::randomRipping() {
-	randomPlay(ripping);
-}
-
 void SoundManager::setVolume(vector<ofSoundPlayer*>& players, float volume) {
 	for(int i = 0; i < players.size(); i++) {
 		players[i]->setVolume(volume);
 	}
 }
 
+void SoundManager::randomAmbience() {
+	randomPlay(ambience);
+}
+
+void SoundManager::randomAttacking() {
+	randomPlay(attacking);
+}
+
+void SoundManager::randomFlapping() {
+	randomPlay(flapping);
+}
+
+void SoundManager::randomRipping() {
+	randomPlay(ripping);
+}
+
+void SoundManager::randomSquawking() {
+	randomPlay(squawking);
+}
+
+void SoundManager::randomGliding() {
+	randomPlay(gliding);
+}
+
+void SoundManager::setAmbienceVolume(float volume) {
+	setVolume(ambience, volume);
+}
+
+void SoundManager::setAttackingVolume(float volume) {
+	setVolume(attacking, volume);
+}
+
 void SoundManager::setFlappingVolume(float volume) {
 	setVolume(flapping, volume);
+}
+
+void SoundManager::setRippingVolume(float volume) {
+	setVolume(ripping, volume);
 }
 
 void SoundManager::setSquawkingVolume(float volume) {
 	setVolume(squawking, volume);
 }
 
-void SoundManager::setRippingVolume(float volume) {
-	setVolume(ripping, volume);
+void SoundManager::setGlidingVolume(float volume) {
+	setVolume(gliding, volume);
 }

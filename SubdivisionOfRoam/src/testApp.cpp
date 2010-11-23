@@ -3,12 +3,11 @@
 /*
  to finish:
  
- anti-ground force except during attack
- leftover sounds
+ leftover sounds: flapping, gliding, ambience mixing
  app starts fullscreen
- manual camera controls to reset camera on restart
  fly away with chunks
  add some explicit form of gravity
+ manual camera controls to reset camera on restart
  adaptive background <-- add this once i have a fw cable again
   
  to perfect:
@@ -104,10 +103,13 @@ void testApp::setupControlPanel() {
 	
 	panel.addPanel("sound");
 	panel.addToggle("enable", "soundEnable", true);
+	panel.addSlider("ambience volume", "soundAmbienceVolume", 1, 0, 1);
+	panel.addSlider("attacking volume", "soundAttackingVolume", .1, 0, 1);
 	panel.addSlider("flapping volume", "soundFlappingVolume", .1, 0, 1);
+	panel.addSlider("ripping volume", "soundRippingVolume", .1, 0, 1);
 	panel.addSlider("squawking volume", "soundSquawkingVolume", .1, 0, 1);
 	panel.addSlider("ripping volume", "soundRippingVolume", .1, 0, 1);
-	// density control?
+	panel.addSlider("gliding volume", "soundGlidingVolume", .1, 0, 1);
 	
 	panel.addPanel("blur");
 	panel.addSlider("global radius", "blurGlobalRadius", 2, 0, 20);
@@ -196,14 +198,23 @@ void testApp::setupControlPanel() {
 void testApp::update() {		
 	debug = panel.getValueB("debug");
 	
+	if(panel.hasValueChanged("soundAmbienceVolume")) {
+		SoundManager::setAmbienceVolume(panel.getValueF("soundAmbienceVolume"));
+	}
+	if(panel.hasValueChanged("sounAttackingVolume")) {
+		SoundManager::setAttackingVolume(panel.getValueF("soundAttackingVolume"));
+	}
 	if(panel.hasValueChanged("soundFlappingVolume")) {
 		SoundManager::setFlappingVolume(panel.getValueF("soundFlappingVolume"));
+	}
+	if(panel.hasValueChanged("soundRippingVolume")) {
+		SoundManager::setRippingVolume(panel.getValueF("soundRippingVolume"));
 	}
 	if(panel.hasValueChanged("soundSquawkingVolume")) {
 		SoundManager::setSquawkingVolume(panel.getValueF("soundSquawkingVolume"));
 	}
-	if(panel.hasValueChanged("soundRippingVolume")) {
-		SoundManager::setRippingVolume(panel.getValueF("soundRippingVolume"));
+	if(panel.hasValueChanged("soundGlidingVolume")) {
+		SoundManager::setGlidingVolume(panel.getValueF("soundGlidingVolume"));
 	}
 	
 	Hole::holeRadius = panel.getValueF("holeRadius");
