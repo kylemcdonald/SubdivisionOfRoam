@@ -3,7 +3,6 @@
 /*
  to finish:
  
- fly away with chunks
  manual camera controls to reset camera on restart
  adaptive background <-- add this once i have a fw cable again
   
