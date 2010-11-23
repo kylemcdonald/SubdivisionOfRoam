@@ -51,9 +51,7 @@ void testApp::setup(){
 	
 	blur.setup(targetWidth, targetHeight);
 	
-	ambience.loadSound("sound/ambience/Amb1.aif");
-	ambience.setLoop(true);
-	ambience.play();
+	ambienceTexture.setup("sound/ambience");
 	
 	camera.setPosition((752 - 640) / 2, 0);
 	camera.setFormat7(true);
@@ -103,6 +101,7 @@ void testApp::setupControlPanel() {
 	
 	panel.addPanel("sound");
 	panel.addToggle("enable", "soundEnable", true);
+	panel.addSlider("ambience rate", "soundAmbienceRate", .5, 0, 5);
 	panel.addSlider("ambience volume", "soundAmbienceVolume", 1, 0, 1);
 	panel.addSlider("attacking volume", "soundAttackingVolume", .1, 0, 1);
 	panel.addSlider("flapping volume", "soundFlappingVolume", .1, 0, 1);
@@ -122,7 +121,7 @@ void testApp::setupControlPanel() {
 	panel.addSlider("flap displacement", "animationFlapDisplacement", 4, 0, 30);
 	panel.addSlider("scale", "animationScale", .20, 0, 2);
 	panel.addSlider("depth scale", "animationDepthScale", 2, 0, 10);
-	panel.addSlider("debris max age", "animationDebrisMaxAge", 1, 0, 5);
+	panel.addSlider("debris max age", "animationDebrisMaxAge", .4, 0, 2);
 	
 	panel.addPanel("flocking");
 	panel.addToggle("enable", "flockingEnable", true);
@@ -198,9 +197,9 @@ void testApp::setupControlPanel() {
 void testApp::update() {		
 	debug = panel.getValueB("debug");
 	
-	if(panel.hasValueChanged("soundAmbienceVolume")) {
-		SoundManager::setAmbienceVolume(panel.getValueF("soundAmbienceVolume"));
-	}
+	ambienceTexture.rate = panel.getValueF("soundAmbienceRate");
+	ambienceTexture.overallVolume = panel.getValueF("soundAmbienceVolume");
+	
 	if(panel.hasValueChanged("sounAttackingVolume")) {
 		SoundManager::setAttackingVolume(panel.getValueF("soundAttackingVolume"));
 	}
@@ -264,6 +263,7 @@ void testApp::update() {
 	}
 	
 	SoundManager::enabled = panel.getValueB("soundEnable");
+	ambienceTexture.update();
 	
 	// update blobs
 	float minBlobSize = PI * powf(panel.getValueF("blobMinDiameter") / 2, 2);

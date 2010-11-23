@@ -19,6 +19,7 @@
 #include "AnimationManager.h"
 #include "HoleManager.h"
 #include "SoundManager.h"
+#include "LoopTexture.h"
 
 class testApp : public ofBaseApp{
 public:
@@ -57,7 +58,7 @@ public:
 	ofxFbo fbo;
 	ofxBlur blur;
 	
-	ofSoundPlayer ambience;
+	LoopTexture ambienceTexture;
 	
 	static const int targetWidth = 1080;
 	static const int targetHeight = 1920;

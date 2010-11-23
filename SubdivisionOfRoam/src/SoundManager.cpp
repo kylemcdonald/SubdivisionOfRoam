@@ -3,7 +3,6 @@
 bool SoundManager::enabled = true;
 
 vector<ofSoundPlayer*>
-	SoundManager::ambience,
 	SoundManager::attacking,
 	SoundManager::flapping,
 	SoundManager::ripping,
@@ -23,7 +22,6 @@ void SoundManager::loadSounds(vector<ofSoundPlayer*>& players,	string path) {
 }
 
 void SoundManager::setup() {
-	loadSounds(ambience, "sound/ambience");
 	loadSounds(attacking, "sound/attacking");
 	loadSounds(flapping, "sound/flapping");
 	loadSounds(ripping, "sound/ripping");
@@ -41,10 +39,6 @@ void SoundManager::setVolume(vector<ofSoundPlayer*>& players, float volume) {
 	for(int i = 0; i < players.size(); i++) {
 		players[i]->setVolume(volume);
 	}
-}
-
-void SoundManager::randomAmbience() {
-	randomPlay(ambience);
 }
 
 void SoundManager::randomAttacking() {
@@ -65,10 +59,6 @@ void SoundManager::randomSquawking() {
 
 void SoundManager::randomGliding() {
 	randomPlay(gliding);
-}
-
-void SoundManager::setAmbienceVolume(float volume) {
-	setVolume(ambience, volume);
 }
 
 void SoundManager::setAttackingVolume(float volume) {

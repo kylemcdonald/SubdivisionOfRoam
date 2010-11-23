@@ -8,7 +8,6 @@ void DebrisManager::setup() {
 void DebrisManager::add(ofPoint position) {
 	debris.push_back(Debris());
 	debris.back().setup(position);
-	cout << debris.size() << endl;
 }
 
 void DebrisManager::update() {
