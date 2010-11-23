@@ -1,5 +1,6 @@
 #include "AnimationManager.h"
 
+Animation* AnimationManager::forward;
 vector<Animation*> AnimationManager::flocking, AnimationManager::attacking, AnimationManager::debris;
 
 void AnimationManager::setup() {
@@ -26,6 +27,9 @@ void AnimationManager::setup() {
 		cur->setup(dir.getPath(i));
 		debris.push_back(cur);
 	}
+	
+	forward = new Animation();
+	forward->setup("animation/forward");
 }
 
 Animation* AnimationManager::randomFlocking() {

@@ -9,4 +9,6 @@ public:
 	static Animation* randomFlocking();
 	static Animation* randomAttacking();
 	static Animation* randomDebris();
+	
+	static Animation* forward;
 };

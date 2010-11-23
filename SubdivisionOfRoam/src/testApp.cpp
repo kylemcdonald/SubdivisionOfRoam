@@ -4,7 +4,7 @@
  to finish:
  
  fly away with chunks
- add some explicit form of gravity?
+ turnarounds and extra animations
  manual camera controls to reset camera on restart
  adaptive background <-- add this once i have a fw cable again
   
@@ -99,14 +99,14 @@ void testApp::setupControlPanel() {
 	panel.addSlider("force framerate", "animationForceFramerate", 5, 0, 40);
 	panel.addSlider("velocity framerate", "animationVelocityFramerate", .2, 0, 4);
 	panel.addSlider("flap displacement", "animationFlapDisplacement", 4, 0, 30);
-	panel.addSlider("scale", "animationScale", .20, 0, 2);
+	panel.addSlider("scale", "animationScale", .3, 0, 2);
 	panel.addSlider("depth scale", "animationDepthScale", 2, 0, 10);
 	panel.addSlider("debris max age", "animationDebrisMaxAge", .4, 0, 2);
 	
 	panel.addPanel("flocking");
 	panel.addToggle("enable", "flockingEnable", true);
 	panel.addSlider("size", "flockingSize", n, 1, 1000);
-	panel.addSlider("minimum speed", "flockingMinimumSpeed", .8, 0, 4);
+	panel.addSlider("minimum speed", "flockingMinimumSpeed", 1, 0, 4);
 	panel.addSlider("speed", "flockingSpeed", 1.5, 0, 10);
 	panel.addSlider("turbulence", "flockingTurbulence", 60, 1, 100);
 	panel.addSlider("spread", "flockingSpread", 85, 10, 120);
@@ -121,7 +121,7 @@ void testApp::setupControlPanel() {
 	panel.addSlider("ground position", "groundPosition", targetHeight / 4, -targetHeight / 2, targetHeight / 2);
 	panel.addSlider("range", "attackingRange", 400, 10, 800);
 	panel.addSlider("precision", "attackingPrecision", 100, 1, 800);
-	panel.addSlider("determination", "attackingDetermination", .6, 0, 1);
+	panel.addSlider("determination", "attackingDetermination", .4, 0, 1);
 	panel.addSlider("accuracy", "attackingAccuracy", 40, 1, 80);
 	
 	/*
