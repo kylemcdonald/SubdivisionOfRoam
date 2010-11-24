@@ -89,7 +89,7 @@ void testApp::setupControlPanel() {
 	panel.addSlider("attacking density", "soundAttackingDensity", 3, 0, 10);
 	
 	panel.addPanel("blur");
-	panel.addSlider("global radius", "blurGlobalRadius", 2, 0, 20);
+	panel.addSlider("global radius", "blurGlobalRadius", 1.8, 0, 20);
 	panel.addSlider("global passes", "blurGlobalPasses", 1, 0, 20, true);
 	
 	panel.addPanel("animation");
@@ -114,15 +114,15 @@ void testApp::setupControlPanel() {
 	panel.addSlider("gravity", "flockingGravity", 0, 0, 1);
 	
 	panel.addPanel("attacking");
-	panel.addSlider("ground force start", "groundForceStart", 0, -targetHeight, 0);
-	panel.addSlider("ground force amount", "groundForceAmount", 1, 0, 5);
-	panel.addSlider("ground position", "groundPosition", targetHeight / 4, 0, targetHeight);
-	panel.addSlider("range", "attackingRange", 400, 10, 800);
+	panel.addSlider("ground force start", "groundForceStart", -960, -targetHeight, 0);
+	panel.addSlider("ground force amount", "groundForceAmount", .44, 0, 5);
+	panel.addSlider("ground position", "groundPosition", 725, 0, targetHeight);
+	panel.addSlider("range", "attackingRange", 800, 10, targetHeight);
 	panel.addSlider("precision", "attackingPrecision", 100, 1, 800);
 	panel.addSlider("determination", "attackingDetermination", .4, 0, 1);
 	panel.addSlider("accuracy", "attackingAccuracy", 40, 1, 80);
-	panel.addSlider("chunk scale", "chunkScale", 2, 0, 5);
-	panel.addSlider("chunk carry distance", "chunkCarryDistance", .8, 0, 1.5);
+	panel.addSlider("chunk scale", "chunkScale", 1.56, 0, 5);
+	panel.addSlider("chunk carry distance", "chunkCarryDistance", .52, 0, 1.5);
 	panel.addSlider("escape distance", "escapeDistance", 2, 1, 6);
 	
 	/*
@@ -144,11 +144,11 @@ void testApp::setupControlPanel() {
 	panel.addSlider("resample spacing", "blobResampleSpacing", 10, 1, 10);
 	
 	panel.addPanel("holes");
-	panel.addSlider("radius", "holeRadius", 10, 1, 40);
-	panel.addSlider("spacing", "holeSpacing", 50, 1, 100);
+	panel.addSlider("radius", "holeRadius", 19, 1, 40);
+	panel.addSlider("spacing", "holeSpacing", 92, 1, 100);
 	panel.addSlider("max age", "holeMaxAge", 30, 1, 60);
 	panel.addToggle("use ellipses", "holeUseEllipses", false);
-	panel.addSlider("deshake", "holeDeshake", 0.1, 0, 1);
+	panel.addSlider("deshake", "holeDeshake", 0.9, 0, 1);
 	
 	panel.addPanel("warp");
 	panel.addToggle("flip orientation", "flipOrientation", false);
