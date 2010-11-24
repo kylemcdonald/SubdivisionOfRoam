@@ -30,12 +30,18 @@ public:
 		if(event.key == '\t') {
 			if(hidden) {
 				show();
-				ofShowCursor();
 			} else {
 				hide();
-				ofHideCursor();
 			}
 		}
+	}
+	void show() {
+		ofxControlPanel::show();
+		ofShowCursor();
+	}
+	void hide() {
+		ofxControlPanel::hide();
+		ofHideCursor();
 	}
 	void mousePressed(ofMouseEventArgs& event) {
 		ofxControlPanel::mousePressed(event.x, event.y, event.button);
