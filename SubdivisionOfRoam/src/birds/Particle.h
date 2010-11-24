@@ -56,6 +56,8 @@ public:
   Particle(float radius) {
     randomize(localOffset);
   	randomize(position);
+		position.z = 0;
+		position.normalize();
   	position *= radius;
 		
 		age = ofRandom(0, 10); // for frame offsets

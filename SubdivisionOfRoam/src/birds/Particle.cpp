@@ -148,14 +148,14 @@ inline void Particle::drawAnimation() {
 	if(attackMode) {
 		attackingAnimation->draw(age);
 	} else {
-		if(abs(velocity.z) > abs(velocity.x)) {
+		/*if(abs(velocity.z) > abs(velocity.x)) {
 			AnimationManager::forward->draw(age);
-		} else {
+		} else {*/
 			bool done = flockingAnimation->draw(age);
 			if(done) {
 				flockingAnimation = AnimationManager::randomFlocking();
 			}
-		}
+		//}
 		if(hasChunk) {
 			chunk.draw();
 		}

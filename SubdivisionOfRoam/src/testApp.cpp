@@ -61,11 +61,6 @@ void testApp::setup(){
 }
 
 void testApp::setupControlPanel() {	
-	int n = 500;
-	float radius = 250;
-	for(int i = 0; i < n; i++)
-		Particle::particles.push_back(Particle(radius));
-	
 	panel.setup("Control Panel", 540, 0, 300, 960);
 	panel.addPanel("general");
 	panel.addToggle("fullscreen", "fullscreen", false);
@@ -103,7 +98,7 @@ void testApp::setupControlPanel() {
 	
 	panel.addPanel("flocking");
 	panel.addToggle("enable", "flockingEnable", true);
-	panel.addSlider("size", "flockingSize", n, 1, 1000);
+	panel.addSlider("size", "flockingSize", 500, 1, 1000);
 	panel.addSlider("minimum speed", "flockingMinimumSpeed", 1, 0, 4);
 	panel.addSlider("speed", "flockingSpeed", 1.5, 0, 10);
 	panel.addSlider("turbulence", "flockingTurbulence", 60, 1, 100);
@@ -112,6 +107,7 @@ void testApp::setupControlPanel() {
 	panel.addSlider("independence", "flockingIndependence", .15, 0, 1);
 	panel.addSlider("neighborhood", "flockingNeighborhood", 400, 10, 1000);
 	panel.addSlider("gravity", "flockingGravity", 0, 0, 1);
+	panel.addSlider("start position", "flockingStartPosition", targetHeight / 2, 0, targetHeight);
 	
 	panel.addPanel("attacking");
 	panel.addSlider("ground force start", "groundForceStart", -960, -targetHeight, 0);
@@ -307,7 +303,7 @@ void testApp::update() {
 	Chunk::carryDistance = panel.getValueF("chunkCarryDistance");
 	Chunk::chunkScale = panel.getValueF("chunkScale");
 	
-	Particle::setSize(panel.getValueI("flockingSize"), 250);
+	Particle::setSize(panel.getValueI("flockingSize"), panel.getValueF("flockingStartPosition"));
 	Particle::minimumSpeed = panel.getValueF("flockingMinimumSpeed");
 	Particle::speed = panel.getValueF("flockingSpeed") * ofGetLastFrameTime() * 256;
 	Particle::spread = panel.getValueF("flockingSpread");
