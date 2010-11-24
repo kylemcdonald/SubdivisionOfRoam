@@ -1,5 +1,9 @@
 #include "Particle.h"
 
+bool
+	Particle::useFlipping,
+	Particle::useForward;
+
 vector<Particle>
 	Particle::particles;
 
@@ -136,10 +140,30 @@ inline void Particle::drawAnimation() {
 		
 	float agePercent = (attackMode ? attackingAnimation : flockingAnimation)->getPercent(age);
 	
+	// how are we doing right now
 	float angle = atan2f(velocity.y, velocity.x);
-	glRotatef(ofRadToDeg(angle), 0, 0, 1);	
-	if(angle > PI / 2 || angle < -PI / 2)
+	//angle = angle > HALF_PI || angle < -HALF_PI ? PI : 0; // lock the angle
+	
+	// the problem with flipping is two fold, this is one line
+	glRotatef(ofRadToDeg(angle), 0, 0, 1);
+	bool curFlipped = angle > HALF_PI || angle < -HALF_PI;
+	
+	// if we're not already flipping
+	if(!flipping) {
+		// but it looks like it's time to
+		if(flipState != curFlipped) {
+			// then start flipping
+			flipping = true;
+			age = 0;
+		}
+	}
+	
+	if(useFlipping ? flipState : curFlipped) {
+		// and this is the other line
+		// if you get these two right and add some sort of third
+		// transformation, that should fix it
 		glScalef(1, -1, 1);
+	}
 	
 	glTranslatef(0, cos(agePercent * TWO_PI + HALF_PI) * flapDisplacement, 0);
 	glScalef(animationScale, animationScale, 1);
@@ -148,14 +172,23 @@ inline void Particle::drawAnimation() {
 	if(attackMode) {
 		attackingAnimation->draw(age);
 	} else {
-		/*if(abs(velocity.z) > abs(velocity.x)) {
-			AnimationManager::forward->draw(age);
-		} else {*/
-			bool done = flockingAnimation->draw(age);
-			if(done) {
-				flockingAnimation = AnimationManager::randomFlocking();
+		if(useFlipping && flipping) {
+			bool doneFlipping = AnimationManager::flipping->draw(age);
+			if(doneFlipping) {
+				flipping = false;
+				age = 0;
+				flipState = !flipState; // we've now settled down (opposite)
 			}
-		//}
+		} else {
+			if(useForward && abs(velocity.z) > abs(velocity.x)) {
+				AnimationManager::forward->draw(age);
+			} else {
+				bool done = flockingAnimation->draw(age);
+				if(done) {
+					flockingAnimation = AnimationManager::randomFlocking();
+				}
+			}
+		}
 		if(hasChunk) {
 			chunk.draw();
 		}

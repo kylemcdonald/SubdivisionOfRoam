@@ -11,4 +11,5 @@ public:
 	static Animation* randomDebris();
 	
 	static Animation* forward;
+	static Animation* flipping;
 };

@@ -30,6 +30,10 @@ void testApp::setup(){
 	ambienceTexture.setup("sound/ambience");
 	flappingTexture.setup("sound/flapping");
 	
+	curFrame.allocate(640, 480, OF_IMAGE_GRAYSCALE);
+	
+	grabber.initGrabber(640, 480);
+	
 	camera.setPosition((752 - 640) / 2, 0);
 	camera.setFormat7(true);
 	camera.setup();
@@ -67,6 +71,8 @@ void testApp::setupControlPanel() {
 	panel.addToggle("debug", "debug", false);
 	panel.addToggle("use live video", "blobUseLiveVideo", false);
 	panel.addToggle("reset background", "blobResetBackground", true);
+	panel.addToggle("adapt background", "blobAdaptBackground", true);
+	panel.addSlider("adapt rate", "blobAdaptRate", .0001, 0, .001);
 	panel.addSlider("threshold", "blobThreshold", 128, 0, 255, true);
 	panel.addDrawableRect("curFrame", &curFrame, 200, 150);
 	panel.addDrawableRect("background", &grayBg, 200, 150);
@@ -95,6 +101,8 @@ void testApp::setupControlPanel() {
 	panel.addSlider("scale", "animationScale", .3, 0, 2);
 	panel.addSlider("depth scale", "animationDepthScale", 2, 0, 10);
 	panel.addSlider("debris max age", "animationDebrisMaxAge", .4, 0, 2);
+	panel.addToggle("use forward", "animationUseForward", false);
+	panel.addToggle("use flipping", "animationUseFlipping", true);
 	
 	panel.addPanel("flocking");
 	panel.addToggle("enable", "flockingEnable", true);
@@ -234,20 +242,58 @@ void testApp::update() {
 		 */
 	}
 	
-	if(camera.grabVideo(curFrame)) {
-		curFrame.update();
-		
-		memcpy(grayImage.getPixels(), curFrame.getPixels(), curFrame.getWidth() * curFrame.getHeight());
-	
-		if(panel.getValueB("blobResetBackground")){
-			grayBg = grayImage;
-			grayBg.flagImageChanged();
-			panel.setValueB("blobResetBackground", false);
+	if(panel.getValueB("blobUseLiveVideo")) {
+		bool updateFromCurFrame = false;
+		if(camera.getLibdcCamera()) {
+			if(camera.grabVideo(curFrame)) {
+				updateFromCurFrame = true;
+			}
+		} else {
+			grabber.grabFrame();
+			if(grabber.isFrameNew()) {
+				// pretty sure there aren't any ofConvertInto functions for color->grayscale conversion
+				unsigned char* grabberPixels = grabber.getPixels();
+				unsigned char* curPixels = curFrame.getPixels();
+				int n = 640 * 480;
+				int j = 0;
+				for(int i = 0; i < n; i++) {
+					unsigned int sum = grabberPixels[j++];
+					sum += grabberPixels[j++];
+					sum += grabberPixels[j++];
+					curPixels[i] = sum / 3;
+				}
+				updateFromCurFrame = true;
+			}
 		}
-
-		grayDiff.absDiff(grayBg, grayImage);
-		grayDiff.threshold(panel.getValueI("blobThreshold"));
-		grayDiff.flagImageChanged();
+		if(updateFromCurFrame) {
+			curFrame.update();
+			
+			memcpy(grayImage.getPixels(), curFrame.getPixels(), curFrame.getWidth() * curFrame.getHeight());
+			
+			if(panel.getValueB("blobResetBackground")){
+				grayBg = grayImage;
+				grayBg.flagImageChanged();
+				panel.setValueB("blobResetBackground", false);
+			}
+			
+			if(panel.getValueB("blobAdaptBackground")) {
+				grayBg.addWeighted(grayImage, panel.getValueF("blobAdaptRate"));
+			}
+			
+			// grayDiff.absDiff(grayBg, grayImage);
+			// replaced with float-compatible single ended diff
+			int n = 640 * 480;
+			unsigned char* diffPixels = grayDiff.getPixels();
+			unsigned char* grayPixels = grayImage.getPixels();
+			float* bgPixels = grayBg.getPixelsAsFloats();
+			for(int i = 0; i < n; i++) {
+				float cur = (bgPixels[i] * 255) - grayPixels[i];
+				diffPixels[i] = cur < 0 ? 0 : cur;
+			}
+			
+			grayDiff.threshold(panel.getValueI("blobThreshold"));
+			grayDiff.flagImageChanged();
+		}
 	}
 	
 	// update blobs
@@ -257,8 +303,12 @@ void testApp::update() {
 	float scaleBlobs = targetWidth / camera.getWidth();
 	// this doesn't project the smallest part on the bottom but avoids showing people with their feet missing
 	ofPoint offset(-camera.getWidth() / 2, targetHeight / 2 - (camera.getHeight() * scaleBlobs));
-	offset += ofPoint(ofSignedNoise(ofGetElapsedTimef(), 1), ofSignedNoise(1, ofGetElapsedTimef())) * panel.getValueF("blobGeneralMotion");
+	offset += ofPoint(ofSignedNoise(ofGetElapsedTimef(), 1), ofSignedNoise(1, ofGetElapsedTimef()));	
 	float contourNoise = panel.getValueF("blobContourMotion");
+	if(!panel.getValueB("blobUseLiveVideo")) {
+		panel.getValueF("blobGeneralMotion");
+		contourNoise = 0;
+	}
 	for(int i = 0; i < contourFinder.nBlobs; i++) {
 		// offset blobs
 		ofxCvBlob& curBlob = contourFinder.blobs[i];
@@ -299,6 +349,8 @@ void testApp::update() {
 	Particle::groundPosition = panel.getValueF("groundPosition");
 	Particle::gravity = panel.getValueF("flockingGravity");
 	Particle::escapeDistance = panel.getValueF("escapeDistance") * targetHeight / 2;
+	Particle::useForward = panel.getValueB("animationUseForward");
+	Particle::useFlipping = panel.getValueB("animationUseFlipping");
 	
 	Chunk::carryDistance = panel.getValueF("chunkCarryDistance");
 	Chunk::chunkScale = panel.getValueF("chunkScale");

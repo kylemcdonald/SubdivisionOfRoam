@@ -20,6 +20,8 @@ inline void randomize(ofxVec3f& v) {
 
 class Particle {
 public:
+	static bool useFlipping, useForward;
+	
 	static ofxVec3f centeringForce, globalOffset, avg;
 	static MSA::Perlin perlin;
 	static float minimumSpeed, speed, spread, viscosity, independence, turbulence, neighborhood;
@@ -50,6 +52,9 @@ public:
 	bool hasChunk;
 	float attackStarted;
 	Chunk chunk;
+	
+	bool flipping;
+	bool flipState;
 	
 	Particle() {		
 	}
@@ -108,7 +113,7 @@ public:
     centeringForce.normalize();
     centeringForce *= -distanceToCenter / (spread * spread);
 		if(hasChunk) {
-			force -= centeringForce; // run away with chunks
+			force -= centeringForce; // run away with chunk
 		} else {
 			force += centeringForce; // otherwise, keep together
 		}

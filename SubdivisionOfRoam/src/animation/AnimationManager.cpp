@@ -1,6 +1,7 @@
 #include "AnimationManager.h"
 
 Animation* AnimationManager::forward;
+Animation* AnimationManager::flipping;
 vector<Animation*> AnimationManager::flocking, AnimationManager::attacking, AnimationManager::debris;
 
 void AnimationManager::setup() {
@@ -30,6 +31,9 @@ void AnimationManager::setup() {
 	
 	forward = new Animation();
 	forward->setup("animation/forward");
+	
+	flipping = new Animation();
+	flipping->setup("animation/flipping");
 }
 
 Animation* AnimationManager::randomFlocking() {

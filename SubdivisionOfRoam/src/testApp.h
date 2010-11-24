@@ -42,11 +42,13 @@ public:
 	
 	void drawBlob(ofxCvBlob& blob);
 	void drawNormals(ofxCvBlob& blob, float length);
-
+	
+	ofVideoGrabber grabber;
 	ofxLibdcPtGrey camera;
 	ofImage curFrame;
 	
-	ofxCvGrayscaleImage grayImage, grayBg, grayDiff;
+	ofxCvGrayscaleImage grayImage, grayDiff;
+	ofxCvFloatImage grayBg;
 
 	static ofxCvContourFinder contourFinder;
 	static vector<ofxCvBlob> resampledBlobs;
