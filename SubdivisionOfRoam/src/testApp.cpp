@@ -32,12 +32,14 @@ void testApp::setup(){
 	
 	curFrame.allocate(640, 480, OF_IMAGE_GRAYSCALE);
 	
-	grabber.initGrabber(640, 480);
-	
 	camera.setPosition((752 - 640) / 2, 0);
 	camera.setFormat7(true);
 	camera.setup();
 	camera.setMaxFramerate();
+	
+	if(!camera.ready()) {
+		grabber.initGrabber(640, 480);
+	}
 	
 	ofImage img;
 	img.loadImage("people.png");
@@ -233,7 +235,9 @@ void testApp::update() {
 		panel.setValueB("flipOrientation", false);
 	}
 	
-	if(panel.getValueB("blobUseLiveVideo") && camera.getLibdcCamera()) {
+	bool useLiveVideo = panel.getValueB("blobUseLiveVideo");
+	bool cameraAvailable = camera.ready();
+	if(useLiveVideo && cameraAvailable) {
 		camera.setBrightnessNorm(panel.getValueF("cameraBrightness"));
 		camera.setExposureNorm(panel.getValueF("cameraExposure"));
 		camera.setGainNorm(panel.getValueF("cameraGain"));
@@ -242,7 +246,7 @@ void testApp::update() {
 	
 	if(panel.getValueB("blobUseLiveVideo")) {
 		bool updateFromCurFrame = false;
-		if(camera.getLibdcCamera()) {
+		if(camera.ready()) {
 			if(camera.grabVideo(curFrame)) {
 				updateFromCurFrame = true;
 			}
