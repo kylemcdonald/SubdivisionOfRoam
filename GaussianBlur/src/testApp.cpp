@@ -10,8 +10,8 @@ void testApp::update(){
 }
 
 void testApp::draw(){	
-	blur.setRadius(ofMap(mouseX, 0, ofGetWidth(), 0, 50));
-	blur.setPasses(ofMap(mouseY, 0, ofGetHeight(), 0, 50));
+	blur.setRadius(ofMap(mouseX, 0, ofGetWidth(), 0, 50, true));
+	blur.setPasses(ofMap(mouseY, 0, ofGetHeight(), 1, 50, true));
 	
 	blur.begin();
 	camera.draw(0, 0);
