@@ -66,7 +66,7 @@ void testApp::setupControlPanel() {
 	for(int i = 0; i < n; i++)
 		Particle::particles.push_back(Particle(radius));
 	
-	panel.setup("Control Panel", 5, 5, 300, 900);
+	panel.setup("Control Panel", 540, 0, 300, 960);
 	panel.addPanel("general");
 	panel.addToggle("fullscreen", "fullscreen", false);
 	panel.addToggle("debug", "debug", false);
@@ -153,13 +153,14 @@ void testApp::setupControlPanel() {
 	panel.addPanel("warp");
 	panel.addToggle("flip orientation", "flipOrientation", false);
 	
+	float maxXPosition = 540. / (540 + 300);
 	panel.addSlider("nwx", "warpNwx", 0, 0, 1);
 	panel.addSlider("nwy", "warpNwy", 0, 0, 1);
-	panel.addSlider("nex", "warpNex", 1, 0, 1);
+	panel.addSlider("nex", "warpNex", maxXPosition, 0, 1);
 	panel.addSlider("ney", "warpNey", 0, 0, 1);
 	panel.addSlider("swx", "warpSwx", 0, 0, 1);
 	panel.addSlider("swy", "warpSwy", 1, 0, 1);
-	panel.addSlider("sex", "warpSex", 1, 0, 1);
+	panel.addSlider("sex", "warpSex", maxXPosition, 0, 1);
 	panel.addSlider("sey", "warpSey", 1, 0, 1);
 	
 	float fineRange = .01;

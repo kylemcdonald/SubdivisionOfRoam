@@ -17,14 +17,14 @@ public:
 		ofxControlPanel::update();
 	}
 	void draw(ofEventArgs& event) {
+		ofxControlPanel::draw();
 		if(!hidden) {
 			glColor4f(1, 1, 1, 1);
 			ofFill();
-			ofRect(ofGetWidth() - 45, ofGetHeight() - 25, 50, 20);
+			ofRect(ofGetWidth() - 45, ofGetHeight() - 25, 40, 20);
 			glColor4f(0, 0, 0, 1);
 			ofDrawBitmapString(ofToString((int) ofGetFrameRate()), ofGetWidth() - 40, ofGetHeight() - 10);
 		}
-		ofxControlPanel::draw();
 	}
 	void keyPressed(ofKeyEventArgs& event) {
 		if(event.key == '\t') {
