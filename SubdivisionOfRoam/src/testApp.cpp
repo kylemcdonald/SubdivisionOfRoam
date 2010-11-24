@@ -78,6 +78,13 @@ void testApp::setupControlPanel() {
 	panel.addDrawableRect("background", &grayBg, 200, 150);
 	panel.addDrawableRect("difference", &grayDiff, 200, 150);
 	
+	panel.addPanel("input");
+	panel.addSlider("brightness", "cameraBrightness", 0, 0, 1);
+	panel.addSlider("exposure", "cameraExposure", 0, 0, 1);
+	panel.addSlider("gain", "cameraGain", 0, 0, 1);
+	panel.addSlider("shutter", "cameraShutter", 0, 0, 1);
+	panel.addDrawableRect("curFrame", &curFrame, 200, 150);
+	
 	panel.addPanel("sound");
 	panel.addToggle("enable", "soundEnable", true);
 	panel.addSlider("ambience rate", "soundAmbienceRate", 2, 0, 5);
@@ -129,14 +136,6 @@ void testApp::setupControlPanel() {
 	panel.addSlider("chunk carry distance", "chunkCarryDistance", .52, 0, 1.5);
 	panel.addSlider("escape distance", "escapeDistance", 2, 1, 6);
 	
-	/*
-	panel.addPanel("input");
-	panel.addSlider("brightness", "brightnessShutter", 0, 0, 1);
-	panel.addSlider("exposure", "exposureShutter", 0, 0, 1);
-	panel.addSlider("gain", "gainShutter", 0, 0, 1);
-	panel.addSlider("shutter", "inputShutter", 0, 0, 1);
-	 */
-	
 	panel.addPanel("blob");
 	panel.addSlider("general motion", "blobGeneralMotion", 5, 0, 20);
 	panel.addSlider("contour motion", "blobContourMotion", 2, 0, 10);
@@ -180,6 +179,8 @@ void testApp::setupControlPanel() {
 	panel.setXMLFilename("roamSettings.xml");
 	panel.loadSettings("roamSettings.xml");
 	panel.hide();
+	
+	panel.setValueB("blobResetBackground", true);
 }
 
 void testApp::update() {		
@@ -232,14 +233,11 @@ void testApp::update() {
 		panel.setValueB("flipOrientation", false);
 	}
 	
-	if(panel.getValueB("blobUseLiveVideo")) {
-		// not sure this is working
-		/*
+	if(panel.getValueB("blobUseLiveVideo") && camera.getLibdcCamera()) {
 		camera.setBrightnessNorm(panel.getValueF("cameraBrightness"));
 		camera.setExposureNorm(panel.getValueF("cameraExposure"));
-		camera.setShutterNorm(panel.getValueF("cameraShutter"));
 		camera.setGainNorm(panel.getValueF("cameraGain"));
-		 */
+		camera.setShutterNorm(panel.getValueF("cameraShutter"));
 	}
 	
 	if(panel.getValueB("blobUseLiveVideo")) {
