@@ -114,9 +114,9 @@ void testApp::setupControlPanel() {
 	panel.addSlider("gravity", "flockingGravity", 0, 0, 1);
 	
 	panel.addPanel("attacking");
-	panel.addSlider("ground force start", "groundForceStart", 0, -targetHeight / 2, targetHeight / 2);
+	panel.addSlider("ground force start", "groundForceStart", 0, -targetHeight, 0);
 	panel.addSlider("ground force amount", "groundForceAmount", 1, 0, 5);
-	panel.addSlider("ground position", "groundPosition", targetHeight / 4, -targetHeight / 2, targetHeight / 2);
+	panel.addSlider("ground position", "groundPosition", targetHeight / 4, 0, targetHeight);
 	panel.addSlider("range", "attackingRange", 400, 10, 800);
 	panel.addSlider("precision", "attackingPrecision", 100, 1, 800);
 	panel.addSlider("determination", "attackingDetermination", .4, 0, 1);
