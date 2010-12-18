@@ -21,6 +21,7 @@ inline void randomize(ofxVec3f& v) {
 class Particle {
 public:
 	static bool useFlipping, useForward;
+	static float forwardAngle;
 	
 	static ofxVec3f centeringForce, globalOffset, avg;
 	static MSA::Perlin perlin;
@@ -139,6 +140,7 @@ public:
 	void attackAtRandom();
 	void beginAttack(ofPoint& target);
 	void endAttack();
+	float attackProgress();
 	
 	static void setAttackingDensity(float density) {
 		attackingTexture.density = density / particles.size();

@@ -33,7 +33,7 @@ void ContourUtils::smoothBlob(ofxCvBlob& blob, int smoothingSize, float smoothin
 	// or the bounding box
 }
 
-ofxVec2f ContourUtils::closestPoint(const ofxVec2f& p1, const ofxVec2f& p2, const ofxVec2f& p3) {
+ofxVec2f ContourUtils::closestPoint(const ofxVec2f& p1, const ofxVec2f& p2, const ofxVec2f& p3, float* uptr) {
 	float u = (p3.x - p1.x) * (p2.x - p1.x);
 	u += (p3.y - p1.y) * (p2.y - p1.y);
 	u /= (p2 - p1).length();
@@ -42,6 +42,9 @@ ofxVec2f ContourUtils::closestPoint(const ofxVec2f& p1, const ofxVec2f& p2, cons
 		u = 1;
 	} else if(u < 0) {
 		u = 0;
+	}
+	if(uptr != NULL) {
+		*uptr = u;
 	}
 	return p1.interpolated(p2, u);
 }

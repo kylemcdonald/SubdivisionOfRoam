@@ -4,6 +4,9 @@ bool
 	Particle::useFlipping,
 	Particle::useForward;
 
+float
+	Particle::forwardAngle;
+
 vector<Particle>
 	Particle::particles;
 
@@ -180,7 +183,8 @@ inline void Particle::drawAnimation() {
 				flipState = !flipState; // we've now settled down (opposite)
 			}
 		} else {
-			if(useForward && abs(velocity.z) > abs(velocity.x)) {
+			float forwardDiff = abs(90 - ofRadToDeg(atan2f(abs(velocity.z), velocity.x)));
+			if(useForward && forwardDiff < forwardAngle) {
 				AnimationManager::forward->draw(age);
 			} else {
 				bool done = flockingAnimation->draw(age);
@@ -272,4 +276,10 @@ inline void Particle::checkForAttack() {
 			}
 		}
 	}
+}
+
+float Particle::attackProgress() {
+	float u;
+	ContourUtils::closestPoint(attackStartingPoint, attackTarget, position, &u);
+	return u;
 }

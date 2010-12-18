@@ -1,6 +1,7 @@
 #include "Debris.h"
 
-float Debris::maxAge;
+float Debris::maxAge,
+	Debris::scale;
 
 void Debris::setup(ofxVec2f position) {
 	birth = ofGetElapsedTimef();
@@ -13,6 +14,7 @@ void Debris::draw() {
 	glPushMatrix();
 	ofTranslate(position);
 	ofRotate(rotation);
+	ofScale(scale, scale, scale);
 	animation->drawPercent(getAge());
 	glPopMatrix();
 }

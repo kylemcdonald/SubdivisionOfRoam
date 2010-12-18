@@ -10,7 +10,7 @@ private:
 	Animation* animation;
 	float birth;
 public:
-	static float maxAge;
+	static float maxAge, scale;
 	
 	void setup(ofxVec2f position);	
 	void draw();

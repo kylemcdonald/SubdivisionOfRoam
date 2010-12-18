@@ -4,7 +4,6 @@
  to finish:
  
  manual camera controls to reset camera on restart
- adaptive background <-- add this once i have a fw cable again
   
  to perfect:
  
@@ -110,8 +109,10 @@ void testApp::setupControlPanel() {
 	panel.addSlider("scale", "animationScale", .3, 0, 2);
 	panel.addSlider("depth scale", "animationDepthScale", 2, 0, 10);
 	panel.addSlider("debris max age", "animationDebrisMaxAge", .4, 0, 2);
+	panel.addSlider("debris scale", "animationDebrisScale", .5, 0, 1);
 	panel.addToggle("use forward", "animationUseForward", false);
 	panel.addToggle("use flipping", "animationUseFlipping", true);
+	panel.addSlider("forward angle", "animationForwardAngle", 0, 0, 90);
 	
 	panel.addPanel("flocking");
 	panel.addToggle("enable", "flockingEnable", true);
@@ -222,6 +223,7 @@ void testApp::update() {
 	HoleManager::holeSpacing = panel.getValueF("holeSpacing");
 	
 	Debris::maxAge = panel.getValueF("animationDebrisMaxAge");
+	Debris::scale = panel.getValueF("animationDebrisScale");
 	
 	if(panel.getValueB("flipOrientation")) {
 		panel.setValueF("warpNwx", 1);
@@ -305,11 +307,11 @@ void testApp::update() {
 	float scaleBlobs = targetWidth / camera.getWidth();
 	// this doesn't project the smallest part on the bottom but avoids showing people with their feet missing
 	ofPoint offset(-camera.getWidth() / 2, targetHeight / 2 - (camera.getHeight() * scaleBlobs));
-	offset += ofPoint(ofSignedNoise(ofGetElapsedTimef(), 1), ofSignedNoise(1, ofGetElapsedTimef()));	
 	float contourNoise = panel.getValueF("blobContourMotion");
-	if(!panel.getValueB("blobUseLiveVideo")) {
-		panel.getValueF("blobGeneralMotion");
+	if(panel.getValueB("blobUseLiveVideo")) {
 		contourNoise = 0;
+	} else {
+		offset += ofPoint(ofSignedNoise(ofGetElapsedTimef(), 1), ofSignedNoise(1, ofGetElapsedTimef())) * panel.getValueF("blobGeneralMotion");
 	}
 	for(int i = 0; i < contourFinder.nBlobs; i++) {
 		// offset blobs
@@ -353,6 +355,7 @@ void testApp::update() {
 	Particle::escapeDistance = panel.getValueF("escapeDistance") * targetHeight / 2;
 	Particle::useForward = panel.getValueB("animationUseForward");
 	Particle::useFlipping = panel.getValueB("animationUseFlipping");
+	Particle::forwardAngle = panel.getValueF("animationForwardAngle");
 	
 	Chunk::carryDistance = panel.getValueF("chunkCarryDistance");
 	Chunk::chunkScale = panel.getValueF("chunkScale");
