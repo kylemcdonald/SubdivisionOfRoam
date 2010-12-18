@@ -70,6 +70,7 @@ void testApp::setupControlPanel() {
 	panel.addPanel("general");
 	panel.addToggle("fullscreen", "fullscreen", false);
 	panel.addToggle("debug", "debug", false);
+	panel.addToggle("move camera", "move camera", false);
 	panel.addToggle("use live video", "blobUseLiveVideo", false);
 	panel.addToggle("reset background", "blobResetBackground", true);
 	panel.addToggle("adapt background", "blobAdaptBackground", true);
@@ -390,7 +391,7 @@ void testApp::draw(){
 	glPushMatrix();
 	ofTranslate(targetWidth / 2, targetHeight / 2);
 	
-	if(debug) {
+	if(panel.getValueB("moveCamera")) {
 		ofRotateY(60 * sin(ofMap(mouseX, 0, ofGetWidth(), -HALF_PI, +HALF_PI)));
 		ofRotateX(30 * sin(ofMap(mouseY, ofGetHeight(), 0, -HALF_PI, +HALF_PI)));
 	}

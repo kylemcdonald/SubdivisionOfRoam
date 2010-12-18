@@ -171,7 +171,13 @@ inline void Particle::drawAnimation() {
 	glTranslatef(0, cos(agePercent * TWO_PI + HALF_PI) * flapDisplacement, 0);
 	glScalef(animationScale, animationScale, 1);
 	
-	glColor4f(1, 1, 1, 1);
+	// color isn't working here, is it overridden by animation drawing?
+	if(testApp::debug) {
+		glColor4f(attackProgress(), 1, 1, 1);
+	} else {
+		glColor4f(1, 1, 1, 1);
+	}
+	
 	if(attackMode) {
 		attackingAnimation->draw(age);
 	} else {
@@ -279,7 +285,15 @@ inline void Particle::checkForAttack() {
 }
 
 float Particle::attackProgress() {
-	float u;
-	ContourUtils::closestPoint(attackStartingPoint, attackTarget, position, &u);
-	return u;
+	float progress;
+	if(hasChunk) {
+		ofxVec2f attackDiff = attackStartingPoint - attackTarget;
+		ofxVec2f getawayDiff = position - attackTarget;
+		progress = getawayDiff.length() / attackDiff.length();
+	} else if(attackMode) {
+		ContourUtils::closestPoint(attackStartingPoint, attackTarget, position, &progress);
+	} else {
+		progress = 0;
+	}
+	return ofClamp(progress, 0, 1);
 }
