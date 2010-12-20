@@ -70,7 +70,7 @@ void testApp::setupControlPanel() {
 	panel.addPanel("general");
 	panel.addToggle("fullscreen", "fullscreen", false);
 	panel.addToggle("debug", "debug", false);
-	panel.addToggle("move camera", "move camera", false);
+	panel.addToggle("move camera", "moveCamera", false);
 	panel.addToggle("use live video", "blobUseLiveVideo", false);
 	panel.addToggle("reset background", "blobResetBackground", true);
 	panel.addToggle("adapt background", "blobAdaptBackground", true);
@@ -79,7 +79,7 @@ void testApp::setupControlPanel() {
 	panel.addDrawableRect("curFrame", &curFrame, 200, 150);
 	panel.addDrawableRect("background", &grayBg, 200, 150);
 	panel.addDrawableRect("difference", &grayDiff, 200, 150);
-	
+
 	panel.addPanel("input");
 	panel.addSlider("brightness", "cameraBrightness", 0, 0, 1);
 	panel.addSlider("exposure", "cameraExposure", 0, 0, 1);
@@ -108,6 +108,7 @@ void testApp::setupControlPanel() {
 	panel.addSlider("velocity framerate", "animationVelocityFramerate", .2, 0, 4);
 	panel.addSlider("flap displacement", "animationFlapDisplacement", 8, 0, 30);
 	panel.addSlider("scale", "animationScale", .3, 0, 2);
+	panel.addSlider("attack scale", "attackScale", .3, 0, 2);
 	panel.addSlider("depth scale", "animationDepthScale", 2, 0, 10);
 	panel.addSlider("debris max age", "animationDebrisMaxAge", .4, 0, 2);
 	panel.addSlider("debris scale", "animationDebrisScale", .5, 0, 1);
@@ -343,6 +344,7 @@ void testApp::update() {
 	Particle::animationForceFramerate = panel.getValueF("animationForceFramerate");
 	Particle::animationVelocityFramerate = panel.getValueF("animationVelocityFramerate");
 	Particle::animationScale = panel.getValueF("animationScale");
+	Particle::attackScale = panel.getValueF("attackScale");
 	Particle::animationDepthScale = panel.getValueF("animationDepthScale");
 	Particle::attackRange = panel.getValueF("attackingRange");
 	Particle::attackPrecision = panel.getValueF("attackingPrecision");
@@ -435,6 +437,7 @@ void testApp::draw(){
 	}
 	
 	glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA); // something like darken
+	glColor4f(1, 1, 1, 1);
 	DebrisManager::draw();
 	Particle::drawAnimationAll();
 	

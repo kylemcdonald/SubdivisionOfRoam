@@ -27,7 +27,7 @@ public:
 	static MSA::Perlin perlin;
 	static float minimumSpeed, speed, spread, viscosity, independence, turbulence, neighborhood;
 	
-	static float animationBaseFramerate, animationScale, animationDepthScale, animationForceFramerate, animationVelocityFramerate, flapDisplacement;
+	static float animationBaseFramerate, animationScale, animationDepthScale, animationForceFramerate, animationVelocityFramerate, flapDisplacement, attackScale;
 	
 	static float attackRange, attackPrecision, attackDetermination, attackAccuracy;
 	static float groundForceStart, groundForceAmount, groundPosition;
