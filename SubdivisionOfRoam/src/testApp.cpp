@@ -114,7 +114,7 @@ void testApp::setupControlPanel() {
 	panel.addSlider("debris scale", "animationDebrisScale", .5, 0, 1);
 	panel.addToggle("use forward", "animationUseForward", false);
 	panel.addToggle("use flipping", "animationUseFlipping", true);
-	panel.addSlider("forward angle", "animationForwardAngle", 0, 0, 90);
+	panel.addSlider("forward angle", "animationForwardAngle", 20, 0, 90);
 	
 	panel.addPanel("flocking");
 	panel.addToggle("enable", "flockingEnable", true);
@@ -139,6 +139,7 @@ void testApp::setupControlPanel() {
 	panel.addSlider("accuracy", "attackingAccuracy", 40, 1, 80);
 	panel.addSlider("chunk scale", "chunkScale", 1.56, 0, 5);
 	panel.addSlider("chunk carry distance", "chunkCarryDistance", .52, 0, 1.5);
+	panel.addSlider("chunk global rotation", "chunkGlobalRotation", 0, -180, 180);
 	panel.addSlider("escape distance", "escapeDistance", 2, 1, 6);
 	
 	panel.addPanel("blob");
@@ -362,6 +363,7 @@ void testApp::update() {
 	
 	Chunk::carryDistance = panel.getValueF("chunkCarryDistance");
 	Chunk::chunkScale = panel.getValueF("chunkScale");
+	Chunk::globalRotation = panel.getValueF("chunkGlobalRotation");
 	
 	Particle::setSize(panel.getValueI("flockingSize"), panel.getValueF("flockingStartPosition"));
 	Particle::minimumSpeed = panel.getValueF("flockingMinimumSpeed");

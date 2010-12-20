@@ -8,7 +8,7 @@ private:
 	ofImage* rightHole;
 	float rotation;
 public:
-	static float chunkScale, carryDistance;
+	static float chunkScale, carryDistance, globalRotation;
 	
 	void setup();
 	void draw();
